@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node server/seed.js)",
+      "Bash(npm run *)",
+      "Bash(lsof -ti:5000)",
+      "Bash(xargs kill *)",
+      "Bash(pkill -f \"node server/index.js\")",
+      "Bash(pkill -f \"nodemon\")",
+      "Bash(pkill -f \"node server\")",
+      "Bash(pkill -f nodemon)",
+      "Bash(pkill -f vite)",
+      "Skill(claude-api)",
+      "Bash(ollama --version)",
+      "Bash(ollama list *)",
+      "Bash(npm view *)",
+      "Bash(pip show *)",
+      "Bash(pip3 show *)",
+      "Bash(pip3 install *)",
+      "Read(//Users/ioxy/.claude/**)",
+      "WebSearch",
+      "Bash(curl -s http://localhost:5001/api/health)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(mongosh *)",
+      "Bash(curl -v http://localhost:5173)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(npx vite *)",
+      "Bash(curl *)",
+      "Bash(node server/index.js)"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "eventstaff-nepal",
+  "version": "1.0.0",
+  "description": "Smart Event Staffing Made Easy - Connect event organizers with professional hospitality workers across Nepal",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "npx nodemon server/index.js",
+    "client": "npx vite",
+    "build": "npm run client build",
+    "start": "node server/index.js",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "seed": "cd server && node seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
