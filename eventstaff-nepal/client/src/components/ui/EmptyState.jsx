@@ -1,23 +1,35 @@
-const EmptyState = ({
-  icon = '📭',
-  title,
-  description,
-  action,
-  actionLabel,
-  className = ''
-}) => {
+const EmptyState = ({ icon = '◆', title, description, action, actionLabel, className = '' }) => {
   return (
-    <div className={`text-center py-12 ${className}`}>
-      <div className="text-6xl mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-      {description && (
-        <p className="text-white/50 mb-6 max-w-md mx-auto">{description}</p>
-      )}
-      {action && actionLabel && (
-        <button
-          onClick={action}
-          className="glass-btn text-white px-6 py-3 rounded-xl font-medium"
+    <div className={`flex flex-col items-center justify-center py-20 text-center ${className}`}>
+      {/* Big faint background icon */}
+      <div className="relative mb-6">
+        <span
+          style={{
+            fontFamily: 'Cormorant Garamond, serif',
+            fontSize: '5rem',
+            color: 'transparent',
+            WebkitTextStroke: '1px rgba(232, 104, 30, 0.15)',
+            lineHeight: 1,
+            display: 'block',
+            userSelect: 'none',
+          }}
         >
+          {icon}
+        </span>
+      </div>
+
+      <h3 className="font-serif text-2xl mb-3" style={{ color: 'var(--text)', fontWeight: 400 }}>
+        {title}
+      </h3>
+
+      {description && (
+        <p className="text-sm max-w-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+          {description}
+        </p>
+      )}
+
+      {action && actionLabel && (
+        <button onClick={action} className="btn-secondary mt-8 px-6 py-2.5 text-xs">
           {actionLabel}
         </button>
       )}

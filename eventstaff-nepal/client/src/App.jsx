@@ -22,8 +22,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 rounded-full border-4 border-white/20 border-t-primary-400 animate-spin"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#060912' }}>
+        <div className="spinner" />
+        <span className="label text-[0.65rem]" style={{ color: 'var(--flame)' }}>Loading</span>
       </div>
     );
   }

@@ -27,7 +27,10 @@
       "Bash(pkill -f \"vite\")",
       "Bash(npx vite *)",
       "Bash(curl *)",
-      "Bash(node server/index.js)"
+      "Bash(node server/index.js)",
+      "Bash(git -C /Users/ioxy/Desktop/Hospitality log --oneline --all)",
+      "Bash(rsync *)",
+      "Read(//Users/ioxy/Desktop/EventStaff-Nepal-Submit/**)"
     ]
   }
 }

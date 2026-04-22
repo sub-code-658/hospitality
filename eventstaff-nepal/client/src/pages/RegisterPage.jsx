@@ -10,12 +10,7 @@ const EXPERIENCE_LEVELS = ['None', '0-1 years', '1-3 years', '3-5 years', '5+ ye
 export default function RegisterPage() {
   const [role, setRole] = useState('worker');
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    skills: [],
-    experience: 'None'
+    name: '', email: '', password: '', confirmPassword: '', skills: [], experience: 'None',
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -25,8 +20,8 @@ export default function RegisterPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    if (errors[name]) setErrors({ ...errors, [name]: '' });
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleSkillToggle = (skill) => {
@@ -34,45 +29,33 @@ export default function RegisterPage() {
       ...prev,
       skills: prev.skills.includes(skill)
         ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
+        : [...prev.skills, skill],
     }));
   };
 
   const validate = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    if (role === 'worker' && formData.skills.length === 0) {
-      newErrors.skills = 'Select at least one skill';
-    }
-    return newErrors;
+    const e = {};
+    if (!formData.name.trim()) e.name = 'Name is required';
+    if (!formData.email) e.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) e.email = 'Invalid email format';
+    if (!formData.password) e.password = 'Password is required';
+    else if (formData.password.length < 6) e.password = 'Min. 6 characters';
+    if (formData.password !== formData.confirmPassword) e.confirmPassword = 'Passwords do not match';
+    if (role === 'worker' && formData.skills.length === 0) e.skills = 'Select at least one skill';
+    return e;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
     const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
+    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     setLoading(true);
     const result = await register({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role,
+      name: formData.name, email: formData.email, password: formData.password, role,
       skills: role === 'worker' ? formData.skills : undefined,
-      experience: role === 'worker' ? formData.experience : undefined
+      experience: role === 'worker' ? formData.experience : undefined,
     });
     setLoading(false);
-
     if (result.success) {
       addToast('Registration successful!', 'success');
       navigate('/dashboard');
@@ -81,150 +64,179 @@ export default function RegisterPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen py-12 px-4">
-      {/* Floating orbs */}
-      <div className="absolute top-20 right-20 w-56 h-56 rounded-full glass animate-float opacity-20"></div>
-      <div className="absolute bottom-40 left-16 w-40 h-40 rounded-full glass animate-float opacity-15" style={{ animationDelay: '1.5s' }}></div>
+  const FieldLabel = ({ children }) => (
+    <label
+      className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
+      style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+    >
+      {children}
+    </label>
+  );
 
-      <div className="relative z-10 max-w-lg mx-auto">
-        <div className="text-center mb-10 animate-slide-up">
-          <h1 className="text-4xl font-bold gradient-text glow-text mb-3">Create Account</h1>
-          <p className="text-white/60">Join EventStaff Nepal today</p>
+  const FieldError = ({ msg }) =>
+    msg ? (
+      <p className="text-xs mt-1.5" style={{ color: 'var(--crimson)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+        {msg}
+      </p>
+    ) : null;
+
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-16 relative"
+      style={{ background: 'var(--bg)' }}
+    >
+      <div
+        className="absolute bottom-0 left-0 w-96 h-96 pointer-events-none"
+        style={{ background: 'radial-gradient(circle at bottom left, rgba(232,104,30,0.05) 0%, transparent 65%)' }}
+      />
+
+      <div className="relative z-10 w-full max-w-lg">
+
+        {/* Logo */}
+        <div className="text-center mb-12 animate-fade-in">
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
+            <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
+            <span className="font-serif text-2xl" style={{ color: 'var(--text)', fontWeight: 400 }}>
+              EventStaff <span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>Nepal</span>
+            </span>
+          </Link>
+          <h1
+            className="font-serif block"
+            style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: 'var(--text)', fontWeight: 300, lineHeight: 1.1 }}
+          >
+            Create <span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>Account</span>
+          </h1>
+          <p className="mt-3 text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            Join EventStaff Nepal today
+          </p>
         </div>
 
-        <div className="glass-card p-8 animate-scale-in">
-          {/* Role Toggle */}
-          <div className="flex mb-8 bg-white/5 rounded-xl p-1">
-            <button
-              type="button"
-              onClick={() => setRole('organizer')}
-              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                role === 'organizer'
-                  ? 'bg-white/15 text-white shadow-lg'
-                  : 'text-white/50 hover:text-white/70'
-              }`}
-            >
-              Event Organizer
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('worker')}
-              className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                role === 'worker'
-                  ? 'bg-white/15 text-white shadow-lg'
-                  : 'text-white/50 hover:text-white/70'
-              }`}
-            >
-              Hospitality Worker
-            </button>
+        {/* Card */}
+        <div className="panel p-8 animate-slide-up">
+
+          {/* Role toggle */}
+          <div
+            className="flex rounded-md p-1 mb-8"
+            style={{ background: 'rgba(6,9,18,0.6)', border: '1px solid var(--border)' }}
+          >
+            {['organizer', 'worker'].map(r => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setRole(r)}
+                className="flex-1 py-2.5 rounded text-xs font-semibold uppercase tracking-widest transition-all duration-200"
+                style={{
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  background: role === r ? 'var(--surface-raised)' : 'transparent',
+                  color: role === r ? 'var(--text)' : 'var(--text-muted)',
+                  border: role === r ? '1px solid var(--border)' : '1px solid transparent',
+                  borderRadius: '0.25rem',
+                }}
+              >
+                {r === 'organizer' ? 'Event Organiser' : 'Hospitality Worker'}
+              </button>
+            ))}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40"
-                placeholder="Your full name"
-              />
-              {errors.name && <p className="text-red-300 text-sm mt-2">{errors.name}</p>}
+              <FieldLabel>Full Name</FieldLabel>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} className="input-field" placeholder="Your full name" />
+              <FieldError msg={errors.name} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40"
-                placeholder="you@example.com"
-              />
-              {errors.email && <p className="text-red-300 text-sm mt-2">{errors.email}</p>}
+              <FieldLabel>Email Address</FieldLabel>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="you@example.com" />
+              <FieldError msg={errors.email} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40"
-                placeholder="Min. 6 characters"
-              />
-              {errors.password && <p className="text-red-300 text-sm mt-2">{errors.password}</p>}
+              <FieldLabel>Password</FieldLabel>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} className="input-field" placeholder="Min. 6 characters" />
+              <FieldError msg={errors.password} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40"
-                placeholder="Re-enter password"
-              />
-              {errors.confirmPassword && <p className="text-red-300 text-sm mt-2">{errors.confirmPassword}</p>}
+              <FieldLabel>Confirm Password</FieldLabel>
+              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" placeholder="Re-enter password" />
+              <FieldError msg={errors.confirmPassword} />
             </div>
 
-            {/* Worker-specific fields */}
             {role === 'worker' && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-3">Skills</label>
+                  <FieldLabel>Skills</FieldLabel>
                   <div className="flex flex-wrap gap-2">
-                    {SKILLS.map(skill => (
-                      <button
-                        key={skill}
-                        type="button"
-                        onClick={() => handleSkillToggle(skill)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                          formData.skills.includes(skill)
-                            ? 'bg-primary-500/30 text-primary-200 border border-primary-400/40'
-                            : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
-                        }`}
-                      >
-                        {skill}
-                      </button>
-                    ))}
+                    {SKILLS.map(skill => {
+                      const active = formData.skills.includes(skill);
+                      return (
+                        <button
+                          key={skill}
+                          type="button"
+                          onClick={() => handleSkillToggle(skill)}
+                          className="px-4 py-2 rounded text-xs font-semibold uppercase tracking-widest transition-all duration-200"
+                          style={{
+                            fontFamily: 'Plus Jakarta Sans, sans-serif',
+                            background: active ? 'rgba(232, 104, 30, 0.15)' : 'transparent',
+                            border: `1px solid ${active ? 'rgba(232, 104, 30, 0.4)' : 'var(--border)'}`,
+                            color: active ? 'var(--flame-light)' : 'var(--text-muted)',
+                          }}
+                          onMouseEnter={e => {
+                            if (!active) {
+                              e.currentTarget.style.borderColor = 'rgba(232,104,30,0.3)';
+                              e.currentTarget.style.color = 'var(--text)';
+                            }
+                          }}
+                          onMouseLeave={e => {
+                            if (!active) {
+                              e.currentTarget.style.borderColor = 'var(--border)';
+                              e.currentTarget.style.color = 'var(--text-muted)';
+                            }
+                          }}
+                        >
+                          {skill}
+                        </button>
+                      );
+                    })}
                   </div>
-                  {errors.skills && <p className="text-red-300 text-sm mt-2">{errors.skills}</p>}
+                  <FieldError msg={errors.skills} />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Experience Level</label>
+                  <FieldLabel>Experience Level</FieldLabel>
                   <select
                     name="experience"
                     value={formData.experience}
                     onChange={handleChange}
-                    className="w-full px-4 py-4 rounded-xl glass-input text-white"
+                    className="input-field"
+                    style={{ colorScheme: 'dark' }}
                   >
-                    {EXPERIENCE_LEVELS.map(level => (
-                      <option key={level} value={level} className="bg-gray-800">{level}</option>
+                    {EXPERIENCE_LEVELS.map(lv => (
+                      <option key={lv} value={lv} style={{ background: 'var(--surface)' }}>{lv}</option>
                     ))}
                   </select>
                 </div>
               </>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center mt-6"
-            >
+            <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 mt-2">
               {loading ? <LoadingSpinner size="sm" /> : 'Create Account'}
             </button>
           </form>
 
-          <p className="text-center mt-8 text-white/60">
+          <p
+            className="text-center text-sm mt-7"
+            style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+          >
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-300 font-medium hover:text-primary-200 transition-colors">
+            <Link
+              to="/login"
+              className="font-semibold transition-colors duration-150"
+              style={{ color: 'var(--flame)' }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--flame-light)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--flame)'}
+            >
               Sign in
             </Link>
           </p>
