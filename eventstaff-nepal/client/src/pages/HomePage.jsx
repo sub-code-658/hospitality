@@ -33,8 +33,14 @@ export default function HomePage() {
   const { user } = useAuth();
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
+  let cancelled = false;
 
-  useEffect(() => { fetchFeaturedEvents(); }, []);
+  useEffect(() => {
+    cancelled = false;
+    fetchFeaturedEvents();
+    return () => { cancelled = true; };
+  }, []);
 
   const getEventDateTime = (event, field) => {
     const d = new Date(event.eventDate);
@@ -54,11 +60,16 @@ export default function HomePage() {
 
   const fetchFeaturedEvents = async () => {
     setEventsLoading(true);
+    setFetchError(false);
     try {
       const res = await api.get('/events?status=active');
+      if (cancelled) return;
       setFeaturedEvents(res.data.slice(0, 6));
-    } catch {}
-    finally { setEventsLoading(false); }
+    } catch {
+      if (cancelled) return;
+      setFetchError(true);
+    }
+    finally { if (!cancelled) setEventsLoading(false); }
   };
 
   const ongoing = featuredEvents.filter(e => getEventState(e) === 'Ongoing');
@@ -117,15 +128,22 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <Link
-                to={user?.role === 'organizer' ? '/dashboard' : user?.role === 'worker' ? '/worker-dashboard' : '/register'}
-                className="btn-primary px-8 py-3.5"
-              >
-                {user?.role === 'organizer' ? 'My Dashboard' : user?.role === 'worker' ? 'Find Work' : 'Get Started'}
-              </Link>
-              <Link to="/events" className="btn-secondary px-8 py-3.5">
-                Browse Events
-              </Link>
+              {!user ? (
+                <>
+                  <Link to="/register" className="btn-primary px-8 py-3.5">Get Started</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse Events</Link>
+                </>
+              ) : user.role === 'organizer' ? (
+                <>
+                  <Link to="/dashboard" className="btn-primary px-8 py-3.5">My Events</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse All</Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/worker-dashboard" className="btn-primary px-8 py-3.5">Find Work</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse Events</Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -167,7 +185,7 @@ export default function HomePage() {
       {/* ── STATS ───────────────────────────────────── */}
       <section className="py-0">
         <div
-          className="max-w-7xl mx-auto mx-4 sm:mx-6 lg:mx-8"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           style={{
             borderTop: '1px solid var(--border)',
             borderBottom: '1px solid var(--border)',
@@ -215,6 +233,16 @@ export default function HomePage() {
 
           {eventsLoading ? (
             <div className="flex justify-center py-16"><LoadingSpinner /></div>
+          ) : fetchError ? (
+            <div className="card p-8 text-center">
+              <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>Failed to load events</p>
+              <button
+                onClick={fetchFeaturedEvents}
+                className="btn-secondary px-6 py-2.5 text-xs"
+              >
+                Try again
+              </button>
+            </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
               {/* Ongoing */}
@@ -233,17 +261,10 @@ export default function HomePage() {
                       <Link
                         key={event._id}
                         to={`/events/${event._id}`}
-                        className="group flex flex-col gap-1.5 p-4 rounded-md transition-all duration-200"
-                        style={{
-                          background: 'rgba(232, 104, 30, 0.04)',
-                          border: '1px solid rgba(232, 104, 30, 0.1)',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.08)'; e.currentTarget.style.borderColor = 'rgba(232,104,30,0.2)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.04)'; e.currentTarget.style.borderColor = 'rgba(232,104,30,0.1)'; }}
+                        className="event-card event-card--live"
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>{event.title}</span>
+                          <span className="font-serif text-lg truncate" style={{ color: 'var(--text)', fontWeight: 400 }}>{event.title}</span>
                           <span className="tag" style={{ flexShrink: 0 }}>Live</span>
                         </div>
                         <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{event.location}</span>
@@ -277,17 +298,10 @@ export default function HomePage() {
                       <Link
                         key={event._id}
                         to={`/events/${event._id}`}
-                        className="group flex flex-col gap-1.5 p-4 rounded-md transition-all duration-200"
-                        style={{
-                          background: 'rgba(201, 168, 76, 0.04)',
-                          border: '1px solid rgba(201, 168, 76, 0.1)',
-                          textDecoration: 'none',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201, 168, 76, 0.04)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.1)'; }}
+                        className="event-card event-card--upcoming"
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>{event.title}</span>
+                          <span className="font-serif text-lg truncate" style={{ color: 'var(--text)', fontWeight: 400 }}>{event.title}</span>
                           <span
                             className="tag flex-shrink-0"
                             style={{ background: 'rgba(201,168,76,0.1)', borderColor: 'rgba(201,168,76,0.2)', color: 'var(--gold-light)' }}
@@ -317,7 +331,7 @@ export default function HomePage() {
           <div className="text-center mb-20">
             <p className="label mb-5">Why EventStaff Nepal</p>
             <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text)', fontWeight: 400 }}>
-              The Difference
+              The Advantage
             </h2>
           </div>
 
@@ -364,12 +378,16 @@ export default function HomePage() {
             Nepal's most trusted event staffing platform — connecting organisers with exceptional hospitality talent.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/register" className="btn-primary px-10 py-3.5">
-              Create Account
-            </Link>
-            <Link to="/login" className="btn-secondary px-10 py-3.5">
-              Sign In
-            </Link>
+            {!user ? (
+              <>
+                <Link to="/register" className="btn-primary px-10 py-3.5">Create Account</Link>
+                <Link to="/login" className="btn-secondary px-10 py-3.5">Sign In</Link>
+              </>
+            ) : (
+              <Link to={user.role === 'organizer' ? '/dashboard' : '/worker-dashboard'} className="btn-secondary px-10 py-3.5">
+                {user.role === 'organizer' ? 'View My Events' : 'Find Work'}
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -386,6 +404,20 @@ export default function HomePage() {
               EventStaff <span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>Nepal</span>
             </span>
           </div>
+          <nav className="flex items-center gap-6">
+            {[['About', '#'], ['Events', '/events']].map(([label, to]) => (
+              <Link
+                key={label}
+                to={to}
+                className="text-xs transition-colors duration-200"
+                style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
           <p className="text-xs" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             © 2026 EventStaff Nepal. Crafted with care in Kathmandu.
           </p>

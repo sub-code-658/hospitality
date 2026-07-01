@@ -93,7 +93,7 @@ eventstaff-nepal/
    npm run dev
    ```
 
-   This will start both the server (on port 5000) and client (on port 5173).
+   This will start both the server (on port 5001) and client (on port 5173).
 
 7. **Access the application**
    Open your browser to: http://localhost:5173
@@ -151,12 +151,23 @@ After running `node seed.js`, you can use these accounts:
 
 ## Environment Variables
 
-Server-side (.env):
+Server-side (server/.env):
 ```
-PORT=5000
+PORT=5001
+NODE_ENV=development
 MONGO_URI=mongodb://localhost:27017/eventstaff
-JWT_SECRET=eventstaff_secret_key_2025
+JWT_SECRET=your_secret_key
+JWT_EXPIRE=7d
+CLIENT_URL=http://localhost:5173
 ```
+
+Client-side (client/.env):
+```
+VITE_API_URL=http://localhost:5001/api
+VITE_SOCKET_URL=http://localhost:5001
+```
+
+For production, set `NODE_ENV=production` and replace localhost URLs with your deployed domain.
 
 ## License
 

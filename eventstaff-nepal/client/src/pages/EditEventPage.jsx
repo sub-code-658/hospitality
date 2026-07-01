@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -28,11 +28,13 @@ function LocationPicker({ position, setPosition }) {
   return position ? <Marker position={position} icon={defaultIcon} /> : null;
 }
 
-export default function PostEventPage() {
+export default function EditEventPage() {
+  const { id } = useParams();
   const { user } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [roles, setRoles] = useState([{ roleName: '', count: 1, payPerHour: '' }]);
   const [formData, setFormData] = useState({
     title: '',
@@ -46,7 +48,49 @@ export default function PostEventPage() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-  }, []);
+    if (user && user.role !== 'organizer' && user.role !== 'admin') {
+      navigate('/');
+      return;
+    }
+    fetchEvent();
+  }, [user, id]);
+
+  const fetchEvent = async () => {
+    try {
+      const res = await api.get(`/events/${id}`);
+      const event = res.data;
+
+      const rawDate = event.eventDate
+        ? new Date(event.eventDate).toISOString().split('T')[0]
+        : '';
+
+      setFormData({
+        title: event.title || '',
+        description: event.description || '',
+        location: event.location || '',
+        eventDate: rawDate,
+        startTime: event.startTime || '',
+        endTime: event.endTime || ''
+      });
+
+      if (event.rolesNeeded && event.rolesNeeded.length > 0) {
+        setRoles(event.rolesNeeded.map(r => ({
+          roleName: r.roleName || '',
+          count: r.count ?? 1,
+          payPerHour: r.payPerHour ?? ''
+        })));
+      }
+
+      if (event.coordinates && event.coordinates.lat && event.coordinates.lng) {
+        setMapPosition([event.coordinates.lat, event.coordinates.lng]);
+      }
+    } catch (error) {
+      addToast('Failed to load event details', 'error');
+      navigate('/dashboard');
+    } finally {
+      setFetching(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,23 +149,31 @@ export default function PostEventPage() {
 
     setLoading(true);
     try {
-      await api.post('/events', {
+      await api.put(`/events/${id}`, {
         ...formData,
         rolesNeeded: roles,
         coordinates: { lat: mapPosition[0], lng: mapPosition[1] }
       });
-      addToast('Event posted successfully!', 'success');
+      addToast('Event updated successfully!', 'success');
       navigate('/dashboard');
     } catch (error) {
-      addToast(error.response?.data?.message || 'Failed to post event', 'error');
+      addToast(error.response?.data?.message || 'Failed to update event', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  if (fetching) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="spinner" />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">Post New Event</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">Edit Event</h1>
 
       <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6 animate-scale-in">
         <div>
@@ -171,7 +223,6 @@ export default function PostEventPage() {
               name="eventDate"
               value={formData.eventDate}
               onChange={handleChange}
-              min={new Date().toISOString().split('T')[0]}
               className={`w-full px-4 py-4 rounded-xl glass-input text-white ${errors.eventDate ? 'border-red-400' : ''}`}
             />
             {errors.eventDate && <p className="text-red-300 text-sm mt-2">{errors.eventDate}</p>}
@@ -207,7 +258,7 @@ export default function PostEventPage() {
           <label className="block text-sm font-medium text-white/80 mb-2">Pin Location on Map</label>
           <div className="h-64 rounded-xl overflow-hidden">
             <MapContainer
-              center={[27.7172, 85.3142]}
+              center={mapPosition}
               zoom={13}
               style={{ height: '100%', width: '100%' }}
             >
@@ -218,7 +269,7 @@ export default function PostEventPage() {
               <LocationPicker position={mapPosition} setPosition={(pos) => setMapPosition([pos.lat, pos.lng])} />
             </MapContainer>
           </div>
-          <p className="text-sm text-white/40 mt-2">Click on the map to set the event location</p>
+          <p className="text-sm text-white/40 mt-2">Click on the map to update the event location</p>
         </div>
 
         {/* Roles Section */}
@@ -282,13 +333,22 @@ export default function PostEventPage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center"
-        >
-          {loading ? <LoadingSpinner size="sm" /> : 'Post Event'}
-        </button>
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            className="flex-1 btn-secondary py-4 rounded-xl font-semibold"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center"
+          >
+            {loading ? <LoadingSpinner size="sm" /> : 'Save Changes'}
+          </button>
+        </div>
       </form>
     </div>
   );

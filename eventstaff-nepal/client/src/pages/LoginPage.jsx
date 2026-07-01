@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
     setLoading(false);
     if (result.success) {
       addToast('Welcome back!', 'success');
-      navigate('/dashboard');
+      navigate(user.role === 'organizer' || user.role === 'admin' ? '/dashboard' : '/worker-dashboard');
     } else {
       addToast(result.message, 'error');
     }
@@ -59,17 +59,17 @@ export default function LoginPage() {
         <div className="text-center mb-12 animate-fade-in">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
             <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-            <span className="font-serif text-2xl" style={{ color: 'var(--text)', fontWeight: 400 }}>
+            <span className="font-serif text-2xl" style={{ color: '#111827', fontWeight: 400 }}>
               EventStaff <span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>Nepal</span>
             </span>
           </Link>
           <h1
             className="font-serif block"
-            style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: 'var(--text)', fontWeight: 300, lineHeight: 1.1 }}
+            style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: '#111827', fontWeight: 300, lineHeight: 1.1 }}
           >
             Welcome <span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>Back</span>
           </h1>
-          <p className="mt-3 text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <p className="mt-3 text-sm" style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Sign in to your account
           </p>
         </div>
@@ -87,16 +87,22 @@ export default function LoginPage() {
                 key={tab}
                 type="button"
                 onClick={() => { setActiveTab(tab); setErrors({}); }}
-                className="flex-1 py-2.5 rounded text-xs font-semibold uppercase tracking-widest transition-all duration-200"
+                className="flex-1 py-2.5 rounded text-xs font-semibold uppercase tracking-widest transition-all duration-200 relative"
                 style={{
                   fontFamily: 'Plus Jakarta Sans, sans-serif',
                   background: activeTab === tab ? 'var(--surface-raised)' : 'transparent',
-                  color: activeTab === tab ? 'var(--text)' : 'var(--text-muted)',
+                  color: activeTab === tab ? '#111827' : '#6b7280',
                   border: activeTab === tab ? '1px solid var(--border)' : '1px solid transparent',
                   borderRadius: '0.25rem',
                 }}
               >
                 {tab === 'organizer' ? 'Event Organiser' : 'Hospitality Worker'}
+                {activeTab === tab && (
+                  <span
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full"
+                    style={{ background: 'var(--flame)' }}
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -105,7 +111,7 @@ export default function LoginPage() {
             <div>
               <label
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
-                style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 Email Address
               </label>
@@ -126,7 +132,7 @@ export default function LoginPage() {
             <div>
               <label
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
-                style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 Password
               </label>
@@ -153,7 +159,7 @@ export default function LoginPage() {
           <div className="mt-8 pt-7" style={{ borderTop: '1px solid var(--border)' }}>
             <p
               className="text-center text-xs uppercase tracking-widest mb-4"
-              style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+              style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
             >
               Quick fill — test credentials
             </p>
@@ -168,10 +174,10 @@ export default function LoginPage() {
                     fontFamily: 'Plus Jakarta Sans, sans-serif',
                     background: 'transparent',
                     border: '1px solid var(--border)',
-                    color: 'var(--text-muted)',
+                    color: '#6b7280',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(232,104,30,0.35)'; e.currentTarget.style.color = 'var(--text)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(232,104,30,0.35)'; e.currentTarget.style.color = '#111827'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = '#6b7280'; }}
                 >
                   {type === 'organizer' ? 'Organiser' : 'Worker'}
                 </button>
@@ -181,7 +187,7 @@ export default function LoginPage() {
 
           <p
             className="text-center text-sm mt-7"
-            style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
           >
             No account?{' '}
             <Link

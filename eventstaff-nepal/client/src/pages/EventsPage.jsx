@@ -58,7 +58,7 @@ export default function EventsPage() {
   const FilterLabel = ({ children }) => (
     <label
       className="block text-xs font-semibold uppercase tracking-widest mb-2"
-      style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+      style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
     >
       {children}
     </label>
@@ -112,6 +112,7 @@ export default function EventsPage() {
                   onChange={e => handleFilterChange('search', e.target.value)}
                   placeholder="Event name, location..."
                   className="input-field pr-10 text-sm"
+                  style={{ color: '#111827' }}
                 />
                 <button
                   type="submit"
@@ -134,7 +135,7 @@ export default function EventsPage() {
                   value={filters.role}
                   onChange={e => handleFilterChange('role', e.target.value)}
                   className="input-field text-sm"
-                  style={{ colorScheme: 'dark' }}
+                  style={{ color: '#111827', colorScheme: 'dark' }}
                 >
                   <option value="">All Roles</option>
                   {ROLES.map(r => (

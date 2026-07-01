@@ -53,7 +53,11 @@ export default function Navbar() {
     } catch {}
   };
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = () => {
+    if (socket) socket.disconnect();
+    logout();
+    navigate('/');
+  };
 
   const NavLink = ({ to, children, className = '' }) => (
     <Link

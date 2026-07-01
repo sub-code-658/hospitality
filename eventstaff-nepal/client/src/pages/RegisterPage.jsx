@@ -14,7 +14,7 @@ export default function RegisterPage() {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { user, register } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ export default function RegisterPage() {
     setLoading(false);
     if (result.success) {
       addToast('Registration successful!', 'success');
-      navigate('/dashboard');
+      navigate(user.role === 'organizer' || user.role === 'admin' ? '/dashboard' : '/worker-dashboard');
     } else {
       addToast(result.message, 'error');
     }
@@ -67,7 +67,7 @@ export default function RegisterPage() {
   const FieldLabel = ({ children }) => (
     <label
       className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
-      style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+      style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
     >
       {children}
     </label>
@@ -96,17 +96,17 @@ export default function RegisterPage() {
         <div className="text-center mb-12 animate-fade-in">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
             <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-            <span className="font-serif text-2xl" style={{ color: 'var(--text)', fontWeight: 400 }}>
+            <span className="font-serif text-2xl" style={{ color: '#111827', fontWeight: 400 }}>
               EventStaff <span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>Nepal</span>
             </span>
           </Link>
           <h1
             className="font-serif block"
-            style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: 'var(--text)', fontWeight: 300, lineHeight: 1.1 }}
+            style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: '#111827', fontWeight: 300, lineHeight: 1.1 }}
           >
             Create <span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>Account</span>
           </h1>
-          <p className="mt-3 text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <p className="mt-3 text-sm" style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
             Join EventStaff Nepal today
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function RegisterPage() {
                 style={{
                   fontFamily: 'Plus Jakarta Sans, sans-serif',
                   background: role === r ? 'var(--surface-raised)' : 'transparent',
-                  color: role === r ? 'var(--text)' : 'var(--text-muted)',
+                  color: role === r ? '#111827' : '#6b7280',
                   border: role === r ? '1px solid var(--border)' : '1px solid transparent',
                   borderRadius: '0.25rem',
                 }}
@@ -180,18 +180,18 @@ export default function RegisterPage() {
                             fontFamily: 'Plus Jakarta Sans, sans-serif',
                             background: active ? 'rgba(232, 104, 30, 0.15)' : 'transparent',
                             border: `1px solid ${active ? 'rgba(232, 104, 30, 0.4)' : 'var(--border)'}`,
-                            color: active ? 'var(--flame-light)' : 'var(--text-muted)',
+                            color: active ? 'var(--flame-light)' : '#6b7280',
                           }}
                           onMouseEnter={e => {
                             if (!active) {
                               e.currentTarget.style.borderColor = 'rgba(232,104,30,0.3)';
-                              e.currentTarget.style.color = 'var(--text)';
+                              e.currentTarget.style.color = '#111827';
                             }
                           }}
                           onMouseLeave={e => {
                             if (!active) {
                               e.currentTarget.style.borderColor = 'var(--border)';
-                              e.currentTarget.style.color = 'var(--text-muted)';
+                              e.currentTarget.style.color = '#6b7280';
                             }
                           }}
                         >
@@ -227,7 +227,7 @@ export default function RegisterPage() {
 
           <p
             className="text-center text-sm mt-7"
-            style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+            style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
           >
             Already have an account?{' '}
             <Link

@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import { useToast } from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function MessagesPage() {
   const { user } = useAuth();
+  const { socket, onlineUsers } = useSocket();
   const { addToast } = useToast();
   const [conversations, setConversations] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -14,63 +15,36 @@ export default function MessagesPage() {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const messagesEndRef = useRef(null);
-  const socketRef = useRef(null);
 
   useEffect(() => {
     fetchConversations();
-    setupSocket();
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
-    };
   }, []);
 
   useEffect(() => {
-    if (selectedUser) {
-      fetchMessages(selectedUser._id);
-    }
-  }, [selectedUser]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const setupSocket = () => {
-    const token = localStorage.getItem('token');
-    socketRef.current = io('http://localhost:5001', {
-      auth: { token }
-    });
-
-    socketRef.current.on('connect', () => {
-      socketRef.current.emit('join', user.id);
-    });
-
-    socketRef.current.on('newMessage', (message) => {
-      if (message.sender === selectedUser?.id || message.sender === user.id) {
-        setMessages(prev => [...prev, message]);
-      }
-      fetchConversations();
-    });
-
-    socketRef.current.on('onlineStatus', ({ userId, online }) => {
-      setOnlineUsers(prev => {
-        if (online && !prev.includes(userId)) {
-          return [...prev, userId];
-        } else if (!online) {
-          return prev.filter(id => id !== userId);
+    if (socket) {
+      socket.on('newMessage', (message) => {
+        if (message.sender === selectedUser?.id || message.sender === user.id) {
+          setMessages(prev => [...prev, message]);
         }
-        return prev;
+        fetchConversations();
       });
-    });
 
-    socketRef.current.on('onlineUsers', (users) => {
-      setOnlineUsers(users);
-    });
-  };
+      socket.on('onlineStatus', ({ userId, online }) => {
+        // handled by SocketContext onlineUsers
+      });
+
+      socket.on('onlineUsers', (users) => {
+        // handled by SocketContext onlineUsers
+      });
+
+      return () => {
+        socket.off('newMessage');
+        socket.off('onlineStatus');
+        socket.off('onlineUsers');
+      };
+    }
+  }, [socket, selectedUser, user.id]);
 
   const fetchConversations = async () => {
     try {
@@ -82,6 +56,16 @@ export default function MessagesPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (selectedUser) {
+      fetchMessages(selectedUser._id);
+    }
+  }, [selectedUser]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const fetchMessages = async (userId) => {
     try {
@@ -98,11 +82,13 @@ export default function MessagesPage() {
 
     setSending(true);
     try {
-      socketRef.current.emit('sendMessage', {
-        senderId: user.id,
-        receiverId: selectedUser._id,
-        content: newMessage.trim()
-      });
+      if (socket) {
+        socket.emit('sendMessage', {
+          senderId: user.id,
+          receiverId: selectedUser._id,
+          content: newMessage.trim()
+        });
+      }
 
       setNewMessage('');
     } catch (error) {

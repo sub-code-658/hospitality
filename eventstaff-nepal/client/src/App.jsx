@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
+import { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import OrganizerDashboard from './pages/OrganizerDashboard';
 import WorkerDashboard from './pages/WorkerDashboard';
 import PostEventPage from './pages/PostEventPage';
+import EditEventPage from './pages/EditEventPage';
 import EventDetailPage from './pages/EventDetailPage';
 import EventsPage from './pages/EventsPage';
 import MessagesPage from './pages/MessagesPage';
@@ -16,6 +17,10 @@ import WorkerProfilePage from './pages/WorkerProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LeaveReviewPage from './pages/LeaveReviewPage';
+import LoadingSpinner from './components/LoadingSpinner';
+
+const OrganizerDashboard = lazy(() => import('./pages/OrganizerDashboard'));
 
 function App() {
   const { user, loading } = useAuth();
@@ -41,13 +46,15 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailPage />} />
             <Route path="/workers/:id" element={<WorkerProfilePage />} />
-            <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['organizer', 'admin']}><OrganizerDashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>}><ProtectedRoute allowedRoles={['organizer', 'admin']}><OrganizerDashboard /></ProtectedRoute></Suspense>} />
             <Route path="/worker-dashboard" element={<ProtectedRoute allowedRoles={['worker']}><WorkerDashboard /></ProtectedRoute>} />
             <Route path="/post-event" element={<ProtectedRoute allowedRoles={['organizer', 'admin']}><PostEventPage /></ProtectedRoute>} />
+            <Route path="/events/:id/edit" element={<ProtectedRoute allowedRoles={['organizer', 'admin']}><EditEventPage /></ProtectedRoute>} />
             <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminPage /></ProtectedRoute>} />
+            <Route path="/reviews/leave" element={<ProtectedRoute><LeaveReviewPage /></ProtectedRoute>} />
+            <Route path="/admin" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>}><ProtectedRoute allowedRoles={['admin']}><AdminPage /></ProtectedRoute></Suspense>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

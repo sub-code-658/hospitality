@@ -7,6 +7,7 @@ const { registerValidator, loginValidator } = require('../utils/validators');
 // Public routes
 router.post('/register', registerValidator, authController.register);
 router.post('/login', loginValidator, authController.login);
+router.get('/workers', authController.getWorkers);
 
 // Protected routes
 router.get('/me', auth, authController.getMe);

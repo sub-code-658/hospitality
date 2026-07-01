@@ -18,12 +18,8 @@ export default function WorkerDashboard() {
   const [roleFilter, setRoleFilter] = useState('');
 
   useEffect(() => {
-    if (user?.role !== 'worker') {
-      navigate('/');
-    } else {
-      fetchData();
-    }
-  }, [user, navigate]);
+    fetchData();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -176,7 +172,19 @@ export default function WorkerDashboard() {
               ) : (
                 <div className="space-y-3">
                   {myApplications.slice(0, 10).map(app => (
-                    <ApplicationCard key={app._id} application={app} />
+                    <div key={app._id}>
+                      <ApplicationCard application={app} />
+                      {app.status === 'accepted' && (
+                        <div className="px-1 pb-1 -mt-2">
+                          <Link
+                            to={`/reviews/leave?revieweeId=${app.event?.organizer?._id}&eventId=${app.event?._id}&revieweeName=${encodeURIComponent(app.event?.organizer?.name || 'Organizer')}`}
+                            style={{ color: 'var(--gold)', fontSize: '0.8rem' }}
+                          >
+                            Leave Review
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               )}

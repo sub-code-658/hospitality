@@ -9,17 +9,22 @@ require('dotenv').config({ path: __dirname + '/.env' });
 const app = express();
 const server = http.createServer(app);
 
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const DEV_ORIGINS = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'];
+const CORS_ORIGINS = [...DEV_ORIGINS];
+if (CLIENT_URL && !CORS_ORIGINS.includes(CLIENT_URL)) CORS_ORIGINS.push(CLIENT_URL);
+
 // Socket.IO setup
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
+    origin: CORS_ORIGINS,
     methods: ['GET', 'POST']
   }
 });
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
+  origin: CORS_ORIGINS,
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));

@@ -37,3 +37,4 @@ data/
 # Keep .env.example
 .env.example
 .claude/
+
