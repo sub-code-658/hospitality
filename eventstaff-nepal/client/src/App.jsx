@@ -19,6 +19,7 @@ import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 import LeaveReviewPage from './pages/LeaveReviewPage';
 import LoadingSpinner from './components/LoadingSpinner';
+import PaymentCallbackPage from './pages/PaymentCallbackPage';
 
 const OrganizerDashboard = lazy(() => import('./pages/OrganizerDashboard'));
 
@@ -54,6 +55,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
             <Route path="/reviews/leave" element={<ProtectedRoute><LeaveReviewPage /></ProtectedRoute>} />
+            <Route path="/payments/callback" element={<ProtectedRoute><PaymentCallbackPage /></ProtectedRoute>} />
             <Route path="/admin" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>}><ProtectedRoute allowedRoles={['admin']}><AdminPage /></ProtectedRoute></Suspense>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

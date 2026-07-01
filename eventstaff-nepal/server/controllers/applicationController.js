@@ -1,7 +1,9 @@
 const Application = require('../models/Application');
 const Event = require('../models/Event');
 const Message = require('../models/Message');
+const User = require('../models/User');
 const checkScheduleConflict = require('../utils/scheduleConflict');
+const { sendEmailNotification, sendSMSNotification } = require('../utils/notificationService');
 
 // Apply to an event (worker only)
 exports.applyToEvent = async (req, res, next) => {
@@ -13,7 +15,7 @@ exports.applyToEvent = async (req, res, next) => {
     const { eventId, message, roleAppliedFor } = req.body;
 
     // Check if event exists
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(eventId).populate('organizer', 'name email phone');
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
@@ -61,6 +63,23 @@ exports.applyToEvent = async (req, res, next) => {
     const populatedApplication = await Application.findById(application._id)
       .populate('event', 'title eventDate startTime endTime location')
       .populate('worker', 'name email skills experience rating');
+
+    // Trigger email notification to organizer
+    if (event.organizer && event.organizer.email) {
+      const emailSubject = `New Application for ${event.title}`;
+      const emailHtml = `
+        <h3>New Worker Application</h3>
+        <p>Dear ${event.organizer.name || 'Organizer'},</p>
+        <p>A worker has applied for your event <strong>${event.title}</strong>.</p>
+        <ul>
+          <li><strong>Worker:</strong> ${populatedApplication.worker.name || 'Anonymous'}</li>
+          <li><strong>Applied Role:</strong> ${roleAppliedFor || 'General Staff'}</li>
+          <li><strong>Rating:</strong> ${populatedApplication.worker.rating} / 5</li>
+        </ul>
+        <p>Log in to your dashboard to review and manage applications.</p>
+      `;
+      sendEmailNotification(event.organizer.email, emailSubject, emailHtml).catch(console.error);
+    }
 
     res.status(201).json(populatedApplication);
   } catch (error) {
@@ -117,7 +136,7 @@ exports.updateApplicationStatus = async (req, res, next) => {
 
     const application = await Application.findById(req.params.id)
       .populate('event')
-      .populate('worker', 'name');
+      .populate('worker', 'name email phone');
 
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
@@ -131,7 +150,7 @@ exports.updateApplicationStatus = async (req, res, next) => {
     application.status = status;
     await application.save();
 
-    // If accepting, send notification message
+    // If accepting, update positions and notify
     if (status === 'accepted') {
       // Update event's filled positions
       const acceptedCount = await Application.countDocuments({
@@ -161,6 +180,28 @@ exports.updateApplicationStatus = async (req, res, next) => {
           content: messageContent,
           sentAt: systemMessage.sentAt
         });
+      }
+    }
+
+    // Trigger offline notifications (Email/SMS) to the worker
+    if (application.worker && application.worker.email) {
+      const isAccepted = status === 'accepted';
+      const emailSubject = isAccepted 
+        ? `Application Accepted - ${application.event.title}`
+        : `Application Update - ${application.event.title}`;
+      
+      const emailHtml = isAccepted
+        ? `<h3>Congratulations!</h3><p>Your application for <strong>${application.event.title}</strong> has been accepted.</p><p>Please log in to check your shift notes and schedule.</p>`
+        : `<h3>Application Update</h3><p>Thank you for applying to <strong>${application.event.title}</strong>.</p><p>Unfortunately, your application was not accepted at this time. Keep looking for shifts on EventStaff Nepal!</p>`;
+
+      const smsText = isAccepted
+        ? `Congratulations! Your application for "${application.event.title}" has been accepted. Check your dashboard for details.`
+        : `Update: Your application for "${application.event.title}" was not accepted. Keep looking for other shifts!`;
+
+      // Dispatch async
+      sendEmailNotification(application.worker.email, emailSubject, emailHtml).catch(console.error);
+      if (application.worker.phone) {
+        sendSMSNotification(application.worker.phone, smsText).catch(console.error);
       }
     }
 

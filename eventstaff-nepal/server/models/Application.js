@@ -51,6 +51,10 @@ const applicationSchema = new mongoose.Schema({
   assignedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  isPaid: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

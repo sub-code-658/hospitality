@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useTranslation } from 'react-i18next';
 
 const STATS = [
   { value: '500+', label: 'Active Workers' },
@@ -31,6 +32,7 @@ const FEATURES = [
 
 export default function HomePage() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [featuredEvents, setFeaturedEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
@@ -113,35 +115,35 @@ export default function HomePage() {
 
             <h1
               className="font-serif leading-none mb-8"
-              style={{ fontSize: 'clamp(3.5rem, 9vw, 7.5rem)' }}
+              style={{ fontSize: 'clamp(3.5rem, 9vw, 6.5rem)' }}
             >
-              <span style={{ color: 'var(--text)', fontWeight: 300 }}>Where Events</span>
+              <span style={{ color: 'var(--text)', fontWeight: 300 }}>{t('home.title').split(' ')[0]} {t('home.title').split(' ')[1] || ''}</span>
               <br />
-              <span className="flame-text" style={{ fontWeight: 700, fontStyle: 'italic' }}>Come Alive.</span>
+              <span className="flame-text" style={{ fontWeight: 700, fontStyle: 'italic' }}>{t('home.title').split(' ').slice(2).join(' ')}</span>
             </h1>
 
             <p
               className="text-lg max-w-xl leading-relaxed mb-12 animate-slide-up"
               style={{ color: 'var(--text-muted)', animationDelay: '0.1s' }}
             >
-              Connect exceptional hospitality professionals with Nepal's most memorable events — from the Kathmandu valley to Pokhara lakeside.
+              {t('home.subtitle')}
             </p>
 
             <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               {!user ? (
                 <>
-                  <Link to="/register" className="btn-primary px-8 py-3.5">Get Started</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse Events</Link>
+                  <Link to="/register" className="btn-primary px-8 py-3.5">{t('nav.register')}</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
                 </>
               ) : user.role === 'organizer' ? (
                 <>
-                  <Link to="/dashboard" className="btn-primary px-8 py-3.5">My Events</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse All</Link>
+                  <Link to="/dashboard" className="btn-primary px-8 py-3.5">{t('nav.dashboard')}</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
                 </>
               ) : (
                 <>
-                  <Link to="/worker-dashboard" className="btn-primary px-8 py-3.5">Find Work</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">Browse Events</Link>
+                  <Link to="/worker-dashboard" className="btn-primary px-8 py-3.5">{t('home.find_work')}</Link>
+                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
                 </>
               )}
             </div>

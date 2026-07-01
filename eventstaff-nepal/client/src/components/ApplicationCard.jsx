@@ -1,9 +1,55 @@
 import { useState, useEffect } from 'react';
+import api from '../api/axios';
 
 export default function ApplicationCard({ application, eventRoles = [], isOrganizer = false, onStatusChange, onAssign = async () => {} }) {
   const [assignedRole, setAssignedRole] = useState(application.assignedRole || '');
   const [shiftNotes, setShiftNotes] = useState(application.shiftNotes || '');
   const [saving, setSaving] = useState(false);
+  const [paying, setPaying] = useState(false);
+
+  const handlePayment = async () => {
+    setPaying(true);
+    try {
+      const res = await api.post('/payments/initialize', {
+        applicationId: application._id,
+        paymentMethod: 'esewa'
+      });
+      if (res.data.success) {
+        const form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', res.data.actionUrl);
+
+        const params = {
+          amount: res.data.amount,
+          tax_amount: 0,
+          total_amount: res.data.amount,
+          transaction_uuid: res.data.transactionUuid,
+          product_code: res.data.productCode,
+          product_service_charge: 0,
+          product_delivery_charge: 0,
+          success_url: `${window.location.origin}/payments/callback`,
+          failure_url: `${window.location.origin}/payments/callback`,
+          signed_field_names: 'total_amount,transaction_uuid,product_code',
+          signature: res.data.signature
+        };
+
+        for (const key in params) {
+          const hiddenField = document.createElement('input');
+          hiddenField.setAttribute('type', 'hidden');
+          hiddenField.setAttribute('name', key);
+          hiddenField.setAttribute('value', params[key]);
+          form.appendChild(hiddenField);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+      }
+    } catch (err) {
+      console.error('Payment initialization failed:', err);
+    } finally {
+      setPaying(false);
+    }
+  };
 
   useEffect(() => {
     setAssignedRole(application.assignedRole || '');
@@ -76,6 +122,34 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
           <p className="text-white/80 mt-2">{application.assignedRole || 'Assigned'}</p>
           {application.shiftNotes && (
             <p className="text-sm text-white/60 mt-2">{application.shiftNotes}</p>
+          )}
+        </div>
+      )}
+
+      {application.status === 'accepted' && (
+        <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-white/60">Shift Payment:</span>
+            {application.isPaid ? (
+              <span className="px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 text-xs font-semibold uppercase tracking-wider rounded-full flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                Paid
+              </span>
+            ) : (
+              <span className="text-xs text-yellow-300 font-semibold uppercase tracking-wider">Unpaid</span>
+            )}
+          </div>
+          
+          {isOrganizer && !application.isPaid && (
+            <button
+              onClick={handlePayment}
+              disabled={paying}
+              className="btn-primary w-full py-2.5 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+            >
+              {paying ? 'Redirecting to eSewa...' : 'Pay Shift via eSewa'}
+            </button>
           )}
         </div>
       )}

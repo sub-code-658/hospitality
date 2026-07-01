@@ -23,6 +23,7 @@ export default function AdminPage() {
   });
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -38,14 +39,16 @@ export default function AdminPage() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [statsRes, usersRes, eventsRes] = await Promise.all([
+      const [statsRes, usersRes, eventsRes, paymentsRes] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/admin/users'),
-        api.get('/admin/events')
+        api.get('/admin/events'),
+        api.get('/payments/history')
       ]);
       setStats(statsRes.data);
       setUsers(usersRes.data.users || []);
       setEvents(eventsRes.data.events || []);
+      setPayments(paymentsRes.data.payments || []);
     } catch (error) {
       console.error('Failed to fetch dashboard data', error);
       addToast('Failed to load admin data', 'error');
@@ -123,7 +126,7 @@ export default function AdminPage() {
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-        {['overview', 'users', 'events', 'applications'].map(tab => (
+        {['overview', 'users', 'events', 'applications', 'payments'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -331,6 +334,48 @@ export default function AdminPage() {
                 <div className="text-2xl font-bold text-red-400 mb-1">0</div>
                 <div className="text-white/50 text-sm">Rejected</div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'payments' && (
+          <div className="glass-card rounded-xl overflow-hidden animate-fade-in">
+            <div className="p-4 border-b border-white/10">
+              <h3 className="text-lg font-semibold text-white">All Platform Transactions</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-white/5">
+                  <tr>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Event</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Organizer</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Worker</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Amount (NPR)</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Method</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Status</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map(payment => (
+                    <tr key={payment._id} className="border-b border-white/5 hover:bg-white/5">
+                      <td className="px-4 py-3 text-white">{payment.event?.title || 'Unknown Event'}</td>
+                      <td className="px-4 py-3 text-white/70">{payment.organizer?.name || 'Organizer'}</td>
+                      <td className="px-4 py-3 text-white/70">{payment.worker?.name || 'Worker'}</td>
+                      <td className="px-4 py-3 text-white font-semibold">{payment.amount}</td>
+                      <td className="px-4 py-3 text-white/50 uppercase text-xs">{payment.paymentMethod}</td>
+                      <td className="px-4 py-3">
+                        <Badge variant={payment.status === 'completed' ? 'accepted' : payment.status === 'failed' ? 'rejected' : 'pending'}>
+                          {payment.status}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-white/50 text-xs">
+                        {new Date(payment.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

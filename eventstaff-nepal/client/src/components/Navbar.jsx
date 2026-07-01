@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { useSocket } from '../context/SocketContext';
+import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { socket } = useSocket();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -107,12 +109,31 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
+            {/* Language Switcher */}
+            <button
+              onClick={() => {
+                const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                i18n.changeLanguage(nextLng);
+                localStorage.setItem('lng', nextLng);
+              }}
+              className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300 mr-2"
+              style={{
+                borderColor: 'rgba(232, 104, 30, 0.2)',
+                color: 'var(--text-muted)',
+                background: 'rgba(13, 17, 24, 0.6)'
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              {i18n.language === 'en' ? 'NE' : 'EN'}
+            </button>
+
             {user ? (
               <>
                 <NavLink to={user.role === 'organizer' ? '/dashboard' : '/worker-dashboard'}>
-                  Dashboard
+                  {t('nav.dashboard')}
                 </NavLink>
-                <NavLink to="/events">Browse</NavLink>
+                <NavLink to="/events">{t('nav.events')}</NavLink>
 
                 {/* Notifications */}
                 <div className="relative" ref={notifsRef}>
@@ -246,7 +267,7 @@ export default function Navbar() {
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Profile
+                        {t('nav.profile')}
                       </Link>
                       <div style={{ height: 1, background: 'var(--border)' }} />
                       <button
@@ -256,7 +277,7 @@ export default function Navbar() {
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(204, 59, 59, 0.07)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
-                        Sign Out
+                        {t('nav.logout')}
                       </button>
                     </div>
                   )}
@@ -264,9 +285,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <NavLink to="/login">Sign In</NavLink>
+                <NavLink to="/login">{t('nav.login')}</NavLink>
                 <Link to="/register" className="btn-primary px-5 py-2.5 text-xs">
-                  Join Now
+                  {t('nav.register')}
                 </Link>
               </>
             )}
@@ -301,13 +322,28 @@ export default function Navbar() {
         }}
       >
         <div className="px-4 py-4 flex flex-col gap-1">
+          <div className="px-3 py-2 flex justify-between items-center mb-2 border-b border-white/5">
+            <span className="text-[0.65rem] uppercase tracking-wider text-white/40 font-bold">Language</span>
+            <button
+              onClick={() => {
+                const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                i18n.changeLanguage(nextLng);
+                localStorage.setItem('lng', nextLng);
+                setMobileOpen(false);
+              }}
+              className="px-3 py-1 rounded border text-xs font-bold uppercase tracking-wider text-white bg-white/5"
+            >
+              {i18n.language === 'en' ? 'नेपाली (NE)' : 'English (EN)'}
+            </button>
+          </div>
+
           {user ? (
             <>
               {[
-                { to: user.role === 'organizer' ? '/dashboard' : '/worker-dashboard', label: 'Dashboard' },
-                { to: '/events', label: 'Browse Events' },
-                { to: '/messages', label: `Messages${unreadCount > 0 ? ` (${unreadCount})` : ''}` },
-                { to: '/profile', label: 'Profile' },
+                { to: user.role === 'organizer' ? '/dashboard' : '/worker-dashboard', label: t('nav.dashboard') },
+                { to: '/events', label: t('nav.events') },
+                { to: '/messages', label: `${t('nav.messages')}${unreadCount > 0 ? ` (${unreadCount})` : ''}` },
+                { to: '/profile', label: t('nav.profile') },
               ].map(({ to, label }) => (
                 <Link
                   key={to}
@@ -328,7 +364,7 @@ export default function Navbar() {
                   className="px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest"
                   style={{ color: 'var(--gold)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                 >
-                  Admin Panel
+                  {t('nav.admin')}
                 </Link>
               )}
               <button
@@ -338,16 +374,16 @@ export default function Navbar() {
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(204, 59, 59, 0.07)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >
-                Sign Out
+                {t('nav.logout')}
               </button>
             </>
           ) : (
             <>
               <Link to="/login" onClick={() => setMobileOpen(false)} className="px-3 py-3 text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                Sign In
+                {t('nav.login')}
               </Link>
               <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-primary text-center mt-2">
-                Join Now
+                {t('nav.register')}
               </Link>
             </>
           )}

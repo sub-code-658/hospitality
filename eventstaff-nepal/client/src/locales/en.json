@@ -1,0 +1,26 @@
+{
+  "nav": {
+    "home": "Home",
+    "events": "Find Shifts",
+    "dashboard": "Dashboard",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "admin": "Admin",
+    "logout": "Sign Out",
+    "login": "Sign In",
+    "register": "Sign Up"
+  },
+  "home": {
+    "title": "Hospitality Gig Work, Simplified.",
+    "subtitle": "Connecting premier event organizers with skilled hospitality staff across Nepal.",
+    "find_work": "Find Shifts",
+    "post_event": "Post Event"
+  },
+  "dashboard": {
+    "total_events": "Total Events",
+    "pending_apps": "Pending Applications",
+    "active_shifts": "Active Shifts",
+    "earnings": "Total Earnings"
+  }
+}
