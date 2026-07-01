@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const { user, login } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -110,17 +111,23 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label
+                htmlFor="email"
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
                 style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 Email Address
               </label>
               <input
+                id="email"
                 type="email"
+                name="email"
                 value={email}
                 onChange={e => { setEmail(e.target.value); setErrors(prev => ({ ...prev, email: '' })); }}
                 className="input-field"
                 placeholder="you@example.com"
+                autoComplete="username"
+                required
+                enterKeyHint="next"
               />
               {errors.email && (
                 <p className="text-xs mt-1.5" style={{ color: 'var(--crimson)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -131,18 +138,42 @@ export default function LoginPage() {
 
             <div>
               <label
+                htmlFor="password"
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
                 style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: '' })); }}
-                className="input-field"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={password}
+                  onChange={e => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: '' })); }}
+                  className="input-field pr-12"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  enterKeyHint="done"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
+                  style={{
+                    color: '#6b7280',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#111827'}
+                  onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-xs mt-1.5" style={{ color: 'var(--crimson)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   {errors.password}

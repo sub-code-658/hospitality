@@ -14,6 +14,7 @@ export default function RegisterPage() {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { user, register } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -64,8 +65,9 @@ export default function RegisterPage() {
     }
   };
 
-  const FieldLabel = ({ children }) => (
+  const FieldLabel = ({ htmlFor, children }) => (
     <label
+      htmlFor={htmlFor}
       className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
       style={{ color: '#6b7280', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
     >
@@ -140,26 +142,106 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <FieldLabel>Full Name</FieldLabel>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} className="input-field" placeholder="Your full name" />
+              <FieldLabel htmlFor="name">Full Name</FieldLabel>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="input-field"
+                placeholder="Your full name"
+                autoComplete="name"
+                required
+                enterKeyHint="next"
+              />
               <FieldError msg={errors.name} />
             </div>
 
             <div>
-              <FieldLabel>Email Address</FieldLabel>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="you@example.com" />
+              <FieldLabel htmlFor="email">Email Address</FieldLabel>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="input-field"
+                placeholder="you@example.com"
+                autoComplete="username"
+                required
+                enterKeyHint="next"
+              />
               <FieldError msg={errors.email} />
             </div>
 
             <div>
-              <FieldLabel>Password</FieldLabel>
-              <input type="password" name="password" value={formData.password} onChange={handleChange} className="input-field" placeholder="Min. 6 characters" />
+              <FieldLabel htmlFor="new-password">Password</FieldLabel>
+              <div className="relative">
+                <input
+                  id="new-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input-field pr-12"
+                  placeholder="Min. 6 characters"
+                  autoComplete="new-password"
+                  required
+                  enterKeyHint="next"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
+                  style={{
+                    color: '#6b7280',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#111827'}
+                  onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
               <FieldError msg={errors.password} />
             </div>
 
             <div>
-              <FieldLabel>Confirm Password</FieldLabel>
-              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" placeholder="Re-enter password" />
+              <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+              <div className="relative">
+                <input
+                  id="confirm-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="input-field pr-12"
+                  placeholder="Re-enter password"
+                  autoComplete="new-password"
+                  required
+                  enterKeyHint="done"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
+                  style={{
+                    color: '#6b7280',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#111827'}
+                  onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
               <FieldError msg={errors.confirmPassword} />
             </div>
 
