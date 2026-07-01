@@ -354,7 +354,6 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
-    backdrop-filter: blur(8px);
     appearance: none;
     -webkit-appearance: none;
     color-scheme: dark;
