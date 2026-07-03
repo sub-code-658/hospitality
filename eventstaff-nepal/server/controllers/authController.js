@@ -201,11 +201,13 @@ exports.changePassword = async (req, res, next) => {
 // Get workers list (public)
 exports.getWorkers = async (req, res, next) => {
   try {
-    const { skills, experience, search, page = 1, limit = 12 } = req.query;
+    const { skills, experience, search, page = 1, limit = 12, rating, availability } = req.query;
     const query = { role: 'worker' };
     if (skills) query.skills = { $in: skills.split(',') };
     if (experience) query.experience = experience;
     if (search) query.name = { $regex: search, $options: 'i' };
+    if (rating) query.rating = { $gte: Number(rating) };
+    if (availability === 'available') query.isAvailable = true;
     const skip = (page - 1) * limit;
     const [workers, total] = await Promise.all([
       User.find(query).select('-password').sort({ rating: -1 }).skip(skip).limit(Number(limit)),

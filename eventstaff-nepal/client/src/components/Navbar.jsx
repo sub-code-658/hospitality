@@ -18,6 +18,21 @@ export default function Navbar() {
   const notifsRef = useRef(null);
   const userMenuRef = useRef(null);
 
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.style.backgroundColor = '#060912';
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+    } else {
+      document.body.style.backgroundColor = 'var(--bg)';
+      document.body.classList.add('light');
+      document.body.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   useEffect(() => {
     if (user) {
       fetchUnreadCount();
@@ -75,9 +90,9 @@ export default function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50"
+      className="sticky top-0 z-50 transition-colors duration-300"
       style={{
-        background: 'rgba(6, 9, 18, 0.92)',
+        background: 'var(--surface)',
         backdropFilter: 'blur(16px)',
         borderBottom: '1px solid var(--border)',
       }}
@@ -103,30 +118,56 @@ export default function Navbar() {
               style={{ color: 'var(--text)', fontWeight: 500 }}
             >
               EventStaff{' '}
-              <span style={{ color: 'var(--flame)', fontStyle: 'italic' }}>Nepal</span>
+              <span style={{ color: '#003300', fontStyle: 'italic' }}>Nepal</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
-            {/* Language Switcher */}
-            <button
-              onClick={() => {
-                const nextLng = i18n.language === 'en' ? 'ne' : 'en';
-                i18n.changeLanguage(nextLng);
-                localStorage.setItem('lng', nextLng);
-              }}
-              className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300 mr-2"
-              style={{
-                borderColor: 'rgba(232, 104, 30, 0.2)',
-                color: 'var(--text-muted)',
-                background: 'rgba(13, 17, 24, 0.6)'
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-            >
-              {i18n.language === 'en' ? 'NE' : 'EN'}
-            </button>
+            {/* Theme & Language Controls */}
+            <div className="flex items-center gap-2 mr-2">
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300"
+                style={{
+                  borderColor: 'rgba(232, 104, 30, 0.2)',
+                  color: 'var(--text-muted)',
+                  background: 'rgba(232, 234, 230, 0.1)'
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                title="Toggle Theme"
+              >
+                {theme === 'dark' ? (
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" className="text-yellow-400">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                )}
+              </button>
+
+              <button
+                onClick={() => {
+                  const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                  i18n.changeLanguage(nextLng);
+                  localStorage.setItem('lng', nextLng);
+                }}
+                className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300"
+                style={{
+                  borderColor: 'rgba(232, 104, 30, 0.2)',
+                  color: 'var(--text-muted)',
+                  background: 'rgba(232, 234, 230, 0.1)'
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                title="Change Language"
+              >
+                {i18n.language === 'en' ? 'NE' : 'EN'}
+              </button>
+            </div>
 
             {user ? (
               <>
@@ -149,7 +190,7 @@ export default function Navbar() {
                     </svg>
                     {unreadCount > 0 && (
                       <span
-                        className="absolute -top-0.5 -right-0.5 flex items-center justify-center rounded-full text-white font-bold"
+                        className="absolute -top-0.5 -right-0.5 flex items-center justify-center rounded-full text-[#060912] font-bold"
                         style={{ width: 16, height: 16, fontSize: '0.6rem', background: 'var(--flame)' }}
                       >
                         {unreadCount > 9 ? '9+' : unreadCount}
@@ -270,6 +311,37 @@ export default function Navbar() {
                         {t('nav.profile')}
                       </Link>
                       <div style={{ height: 1, background: 'var(--border)' }} />
+                      <Link
+                        to={user?.role === 'organizer' ? "/wallet" : "/reviews"}
+                        className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
+                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        {user?.role === 'organizer' ? 'My Wallet' : 'My Reviews'}
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
+                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Settings
+                      </Link>
+                      <Link
+                        to="/help"
+                        className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
+                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        Help Center
+                      </Link>
+                      <div style={{ height: 1, background: 'var(--border)' }} />
                       <button
                         onClick={() => { handleLogout(); setShowUserMenu(false); }}
                         className="flex items-center gap-2.5 w-full text-left px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
@@ -285,8 +357,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <NavLink to="/login">{t('nav.login')}</NavLink>
-                <Link to="/register" className="btn-primary px-5 py-2.5 text-xs">
+                <Link to="/login" className="btn-glass px-5 py-2.5 text-xs mr-2">{t('nav.login')}</Link>
+                <Link to="/register" className="btn-glass px-5 py-2.5 text-xs">
                   {t('nav.register')}
                 </Link>
               </>
@@ -317,25 +389,36 @@ export default function Navbar() {
         style={{
           maxHeight: mobileOpen ? '400px' : '0',
           opacity: mobileOpen ? 1 : 0,
-          background: 'rgba(6, 9, 18, 0.97)',
+          background: 'var(--surface)',
           borderTop: mobileOpen ? '1px solid var(--border)' : 'none',
         }}
       >
         <div className="px-4 py-4 flex flex-col gap-1">
-          <div className="px-3 py-2 flex justify-between items-center mb-2 border-b border-white/5">
-            <span className="text-[0.65rem] uppercase tracking-wider text-white/40 font-bold">Language</span>
-            <button
-              onClick={() => {
-                const nextLng = i18n.language === 'en' ? 'ne' : 'en';
-                i18n.changeLanguage(nextLng);
-                localStorage.setItem('lng', nextLng);
-                setMobileOpen(false);
-              }}
-              className="px-3 py-1 rounded border text-xs font-bold uppercase tracking-wider text-white bg-white/5"
-            >
-              {i18n.language === 'en' ? 'नेपाली (NE)' : 'English (EN)'}
-            </button>
-          </div>
+            <span className="text-[0.65rem] uppercase tracking-wider font-bold mb-1" style={{ color: 'var(--text-dim)' }}>Preferences</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setTheme(theme === 'dark' ? 'light' : 'dark');
+                  setMobileOpen(false);
+                }}
+                className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
+                style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
+              >
+                {theme === 'dark' ? 'Day' : 'Dark'}
+              </button>
+              <button
+                onClick={() => {
+                  const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                  i18n.changeLanguage(nextLng);
+                  localStorage.setItem('lng', nextLng);
+                  setMobileOpen(false);
+                }}
+                className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
+                style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
+              >
+                {i18n.language === 'en' ? 'NE' : 'EN'}
+              </button>
+            </div>
 
           {user ? (
             <>
@@ -344,6 +427,24 @@ export default function Navbar() {
                 { to: '/events', label: t('nav.events') },
                 { to: '/messages', label: `${t('nav.messages')}${unreadCount > 0 ? ` (${unreadCount})` : ''}` },
                 { to: '/profile', label: t('nav.profile') },
+              ].map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setMobileOpen(false)}
+                  className="px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
+                  style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                >
+                  {label}
+                </Link>
+              ))}
+              <div className="h-px bg-[var(--border)] my-1" />
+              {[
+                { to: user?.role === 'organizer' ? '/wallet' : '/reviews', label: user?.role === 'organizer' ? 'My Wallet' : 'My Reviews' },
+                { to: '/settings', label: 'Settings' },
+                { to: '/help', label: 'Help Center' },
               ].map(({ to, label }) => (
                 <Link
                   key={to}
@@ -379,10 +480,10 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" onClick={() => setMobileOpen(false)} className="px-3 py-3 text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-glass text-center mt-2">
                 {t('nav.login')}
               </Link>
-              <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-primary text-center mt-2">
+              <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-glass text-center mt-2">
                 {t('nav.register')}
               </Link>
             </>

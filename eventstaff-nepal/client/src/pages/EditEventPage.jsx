@@ -35,7 +35,7 @@ export default function EditEventPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [roles, setRoles] = useState([{ roleName: '', count: 1, payPerHour: '' }]);
+  const [roles, setRoles] = useState([{ roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -77,7 +77,8 @@ export default function EditEventPage() {
         setRoles(event.rolesNeeded.map(r => ({
           roleName: r.roleName || '',
           count: r.count ?? 1,
-          payPerHour: r.payPerHour ?? ''
+          paymentType: r.paymentType ?? 'per_hour',
+          payAmount: r.payAmount ?? ''
         })));
       }
 
@@ -105,7 +106,7 @@ export default function EditEventPage() {
   };
 
   const addRole = () => {
-    setRoles([...roles, { roleName: '', count: 1, payPerHour: '' }]);
+    setRoles([...roles, { roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
   };
 
   const removeRole = (index) => {
@@ -134,7 +135,7 @@ export default function EditEventPage() {
     roles.forEach((role, idx) => {
       if (!role.roleName) newErrors[`role_${idx}`] = 'Role name is required';
       if (!role.count || role.count < 1) newErrors[`count_${idx}`] = 'Valid count is required';
-      if (role.payPerHour === '' || role.payPerHour < 0) newErrors[`pay_${idx}`] = 'Valid pay rate is required';
+      if (role.payAmount === '' || role.payAmount < 0) newErrors[`pay_${idx}`] = 'Valid pay amount is required';
     });
     return newErrors;
   };
@@ -293,7 +294,7 @@ export default function EditEventPage() {
                     value={role.roleName}
                     onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
                     placeholder="Role (e.g., Waiter)"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm"
+                    className="w-full px-3 py-2 rounded-xl input-field text-sm"
                   />
                   {errors[`role_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`role_${index}`]}</p>}
                 </div>
@@ -304,20 +305,31 @@ export default function EditEventPage() {
                     onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
                     placeholder="Count"
                     min="1"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm text-center"
+                    className="w-full px-3 py-2 rounded-xl input-field text-sm text-center"
                   />
                   {errors[`count_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`count_${index}`]}</p>}
                 </div>
-                <div className="w-32">
-                  <input
-                    type="number"
-                    value={role.payPerHour}
-                    onChange={(e) => handleRoleChange(index, 'payPerHour', e.target.value)}
-                    placeholder="NPR/hr"
-                    min="0"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm"
-                  />
-                  {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                <div className="w-56 flex gap-2">
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      value={role.payAmount}
+                      onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
+                      placeholder="Amount"
+                      min="0"
+                      className="w-full px-3 py-2 rounded-xl input-field text-sm"
+                    />
+                    {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                  </div>
+                  <select
+                    value={role.paymentType}
+                    onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
+                    className="w-24 px-2 py-2 rounded-xl input-field text-sm"
+                  >
+                    <option value="per_hour">/ Hour</option>
+                    <option value="per_day">/ Day</option>
+                    <option value="per_event">/ Event</option>
+                  </select>
                 </div>
                 {roles.length > 1 && (
                   <button
@@ -344,7 +356,7 @@ export default function EditEventPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center"
+            className="flex-1 btn-glass py-4 rounded-xl font-semibold flex items-center justify-center"
           >
             {loading ? <LoadingSpinner size="sm" /> : 'Save Changes'}
           </button>

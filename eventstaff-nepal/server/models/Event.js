@@ -10,7 +10,12 @@ const roleSchema = new mongoose.Schema({
     required: true,
     min: 1
   },
-  payPerHour: {
+  paymentType: {
+    type: String,
+    enum: ["per_hour", "per_day", "per_event"],
+    default: "per_hour"
+  },
+  payAmount: {
     type: Number,
     required: true,
     min: 0

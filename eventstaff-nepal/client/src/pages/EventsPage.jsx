@@ -4,8 +4,10 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import EventCard from '../components/EventCard';
+import StaffCard from '../components/StaffCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/ui/EmptyState';
+import InviteModal from '../components/InviteModal';
 import { ROLES } from '../utils/constants';
 
 export default function EventsPage() {
@@ -13,33 +15,56 @@ export default function EventsPage() {
   const { addToast } = useToast();
   const [searchParams] = useSearchParams();
 
-  const [events, setEvents] = useState([]);
+  const isOrganizer = user?.role === 'organizer' || user?.role === 'admin';
+  const pageTitle = isOrganizer ? 'Find Staff' : 'Browse Events';
+  const pageSubtitle = isOrganizer ? 'Discover and invite talented hospitality professionals' : 'Find and apply to upcoming hospitality opportunities across Nepal';
+
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     role: searchParams.get('role') || '',
     date: searchParams.get('date') || '',
     status: 'active',
+    rating: '',
+    availability: '',
   });
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, totalCount: 0 });
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [selectedWorker, setSelectedWorker] = useState(null);
 
-  useEffect(() => { fetchEvents(); }, [filters, pagination.currentPage]);
+  const handleInvite = (worker) => {
+    setSelectedWorker(worker);
+    setIsInviteModalOpen(true);
+  };
 
-  const fetchEvents = async () => {
+  useEffect(() => { fetchData(); }, [filters, pagination.currentPage, isOrganizer]);
+
+  const fetchData = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (filters.search) params.append('search', filters.search);
-      if (filters.role) params.append('role', filters.role);
-      if (filters.date) params.append('date', filters.date);
-      if (filters.status) params.append('status', filters.status);
       params.append('page', pagination.currentPage);
       params.append('limit', 12);
-      const res = await api.get(`/events?${params.toString()}`);
-      setEvents(res.data.events || []);
-      if (res.data.pagination) setPagination(res.data.pagination);
+
+      if (isOrganizer) {
+        if (filters.role) params.append('skills', filters.role);
+        if (filters.rating) params.append('rating', filters.rating);
+        if (filters.availability) params.append('availability', filters.availability);
+        const res = await api.get(`/auth/workers?${params.toString()}`);
+        setItems(res.data.workers || []);
+        if (res.data.totalPages) setPagination({ currentPage: res.data.page, totalPages: res.data.totalPages, totalCount: res.data.total });
+      } else {
+        if (filters.role) params.append('role', filters.role);
+        if (filters.date) params.append('date', filters.date);
+        if (filters.status) params.append('status', filters.status);
+        const res = await api.get(`/events?${params.toString()}`);
+        setItems(res.data.events || []);
+        if (res.data.pagination) setPagination(res.data.pagination);
+      }
     } catch {
-      addToast('Failed to load events', 'error');
+      addToast(`Failed to load ${isOrganizer ? 'staff' : 'events'}`, 'error');
     } finally {
       setLoading(false);
     }
@@ -51,7 +76,7 @@ export default function EventsPage() {
   };
 
   const clearFilters = () => {
-    setFilters({ search: '', role: '', date: '', status: 'active' });
+    setFilters({ search: '', role: '', date: '', status: 'active', rating: '', availability: '' });
     setPagination(prev => ({ ...prev, currentPage: 1 }));
   };
 
@@ -66,7 +91,6 @@ export default function EventsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-
       {/* Header */}
       <div className="mb-12 animate-fade-in">
         <p className="label mb-3">Explore</p>
@@ -74,15 +98,14 @@ export default function EventsPage() {
           className="font-serif mb-2"
           style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text)', fontWeight: 400, lineHeight: 1.1 }}
         >
-          Browse Events
+          {pageTitle}
         </h1>
         <p className="text-sm" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-          Find and apply to upcoming hospitality opportunities across Nepal
+          {pageSubtitle}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
         {/* Filters sidebar */}
         <aside className="lg:col-span-1">
           <div className="panel p-6 sticky top-24 animate-fade-in">
@@ -101,7 +124,7 @@ export default function EventsPage() {
 
             {/* Search */}
             <form
-              onSubmit={e => { e.preventDefault(); fetchEvents(); }}
+              onSubmit={e => { e.preventDefault(); fetchData(); }}
               className="mb-6"
             >
               <FilterLabel>Search</FilterLabel>
@@ -110,9 +133,8 @@ export default function EventsPage() {
                   type="text"
                   value={filters.search}
                   onChange={e => handleFilterChange('search', e.target.value)}
-                  placeholder="Event name, location..."
+                  placeholder={isOrganizer ? "Name, skills..." : "Event name, location..."}
                   className="input-field pr-10 text-sm"
-                  style={{ color: '#111827' }}
                 />
                 <button
                   type="submit"
@@ -130,37 +152,69 @@ export default function EventsPage() {
 
             <div className="space-y-5">
               <div>
-                <FilterLabel>Role Type</FilterLabel>
+                <FilterLabel>{isOrganizer ? 'Skills' : 'Role Type'}</FilterLabel>
                 <select
                   value={filters.role}
                   onChange={e => handleFilterChange('role', e.target.value)}
                   className="input-field text-sm"
                   style={{ color: '#111827', colorScheme: 'dark' }}
                 >
-                  <option value="">All Roles</option>
+                  <option value="">{isOrganizer ? 'All Skills' : 'All Roles'}</option>
                   {ROLES.map(r => (
                     <option key={r} value={r} style={{ background: 'var(--surface)' }}>{r}</option>
                   ))}
                 </select>
               </div>
 
-              <div>
-                <FilterLabel>Date</FilterLabel>
-                <input
-                  type="date"
-                  value={filters.date}
-                  onChange={e => handleFilterChange('date', e.target.value)}
-                  className="input-field text-sm"
-                  style={{ colorScheme: 'dark' }}
-                />
-              </div>
+              {!isOrganizer && (
+                <div>
+                  <FilterLabel>Date</FilterLabel>
+                  <input
+                    type="date"
+                    value={filters.date}
+                    onChange={e => handleFilterChange('date', e.target.value)}
+                    className="input-field text-sm"
+                    style={{ colorScheme: 'dark' }}
+                  />
+                </div>
+              )}
+
+              {isOrganizer && (
+                <>
+                  <div>
+                    <FilterLabel>Rating</FilterLabel>
+                    <select
+                      value={filters.rating}
+                      onChange={e => handleFilterChange('rating', e.target.value)}
+                      className="input-field text-sm"
+                      style={{ color: '#111827', colorScheme: 'dark' }}
+                    >
+                      <option value="">Any Rating</option>
+                      <option value="4">4+ Stars</option>
+                      <option value="3">3+ Stars</option>
+                    </select>
+                  </div>
+                  <div>
+                    <FilterLabel>Availability</FilterLabel>
+                    <select
+                      value={filters.availability}
+                      onChange={e => handleFilterChange('availability', e.target.value)}
+                      className="input-field text-sm"
+                      style={{ color: '#111827', colorScheme: 'dark' }}
+                    >
+                      <option value="">Any Status</option>
+                      <option value="available">Available Now</option>
+                    </select>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Post event CTA for organisers */}
-            {user?.role === 'organizer' && (
+            {isOrganizer && (
               <Link
                 to="/post-event"
-                className="btn-primary w-full mt-8 py-3 text-xs"
+                className="btn-primary w-full mt-8 py-3 text-xs text-center inline-block"
               >
                 + Post Event
               </Link>
@@ -168,15 +222,15 @@ export default function EventsPage() {
           </div>
         </aside>
 
-        {/* Events grid */}
+        {/* Results grid */}
         <div className="lg:col-span-3">
           {/* Result count */}
-          {!loading && events.length > 0 && (
+          {!loading && items.length > 0 && (
             <p
               className="text-xs mb-5"
               style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
             >
-              {pagination.totalCount} event{pagination.totalCount !== 1 ? 's' : ''} found
+              {pagination.totalCount} {isOrganizer ? 'staff' : `event${pagination.totalCount !== 1 ? 's' : ''}`} found
             </p>
           )}
 
@@ -184,10 +238,10 @@ export default function EventsPage() {
             <div className="flex justify-center py-20">
               <LoadingSpinner />
             </div>
-          ) : events.length === 0 ? (
+          ) : items.length === 0 ? (
             <EmptyState
               icon="◆"
-              title="No events found"
+              title={isOrganizer ? "No staff found" : "No events found"}
               description="Try adjusting your filters or check back later for new opportunities."
               action={clearFilters}
               actionLabel="Clear Filters"
@@ -195,13 +249,13 @@ export default function EventsPage() {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {events.map((event, i) => (
+                {items.map((item, i) => (
                   <div
-                    key={event._id}
+                    key={item._id || item.id}
                     className="animate-slide-up"
                     style={{ animationDelay: `${Math.min(i * 0.05, 0.3)}s` }}
                   >
-                    <EventCard event={event} />
+                    {isOrganizer ? <StaffCard worker={item} onInvite={() => handleInvite(item)} /> : <EventCard event={item} />}
                   </div>
                 ))}
               </div>
@@ -235,6 +289,13 @@ export default function EventsPage() {
           )}
         </div>
       </div>
+      
+      {/* Invite Modal */}
+      <InviteModal 
+        isOpen={isInviteModalOpen} 
+        onClose={() => setIsInviteModalOpen(false)} 
+        worker={selectedWorker} 
+      />
     </div>
   );
 }

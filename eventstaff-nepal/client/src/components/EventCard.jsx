@@ -11,7 +11,7 @@ export default function EventCard({ event, showOrganizer = false }) {
   const formatDate = (date) =>
     new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
-  const totalPay = event.rolesNeeded?.reduce((sum, r) => sum + r.payPerHour * r.count, 0) || 0;
+  const totalPay = event.rolesNeeded?.reduce((sum, r) => sum + r.payAmount * r.count, 0) || 0;
   const barColor = STATUS_COLOR[event.status] || '#6baf8a';
 
   return (

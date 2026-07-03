@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import { initiateConversation } from '../utils/messageUtils';
 
 export default function ApplicationCard({ application, eventRoles = [], isOrganizer = false, onStatusChange, onAssign = async () => {} }) {
   const [assignedRole, setAssignedRole] = useState(application.assignedRole || '');
   const [shiftNotes, setShiftNotes] = useState(application.shiftNotes || '');
   const [saving, setSaving] = useState(false);
   const [paying, setPaying] = useState(false);
+  const [sendDirectMessage, setSendDirectMessage] = useState(false);
+  const navigate = useNavigate();
 
   const handlePayment = async () => {
     setPaying(true);
@@ -70,11 +74,20 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
     });
   };
 
-  const handleAssign = async () => {
+  const handleAssignSubmit = async (e) => {
+    e.preventDefault();
     if (!assignedRole.trim()) return;
     setSaving(true);
     try {
       await onAssign(application._id, assignedRole, shiftNotes);
+      if (sendDirectMessage && application.worker?._id) {
+        // Create the message content
+        const msg = `Assignment Update for ${application.event?.title}:\nRole: ${assignedRole}\nNotes: ${shiftNotes}`;
+        await api.post('/messages', {
+          receiverId: application.worker._id,
+          content: msg
+        });
+      }
     } finally {
       setSaving(false);
     }
@@ -88,9 +101,18 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
             {application.event?.title || 'Event'}
           </h4>
           {application.worker && (
-            <p className="text-sm text-white/60">
-              {application.worker.name || application.worker.email}
-            </p>
+            <div className="flex items-center gap-3 mt-1">
+              <p className="text-sm text-white/60">
+                {application.worker.name || application.worker.email}
+              </p>
+              <button 
+                onClick={() => initiateConversation(application.worker._id || application.worker, navigate)}
+                className="btn-glass px-2 py-1 text-[10px] flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                Message
+              </button>
+            </div>
           )}
         </div>
         <span className={`px-3 py-1 rounded-full text-sm font-medium border ${statusColors[application.status]}`}>
@@ -157,7 +179,7 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
       {isOrganizer && application.status === 'accepted' && (
         <div className="glass p-4 rounded-2xl mt-4 border border-white/10">
           <h5 className="text-sm font-semibold text-white mb-3">Assign shift</h5>
-          <div className="grid gap-4">
+          <form onSubmit={handleAssignSubmit} className="grid gap-4">
             <select
               value={assignedRole}
               onChange={(e) => setAssignedRole(e.target.value)}
@@ -165,7 +187,7 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
             >
               <option value="">Select role</option>
               {eventRoles.map((role, idx) => (
-                <option key={idx} value={role.roleName}>
+                <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-white">
                   {role.roleName}
                 </option>
               ))}
@@ -177,14 +199,23 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
               placeholder="Shift instructions or notes"
               className="w-full px-4 py-3 rounded-xl glass-input text-white"
             />
+            <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
+              <input 
+                type="checkbox" 
+                checked={sendDirectMessage} 
+                onChange={(e) => setSendDirectMessage(e.target.checked)} 
+                className="rounded border-white/20 bg-white/5 text-primary-500 focus:ring-primary-500" 
+              />
+              Send this update as a direct message
+            </label>
             <button
-              onClick={handleAssign}
+              type="submit"
               disabled={saving || !assignedRole.trim()}
-              className="glass-btn text-white px-4 py-3 rounded-xl font-semibold disabled:opacity-50"
+              className="btn-glass w-full py-3 rounded-xl font-semibold disabled:opacity-50"
             >
               {saving ? 'Saving...' : (application.assigned ? 'Update Assignment' : 'Save Assignment')}
             </button>
-          </div>
+          </form>
         </div>
       )}
 

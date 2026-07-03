@@ -11,7 +11,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
     eventDate: initialData?.eventDate || '',
     startTime: initialData?.startTime || '',
     endTime: initialData?.endTime || '',
-    rolesNeeded: initialData?.rolesNeeded || [{ roleName: '', count: 1, payPerHour: '' }],
+    rolesNeeded: initialData?.rolesNeeded || [{ roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }],
     coordinates: initialData?.coordinates || KATHMANDU_CENTER
   });
 
@@ -32,7 +32,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
   const addRole = () => {
     setFormData(prev => ({
       ...prev,
-      rolesNeeded: [...prev.rolesNeeded, { roleName: '', count: 1, payPerHour: '' }]
+      rolesNeeded: [...prev.rolesNeeded, { roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }]
     }));
   };
 
@@ -56,7 +56,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
     formData.rolesNeeded.forEach((role, idx) => {
       if (!role.roleName) newErrors[`role_${idx}`] = 'Role name is required';
       if (!role.count || role.count < 1) newErrors[`count_${idx}`] = 'Valid count is required';
-      if (!role.payPerHour || role.payPerHour < 0) newErrors[`pay_${idx}`] = 'Valid pay rate is required';
+      if (!role.payAmount || role.payAmount < 0) newErrors[`pay_${idx}`] = 'Valid pay amount is required';
     });
     return newErrors;
   };
@@ -195,15 +195,27 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                   className="w-full px-3 py-2 rounded-xl glass-input text-white text-center"
                 />
               </div>
-              <div className="w-28">
-                <input
-                  type="number"
-                  value={role.payPerHour}
-                  onChange={(e) => handleRoleChange(index, 'payPerHour', e.target.value)}
-                  placeholder="NPR/hr"
-                  min="0"
-                  className="w-full px-3 py-2 rounded-xl glass-input text-white"
-                />
+              <div className="w-56 flex gap-2">
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    value={role.payAmount}
+                    onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
+                    placeholder="Amount"
+                    min="0"
+                    className="w-full px-3 py-2 rounded-xl input-field text-sm"
+                  />
+                  {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                </div>
+                <select
+                  value={role.paymentType}
+                  onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
+                  className="w-24 px-2 py-2 rounded-xl input-field text-sm"
+                >
+                  <option value="per_hour">/ Hour</option>
+                  <option value="per_day">/ Day</option>
+                  <option value="per_event">/ Event</option>
+                </select>
               </div>
               {formData.rolesNeeded.length > 1 && (
                 <button

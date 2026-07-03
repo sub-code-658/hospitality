@@ -28,9 +28,9 @@ export const useToast = () => {
 };
 
 const ACCENT = {
-  success: { bar: '#6baf8a', bg: 'rgba(13, 17, 24, 0.97)', border: 'rgba(107, 175, 138, 0.2)' },
-  error: { bar: '#cc3b3b', bg: 'rgba(16, 11, 11, 0.97)', border: 'rgba(204, 59, 59, 0.2)' },
-  info: { bar: '#89b4cc', bg: 'rgba(10, 14, 22, 0.97)', border: 'rgba(137, 180, 204, 0.2)' },
+  success: { bar: '#6baf8a', bg: 'rgba(30, 41, 59, 0.95)', border: 'rgba(107, 175, 138, 0.4)' },
+  error: { bar: '#cc3b3b', bg: 'rgba(232, 104, 30, 0.9)', border: 'rgba(255, 255, 255, 0.2)' },
+  info: { bar: '#89b4cc', bg: 'rgba(30, 41, 59, 0.95)', border: 'rgba(137, 180, 204, 0.4)' },
 };
 
 function ToastItem({ toast }) {
@@ -47,8 +47,7 @@ function ToastItem({ toast }) {
       style={{
         background: colors.bg,
         border: `1px solid ${colors.border}`,
-        borderLeft: 'none',
-        borderRadius: '0 0.375rem 0.375rem 0',
+        borderRadius: '0.375rem',
         backdropFilter: 'blur(16px)',
         transform: visible ? 'translateX(0)' : 'translateX(110%)',
         transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -60,9 +59,9 @@ function ToastItem({ toast }) {
         boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
       }}
     >
-      <div style={{ width: 3, background: colors.bar, flexShrink: 0 }} />
-      <div style={{ padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <span style={{ color: 'var(--text)', fontSize: '0.875rem', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 500, lineHeight: 1.4 }}>
+      <div style={{ width: 4, background: colors.bar, flexShrink: 0 }} />
+      <div style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <span style={{ color: '#FFFFFF', fontSize: '0.875rem', fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 600, lineHeight: 1.4 }}>
           {toast.message}
         </span>
       </div>

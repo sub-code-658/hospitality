@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import ApplicationCard from '../components/ApplicationCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { initiateConversation } from '../utils/messageUtils';
 
 const defaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -29,6 +30,8 @@ export default function EventDetailPage() {
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [showApplications, setShowApplications] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
   useEffect(() => {
     fetchEvent();
@@ -51,10 +54,24 @@ export default function EventDetailPage() {
       return;
     }
 
+    if (!showRoleDropdown) {
+      setShowRoleDropdown(true);
+      if (event.rolesNeeded?.length > 0) {
+        setSelectedRole(event.rolesNeeded[0].roleName);
+      }
+      return;
+    }
+
+    if (!selectedRole) {
+      addToast('Please select a role', 'error');
+      return;
+    }
+
     setApplying(true);
     try {
-      await api.post('/applications', { eventId: id });
+      await api.post('/applications', { eventId: id, roleAppliedFor: selectedRole });
       addToast('Application submitted successfully!', 'success');
+      setShowRoleDropdown(false);
       fetchEvent();
     } catch (error) {
       addToast(error.response?.data?.message || 'Failed to apply', 'error');
@@ -108,7 +125,7 @@ export default function EventDetailPage() {
     return <div className="min-h-screen flex items-center justify-center"><p className="text-white">Event not found</p></div>;
   }
 
-  const totalPay = event.rolesNeeded?.reduce((sum, role) => sum + (role.payPerHour * role.count), 0) || 0;
+  const totalPay = event.rolesNeeded?.reduce((sum, role) => sum + (role.payAmount * role.count), 0) || 0;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -118,9 +135,20 @@ export default function EventDetailPage() {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-3">{event.title}</h1>
-              <p className="text-white/70">
-                By {event.organizer?.name || 'Unknown Organizer'}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-white/70">
+                  By {event.organizer?.name || 'Unknown Organizer'}
+                </p>
+                {user && user.id !== event.organizer?._id && event.organizer?._id && (
+                  <button
+                    onClick={() => initiateConversation(event.organizer._id, navigate)}
+                    className="btn-glass px-2 py-1 text-[10px] flex items-center gap-1"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                    Message
+                  </button>
+                )}
+              </div>
             </div>
             <span className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm ${
               event.status === 'active' ? 'bg-green-500/30 text-green-200 border border-green-400/30' : 'bg-gray-500/30 text-gray-200 border border-gray-400/30'
@@ -202,8 +230,8 @@ export default function EventDetailPage() {
                     <tr key={idx}>
                       <td className="px-5 py-4 text-white/80">{role.roleName}</td>
                       <td className="px-5 py-4 text-white/60">{role.count}</td>
-                      <td className="px-5 py-4 text-white/60">NPR {role.payPerHour}</td>
-                      <td className="px-5 py-4 text-white font-medium">NPR {role.payPerHour * role.count}</td>
+                      <td className="px-5 py-4 text-white/60">NPR {role.payAmount} {role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}</td>
+                      <td className="px-5 py-4 text-white font-medium">NPR {role.payAmount * role.count}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -232,19 +260,47 @@ export default function EventDetailPage() {
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             {isWorker && event.status === 'active' && !event.filled && (
-              <button
-                onClick={handleApply}
-                disabled={applying || hasApplied}
-                className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  hasApplied
-                    ? 'glass text-white/50 cursor-not-allowed border border-white/10'
-                    : 'glass-btn text-white'
-                }`}
-              >
-                {applying ? <LoadingSpinner size="sm" /> : hasApplied ? 'Already Applied' : 'Apply Now'}
-              </button>
+              <div className="flex-1 w-full flex flex-col gap-2">
+                {showRoleDropdown && (
+                  <div className="animate-fade-in">
+                    <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-1">
+                      Select Role
+                    </label>
+                    <select
+                      value={selectedRole}
+                      onChange={(e) => setSelectedRole(e.target.value)}
+                      className="glass-input w-full p-3 rounded-xl bg-[var(--surface-raised)] text-white mb-2"
+                    >
+                      {event.rolesNeeded?.map((role, idx) => (
+                        <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-white">
+                          {role.roleName} (NPR {role.payAmount} {role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <button
+                  onClick={handleApply}
+                  disabled={applying || hasApplied}
+                  className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    hasApplied
+                      ? 'glass text-white/50 cursor-not-allowed border border-white/10'
+                      : 'btn-glass'
+                  }`}
+                >
+                  {applying ? <LoadingSpinner size="sm" /> : hasApplied ? 'Already Applied' : showRoleDropdown ? 'Confirm Application' : 'Apply Now'}
+                </button>
+                {showRoleDropdown && !hasApplied && (
+                  <button 
+                    onClick={() => setShowRoleDropdown(false)}
+                    className="text-xs text-[var(--text-muted)] hover:text-white mt-1 w-full text-center"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             )}
 
             {isWorker && event.status === 'active' && event.filled && (
@@ -256,7 +312,7 @@ export default function EventDetailPage() {
             {isOrganizer && (
               <button
                 onClick={fetchApplications}
-                className="flex-1 glass-btn text-white py-3 rounded-xl font-semibold"
+                className="flex-1 btn-glass py-3 rounded-xl font-semibold"
               >
                 View Applications
               </button>

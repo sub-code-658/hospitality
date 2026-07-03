@@ -14,7 +14,7 @@ const NotFoundPage = () => {
         </p>
         <Link
           to={user?.role === 'organizer' ? '/dashboard' : user?.role === 'worker' ? '/worker-dashboard' : '/'}
-          className="glass-btn text-white px-8 py-3 rounded-xl font-semibold inline-block"
+          className="btn-glass px-8 py-3 rounded-xl font-semibold inline-block"
         >
           Go Home
         </Link>

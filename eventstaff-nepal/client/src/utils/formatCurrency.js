@@ -24,7 +24,7 @@ export const formatPayRate = (amount, period = 'hr') => {
 export const calculateEarnings = (events) => {
   return events.reduce((total, event) => {
     const eventTotal = (event.rolesNeeded || []).reduce((sum, role) => {
-      return sum + (role.payPerHour * role.count);
+      return sum + (role.payAmount * role.count);
     }, 0);
     return total + eventTotal;
   }, 0);

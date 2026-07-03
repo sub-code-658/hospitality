@@ -6,27 +6,27 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useTranslation } from 'react-i18next';
 
 const STATS = [
-  { value: '500+', label: 'Active Workers' },
-  { value: '200+', label: 'Events Completed' },
-  { value: '50+', label: 'Partner Venues' },
-  { value: '4.9', label: 'Avg Rating' },
+  { valueKey: 'home.stats_workers_val', labelKey: 'home.stats_workers_label' },
+  { valueKey: 'home.stats_events_val', labelKey: 'home.stats_events_label' },
+  { valueKey: 'home.stats_venues_val', labelKey: 'home.stats_venues_label' },
+  { valueKey: 'home.stats_rating_val', labelKey: 'home.stats_rating_label' },
 ];
 
 const FEATURES = [
   {
     glyph: '◈',
-    title: 'Vetted Network',
-    body: 'Access verified hospitality professionals with proven track records at Nepal\'s premier events.',
+    titleKey: 'home.feat1_title',
+    bodyKey: 'home.feat1_body',
   },
   {
     glyph: '◉',
-    title: 'Smart Scheduling',
-    body: 'Conflict prevention ensures workers never double-book. Organised shift management, simplified.',
+    titleKey: 'home.feat2_title',
+    bodyKey: 'home.feat2_body',
   },
   {
     glyph: '◎',
-    title: 'Direct Messaging',
-    body: 'Real-time communication between organisers and workers. No middlemen, no delays.',
+    titleKey: 'home.feat3_title',
+    bodyKey: 'home.feat3_body',
   },
 ];
 
@@ -55,7 +55,7 @@ export default function HomePage() {
     const now = new Date();
     const start = getEventDateTime(event, 'startTime');
     const end = getEventDateTime(event, 'endTime');
-    if (now >= start && now <= end) return 'Ongoing';
+    if (now >= start && now<= end) return 'Ongoing';
     if (now < start) return 'Upcoming';
     return 'Closed';
   };
@@ -75,10 +75,9 @@ export default function HomePage() {
   };
 
   const ongoing = featuredEvents.filter(e => getEventState(e) === 'Ongoing');
-  const upcoming = featuredEvents.filter(e => getEventState(e) === 'Upcoming');
+  const upcoming = featuredEvents.filter(e =>getEventState(e) === 'Upcoming');
 
-  return (
-    <div className="min-h-screen">
+  return (<div className="min-h-screen">
 
       {/* ── HERO ────────────────────────────────────── */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -98,9 +97,7 @@ export default function HomePage() {
               lineHeight: 1,
               whiteSpace: 'nowrap',
             }}
-          >
-            NEPAL
-          </span>
+          >NEPAL</span>
         </div>
 
         {/* Ambient spot */}
@@ -111,7 +108,7 @@ export default function HomePage() {
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 py-32 w-full">
           <div className="animate-fade-in">
-            <p className="label mb-8 tracking-[0.3em]">Nepal's Premier Event Staffing Platform</p>
+            <p className="label mb-8 tracking-[0.3em]">{t('home.label_premier')}</p>
 
             <h1
               className="font-serif leading-none mb-8"
@@ -132,18 +129,14 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               {!user ? (
                 <>
-                  <Link to="/register" className="btn-primary px-8 py-3.5">{t('nav.register')}</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
-                </>
-              ) : user.role === 'organizer' ? (
-                <>
-                  <Link to="/dashboard" className="btn-primary px-8 py-3.5">{t('nav.dashboard')}</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
-                </>
-              ) : (
-                <>
-                  <Link to="/worker-dashboard" className="btn-primary px-8 py-3.5">{t('home.find_work')}</Link>
-                  <Link to="/events" className="btn-secondary px-8 py-3.5">{t('nav.events')}</Link>
+                  <Link to="/register" className="btn-glass px-8 py-3.5">{t('nav.register')}</Link>
+                  <Link to="/events" className="btn-glass px-8 py-3.5">{t('nav.events')}</Link>
+                </>) : user.role === 'organizer' ? (<>
+                  <Link to="/dashboard" className="btn-glass px-8 py-3.5">{t('nav.dashboard')}</Link>
+                  <Link to="/events" className="btn-glass px-8 py-3.5">{t('nav.events')}</Link>
+                </>) : (<>
+                  <Link to="/worker-dashboard" className="btn-glass px-8 py-3.5">{t('home.find_work')}</Link>
+                  <Link to="/events" className="btn-glass px-8 py-3.5">{t('nav.events')}</Link>
                 </>
               )}
             </div>
@@ -165,14 +158,12 @@ export default function HomePage() {
               opacity: 0.4,
               fontSize: '0.6rem',
             }}
-          >
-            EVENTSTAFF NEPAL — EST. 2024
-          </span>
+          >EVENTSTAFF NEPAL — EST. 2024</span>
         </div>
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: '1s' }}>
-          <span className="label" style={{ fontSize: '0.55rem', letterSpacing: '0.25em', opacity: 0.5 }}>SCROLL</span>
+          <span className="label" style={{ fontSize: '0.55rem', letterSpacing: '0.25em', opacity: 0.5 }}>{t('home.scroll')}</span>
           <div
             style={{
               width: 1,
@@ -207,10 +198,10 @@ export default function HomePage() {
                   className="font-serif mb-1.5"
                   style={{ fontSize: 'clamp(2.2rem, 4vw, 3rem)', color: 'var(--text)', fontWeight: 300 }}
                 >
-                  {s.value}
+                  {t(s.valueKey)}
                 </div>
                 <div className="label" style={{ fontSize: '0.6rem', opacity: 0.55, letterSpacing: '0.18em' }}>
-                  {s.label}
+                  {t(s.labelKey)}
                 </div>
               </div>
             ))}
@@ -223,42 +214,34 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
             <div>
-              <p className="label mb-4">Current Opportunities</p>
+              <p className="label mb-4">{t('home.label_current')}</p>
               <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text)', fontWeight: 400 }}>
-                Live &amp; Upcoming
+                {t('home.live_upcoming')}
               </h2>
             </div>
-            <Link to="/events" className="btn-secondary px-6 py-2.5 text-xs">
-              All Events →
+            <Link to="/events" className="btn-glass px-6 py-2.5 text-xs">
+              {t('home.all_events')}
             </Link>
           </div>
 
           {eventsLoading ? (
-            <div className="flex justify-center py-16"><LoadingSpinner /></div>
-          ) : fetchError ? (
-            <div className="card p-8 text-center">
+            <div className="flex justify-center py-16"><LoadingSpinner /></div>) : fetchError ? (<div className="card p-8 text-center">
               <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>Failed to load events</p>
               <button
                 onClick={fetchFeaturedEvents}
-                className="btn-secondary px-6 py-2.5 text-xs"
-              >
-                Try again
-              </button>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-6">
+                className="btn-glass px-6 py-2.5 text-xs"
+              >Try again</button>
+            </div>) : (<div className="grid md:grid-cols-2 gap-6">
               {/* Ongoing */}
               <div className="card p-8">
                 <div className="flex items-center gap-3 mb-7">
                   <div className="notification-dot" />
-                  <span className="label">Happening Now</span>
+                  <span className="label">{t('home.happening_now')}</span>
                 </div>
                 {ongoing.length === 0 ? (
                   <p className="text-sm py-8 text-center" style={{ color: 'var(--text-dim)' }}>
-                    No live events at the moment
-                  </p>
-                ) : (
-                  <div className="space-y-3">
+                    {t('home.no_live')}
+                  </p>) : (<div className="space-y-3">
                     {ongoing.map(event => (
                       <Link
                         key={event._id}
@@ -288,14 +271,12 @@ export default function HomePage() {
                     className="w-1.5 h-1.5 rounded-full"
                     style={{ background: 'var(--gold)', boxShadow: '0 0 6px rgba(201,168,76,0.5)' }}
                   />
-                  <span className="label" style={{ color: 'var(--gold)' }}>Starting Soon</span>
+                  <span className="label" style={{ color: 'var(--gold)' }}>{t('home.starting_soon')}</span>
                 </div>
                 {upcoming.length === 0 ? (
                   <p className="text-sm py-8 text-center" style={{ color: 'var(--text-dim)' }}>
-                    No upcoming events yet
-                  </p>
-                ) : (
-                  <div className="space-y-3">
+                    {t('home.no_upcoming')}
+                  </p>) : (<div className="space-y-3">
                     {upcoming.map(event => (
                       <Link
                         key={event._id}
@@ -307,9 +288,7 @@ export default function HomePage() {
                           <span
                             className="tag flex-shrink-0"
                             style={{ background: 'rgba(201,168,76,0.1)', borderColor: 'rgba(201,168,76,0.2)', color: 'var(--gold-light)' }}
-                          >
-                            Soon
-                          </span>
+                          >Soon</span>
                         </div>
                         <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{event.location}</span>
                         <div className="flex items-center gap-3 text-xs mt-1" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -331,9 +310,9 @@ export default function HomePage() {
       <section className="py-28 px-6 sm:px-8" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <p className="label mb-5">Why EventStaff Nepal</p>
+            <p className="label mb-5">{t('home.label_why')}</p>
             <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text)', fontWeight: 400 }}>
-              The Advantage
+              {t('home.advantage')}
             </h2>
           </div>
 
@@ -353,10 +332,10 @@ export default function HomePage() {
                   {f.glyph}
                 </div>
                 <h3 className="font-serif text-2xl mb-4" style={{ color: 'var(--text)', fontWeight: 500 }}>
-                  {f.title}
+                  {t(f.titleKey)}
                 </h3>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                  {f.body}
+                  {t(f.bodyKey)}
                 </p>
               </div>
             ))}
@@ -367,27 +346,25 @@ export default function HomePage() {
       {/* ── CTA ─────────────────────────────────────── */}
       <section className="py-28 px-6 sm:px-8" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="max-w-4xl mx-auto text-center">
-          <p className="label mb-6">Join Today</p>
+          <p className="label mb-6">{t('home.label_join')}</p>
           <h2
             className="font-serif mb-6"
             style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', color: 'var(--text)', fontWeight: 300, lineHeight: 1.1 }}
           >
-            Ready to elevate
+            {t('home.ready')}
             <br />
-            <span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>your events?</span>
+            <span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>{t('home.your_events')}</span>
           </h2>
           <p className="text-base mb-12 max-w-md mx-auto" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-            Nepal's most trusted event staffing platform — connecting organisers with exceptional hospitality talent.
+            {t('home.cta_desc')}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             {!user ? (
               <>
-                <Link to="/register" className="btn-primary px-10 py-3.5">Create Account</Link>
-                <Link to="/login" className="btn-secondary px-10 py-3.5">Sign In</Link>
-              </>
-            ) : (
-              <Link to={user.role === 'organizer' ? '/dashboard' : '/worker-dashboard'} className="btn-secondary px-10 py-3.5">
-                {user.role === 'organizer' ? 'View My Events' : 'Find Work'}
+                <Link to="/register" className="btn-glass px-10 py-3.5">{t('nav.register')}</Link>
+                <Link to="/login" className="btn-glass px-10 py-3.5">{t('nav.login')}</Link>
+              </>) : (<Link to={user.role === 'organizer' ? '/dashboard' : '/worker-dashboard'} className="btn-glass px-10 py-3.5">
+                {user.role === 'organizer' ? t('home.view_my_events') : t('home.find_work')}
               </Link>
             )}
           </div>
@@ -396,18 +373,17 @@ export default function HomePage() {
 
       {/* ── FOOTER ──────────────────────────────────── */}
       <footer
-        className="py-10 px-6"
-        style={{ borderTop: '1px solid var(--border)', background: 'rgba(6,9,18,0.6)' }}
+        className="py-10 px-6 relative z-10"
+        style={{ borderTop: '1px solid var(--border)', background: '#060912', opacity: 1 }}
       >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <span style={{ color: 'var(--flame)', fontSize: '0.85rem' }}>◆</span>
-            <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>
-              EventStaff <span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>Nepal</span>
+            <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>EventStaff<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>NEPAL</span>
             </span>
           </div>
           <nav className="flex items-center gap-6">
-            {[['About', '#'], ['Events', '/events']].map(([label, to]) => (
+            {[[t('footer.about'), '#'], [t('footer.events'), '/events']].map(([label, to]) => (
               <Link
                 key={label}
                 to={to}
@@ -421,7 +397,7 @@ export default function HomePage() {
             ))}
           </nav>
           <p className="text-xs" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-            © 2026 EventStaff Nepal. Crafted with care in Kathmandu.
+            {t('footer.copyright')}
           </p>
         </div>
       </footer>

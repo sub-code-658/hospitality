@@ -24,8 +24,12 @@ export default function MessagesPage() {
   useEffect(() => {
     if (socket) {
       socket.on('newMessage', (message) => {
-        if (message.sender === selectedUser?.id || message.sender === user.id) {
-          setMessages(prev => [...prev, message]);
+        if (message.sender === selectedUser?._id || message.sender === user.id) {
+          setMessages(prev => {
+            // Avoid duplicate messages if we already appended it in handleSend
+            if (prev.some(m => m._id === message._id)) return prev;
+            return [...prev, message];
+          });
         }
         fetchConversations();
       });
@@ -82,13 +86,13 @@ export default function MessagesPage() {
 
     setSending(true);
     try {
-      if (socket) {
-        socket.emit('sendMessage', {
-          senderId: user.id,
-          receiverId: selectedUser._id,
-          content: newMessage.trim()
-        });
-      }
+      const res = await api.post('/messages', {
+        receiverId: selectedUser._id,
+        content: newMessage.trim()
+      });
+      // Append the message immediately to our local state so it feels instant
+      setMessages(prev => [...prev, res.data]);
+      fetchConversations();
 
       setNewMessage('');
     } catch (error) {
@@ -241,7 +245,7 @@ export default function MessagesPage() {
                   <button
                     type="submit"
                     disabled={sending || !newMessage.trim()}
-                    className="glass-btn text-white px-6 py-3 rounded-xl disabled:opacity-50"
+                    className="btn-glass px-6 py-3 rounded-xl disabled:opacity-50"
                   >
                     {sending ? <LoadingSpinner size="sm" /> : 'Send'}
                   </button>

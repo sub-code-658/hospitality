@@ -27,9 +27,12 @@ export default function WorkerDashboard() {
         api.get('/events?status=active'),
         api.get('/applications/my')
       ]);
-      setEvents(eventsRes.data);
-      setMyApplications(appsRes.data);
+      setEvents(Array.isArray(eventsRes.data) ? eventsRes.data : []);
+      setMyApplications(Array.isArray(appsRes.data) ? appsRes.data : []);
     } catch (error) {
+      console.error('Failed to load data:', error);
+      setEvents([]);
+      setMyApplications([]);
       addToast('Failed to load data', 'error');
     } finally {
       setLoading(false);
@@ -46,19 +49,19 @@ export default function WorkerDashboard() {
     }
   };
 
-  const allRoles = [...new Set(events.flatMap(e => e.rolesNeeded?.map(r => r.roleName) || []))];
+  const allRoles = [...new Set((events || []).flatMap(e => e.rolesNeeded?.map(r => r.roleName) || []))];
 
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = (events || []).filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = !roleFilter || event.rolesNeeded?.some(r => r.roleName === roleFilter);
     return matchesSearch && matchesRole;
   });
 
-  const appliedEventIds = myApplications.map(a => a.event?._id || a.event);
+  const appliedEventIds = (myApplications || []).map(a => a.event?._id || a.event);
 
-  const acceptedApps = myApplications.filter(a => a.status === 'accepted');
-  const pendingApps = myApplications.filter(a => a.status === 'pending');
+  const acceptedApps = (myApplications || []).filter(a => a.status === 'accepted');
+  const pendingApps = (myApplications || []).filter(a => a.status === 'pending');
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>;
@@ -103,12 +106,12 @@ export default function WorkerDashboard() {
                   placeholder="Search events..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 px-4 py-3 rounded-xl glass-input text-white placeholder-white/40"
+                  className="flex-1 px-4 py-3 rounded-xl glass-input"
                 />
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-4 py-3 rounded-xl glass-input text-white"
+                  className="px-4 py-3 rounded-xl glass-input"
                 >
                   <option value="" className="bg-gray-800">All Roles</option>
                   {allRoles.map(role => (
@@ -139,7 +142,7 @@ export default function WorkerDashboard() {
                         ) : (
                           <button
                             onClick={() => handleApply(event._id)}
-                            className="glass-btn text-white px-4 py-2 rounded-xl text-sm"
+                            className="btn-glass px-4 py-2 rounded-xl text-sm"
                           >
                             Apply Now
                           </button>
@@ -148,7 +151,7 @@ export default function WorkerDashboard() {
                       <div className="flex flex-wrap gap-2">
                         {event.rolesNeeded?.map((role, idx) => (
                           <span key={idx} className="bg-primary-500/20 text-primary-300 px-2 py-1 rounded-full text-xs border border-primary-400/30">
-                            {role.roleName} - NPR {role.payPerHour}/hr
+                            {role.roleName} - NPR {role.payAmount}{role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}
                           </span>
                         ))}
                       </div>

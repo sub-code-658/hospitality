@@ -33,7 +33,7 @@ export default function PostEventPage() {
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [roles, setRoles] = useState([{ roleName: '', count: 1, payPerHour: '' }]);
+  const [roles, setRoles] = useState([{ roleSelect: 'Waiter', customRole: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -61,7 +61,7 @@ export default function PostEventPage() {
   };
 
   const addRole = () => {
-    setRoles([...roles, { roleName: '', count: 1, payPerHour: '' }]);
+    setRoles([...roles, { roleSelect: 'Waiter', customRole: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
   };
 
   const removeRole = (index) => {
@@ -88,9 +88,9 @@ export default function PostEventPage() {
     }
 
     roles.forEach((role, idx) => {
-      if (!role.roleName) newErrors[`role_${idx}`] = 'Role name is required';
+      if (role.roleSelect === 'Other' && !role.customRole.trim()) newErrors[`role_${idx}`] = 'Custom role name is required';
       if (!role.count || role.count < 1) newErrors[`count_${idx}`] = 'Valid count is required';
-      if (role.payPerHour === '' || role.payPerHour < 0) newErrors[`pay_${idx}`] = 'Valid pay rate is required';
+      if (role.payAmount === '' || role.payAmount < 0) newErrors[`pay_${idx}`] = 'Valid pay amount is required';
     });
     return newErrors;
   };
@@ -105,11 +105,22 @@ export default function PostEventPage() {
 
     setLoading(true);
     try {
-      await api.post('/events', {
+      const processedRoles = roles.map(r => ({
+        roleName: r.roleSelect === 'Other' ? r.customRole.trim() : r.roleSelect,
+        count: parseInt(r.count, 10),
+        payAmount: Number(r.payAmount),
+        paymentType: r.paymentType
+      }));
+
+      const eventData = {
         ...formData,
-        rolesNeeded: roles,
+        rolesNeeded: processedRoles,
         coordinates: { lat: mapPosition[0], lng: mapPosition[1] }
-      });
+      };
+      
+      console.log('Sending eventData:', JSON.stringify(eventData, null, 2));
+
+      await api.post('/events', eventData);
       addToast('Event posted successfully!', 'success');
       navigate('/dashboard');
     } catch (error) {
@@ -236,14 +247,31 @@ export default function PostEventPage() {
           <div className="space-y-4">
             {roles.map((role, index) => (
               <div key={index} className="flex gap-4 items-start p-4 glass rounded-xl">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    value={role.roleName}
-                    onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
-                    placeholder="Role (e.g., Waiter)"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm"
-                  />
+                <div className="flex-1 flex flex-col gap-2">
+                  <select
+                    value={role.roleSelect}
+                    onChange={(e) => handleRoleChange(index, 'roleSelect', e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl input-field text-sm"
+                  >
+                    <option value="Waiter">Waiter</option>
+                    <option value="Chef">Chef</option>
+                    <option value="Bartender">Bartender</option>
+                    <option value="DJ">DJ</option>
+                    <option value="Host/Hostess">Host/Hostess</option>
+                    <option value="Security">Security</option>
+                    <option value="Cleaner">Cleaner</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  
+                  {role.roleSelect === 'Other' && (
+                    <input
+                      type="text"
+                      value={role.customRole}
+                      onChange={(e) => handleRoleChange(index, 'customRole', e.target.value)}
+                      placeholder="Specify role"
+                      className="w-full px-3 py-2 rounded-xl input-field text-sm mt-1"
+                    />
+                  )}
                   {errors[`role_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`role_${index}`]}</p>}
                 </div>
                 <div className="w-24">
@@ -253,20 +281,31 @@ export default function PostEventPage() {
                     onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
                     placeholder="Count"
                     min="1"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm text-center"
+                    className="w-full px-3 py-2 rounded-xl input-field text-sm text-center"
                   />
                   {errors[`count_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`count_${index}`]}</p>}
                 </div>
-                <div className="w-32">
-                  <input
-                    type="number"
-                    value={role.payPerHour}
-                    onChange={(e) => handleRoleChange(index, 'payPerHour', e.target.value)}
-                    placeholder="NPR/hr"
-                    min="0"
-                    className="w-full px-3 py-2 rounded-xl glass-input text-white placeholder-white/40 text-sm"
-                  />
-                  {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                <div className="w-56 flex gap-2">
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      value={role.payAmount}
+                      onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
+                      placeholder="Amount"
+                      min="0"
+                      className="w-full px-3 py-2 rounded-xl input-field text-sm"
+                    />
+                    {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                  </div>
+                  <select
+                    value={role.paymentType}
+                    onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
+                    className="w-24 px-2 py-2 rounded-xl input-field text-sm"
+                  >
+                    <option value="per_hour">/ Hour</option>
+                    <option value="per_day">/ Day</option>
+                    <option value="per_event">/ Event</option>
+                  </select>
                 </div>
                 {roles.length > 1 && (
                   <button
@@ -285,7 +324,7 @@ export default function PostEventPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center"
+          className="w-full btn-glass py-4 rounded-xl font-semibold flex items-center justify-center"
         >
           {loading ? <LoadingSpinner size="sm" /> : 'Post Event'}
         </button>

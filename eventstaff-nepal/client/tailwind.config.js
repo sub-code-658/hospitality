@@ -7,19 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#060912',
-        surface: '#0d1118',
-        'surface-raised': '#131a24',
+        bg: '#FDFDFA',
+        surface: '#FFFFFF',
+        'surface-raised': '#F5F5F0',
         flame: {
-          DEFAULT: '#e8681e',
-          light: '#f5a85c',
-          dark: '#b5511a',
-          muted: 'rgba(232, 104, 30, 0.12)',
+          DEFAULT: '#B89F64',
+          light: '#C2A86C',
+          dark: '#A38C52',
+          muted: 'rgba(184, 159, 100, 0.12)',
         },
         gold: {
-          DEFAULT: '#c9a84c',
-          light: '#dfc673',
-          muted: 'rgba(201, 168, 76, 0.12)',
+          DEFAULT: '#B89F64',
+          light: '#C2A86C',
+          muted: 'rgba(184, 159, 100, 0.12)',
         },
         sage: {
           DEFAULT: '#6baf8a',
@@ -38,14 +38,14 @@ export default {
         display: ['Cormorant Garamond', 'serif'],
       },
       backgroundImage: {
-        'gradient-flame': 'linear-gradient(135deg, #e8681e 0%, #f5a85c 100%)',
+        'gradient-flame': 'linear-gradient(135deg, #B89F64 0%, #C2A86C 100%)',
         'gradient-gold': 'linear-gradient(135deg, #c9a84c 0%, #dfc673 100%)',
-        'gradient-dark': 'linear-gradient(135deg, #0d1118 0%, #060912 100%)',
+        'gradient-dark': 'linear-gradient(135deg, #FFFFFF 0%, #FDFDFA 100%)',
       },
       boxShadow: {
-        'flame': '0 0 30px rgba(232, 104, 30, 0.2)',
-        'flame-lg': '0 0 60px rgba(232, 104, 30, 0.35)',
-        'gold': '0 0 20px rgba(201, 168, 76, 0.2)',
+        'flame': '0 0 30px rgba(184, 159, 100, 0.2)',
+        'flame-lg': '0 0 60px rgba(184, 159, 100, 0.35)',
+        'gold': '0 0 20px rgba(184, 159, 100, 0.2)',
         'inner': 'inset 0 1px 0 rgba(255,255,255,0.04)',
         'card': '0 4px 24px rgba(0,0,0,0.4)',
         'modal': '0 24px 80px rgba(0,0,0,0.7)',
@@ -78,8 +78,8 @@ export default {
           '50%': { transform: 'translateY(-24px)' },
         },
         pulseFlame: {
-          '0%, 100%': { opacity: '1', boxShadow: '0 0 8px rgba(232, 104, 30, 0.6)' },
-          '50%': { opacity: '0.6', boxShadow: '0 0 18px rgba(232, 104, 30, 0.9)' },
+          '0%, 100%': { opacity: '1', boxShadow: '0 0 8px rgba(184, 159, 100, 0.6)' },
+          '50%': { opacity: '0.6', boxShadow: '0 0 18px rgba(184, 159, 100, 0.9)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% center' },

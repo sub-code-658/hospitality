@@ -51,6 +51,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/payments', require('./routes/payments'));
+app.use('/api/invitations', require('./routes/invitations'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -62,8 +63,9 @@ app.get('/api/health', (req, res) => {
 });
 
 // 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
+app.use('*', (req, res) => {
+  console.log('Unhandled request:', req.method, req.originalUrl);
+  res.status(404).json({ error: 'Route not found' });
 });
 
 // Global error handler

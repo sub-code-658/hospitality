@@ -105,7 +105,7 @@ export default function ProfilePage() {
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="glass-btn text-white px-4 py-2 rounded-xl"
+                    className="btn-glass px-4 py-2 rounded-xl"
                   >
                     {saving ? <LoadingSpinner size="sm" /> : 'Save'}
                   </button>

@@ -59,6 +59,10 @@ const userSchema = new mongoose.Schema({
     min: 0,
     max: 5
   },
+  isAvailable: {
+    type: Boolean,
+    default: true
+  },
   totalReviews: {
     type: Number,
     default: 0,

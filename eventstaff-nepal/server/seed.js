@@ -80,8 +80,8 @@ const seed = async () => {
         startTime: '16:00',
         endTime: '22:00',
         rolesNeeded: [
-          { roleName: 'Waiter', count: 8, payPerHour: 500 },
-          { roleName: 'Host', count: 2, payPerHour: 600 }
+          { roleName: 'Waiter', count: 8, payAmount: 500 },
+          { roleName: 'Host', count: 2, payAmount: 600 }
         ],
         organizer: organizers[0]._id,
         status: 'active',
@@ -95,9 +95,9 @@ const seed = async () => {
         startTime: '18:00',
         endTime: '23:00',
         rolesNeeded: [
-          { roleName: 'Waiter', count: 10, payPerHour: 550 },
-          { roleName: 'Bartender', count: 2, payPerHour: 700 },
-          { roleName: 'Host', count: 2, payPerHour: 650 }
+          { roleName: 'Waiter', count: 10, payAmount: 550 },
+          { roleName: 'Bartender', count: 2, payAmount: 700 },
+          { roleName: 'Host', count: 2, payAmount: 650 }
         ],
         organizer: organizers[0]._id,
         status: 'active',
@@ -111,9 +111,9 @@ const seed = async () => {
         startTime: '10:00',
         endTime: '18:00',
         rolesNeeded: [
-          { roleName: 'Waiter', count: 6, payPerHour: 450 },
-          { roleName: 'Chef', count: 3, payPerHour: 800 },
-          { roleName: 'Security', count: 4, payPerHour: 500 }
+          { roleName: 'Waiter', count: 6, payAmount: 450 },
+          { roleName: 'Chef', count: 3, payAmount: 800 },
+          { roleName: 'Security', count: 4, payAmount: 500 }
         ],
         organizer: organizers[1]._id,
         status: 'active',
@@ -127,8 +127,8 @@ const seed = async () => {
         startTime: '14:00',
         endTime: '20:00',
         rolesNeeded: [
-          { roleName: 'Waiter', count: 4, payPerHour: 400 },
-          { roleName: 'Host', count: 1, payPerHour: 500 }
+          { roleName: 'Waiter', count: 4, payAmount: 400 },
+          { roleName: 'Host', count: 1, payAmount: 500 }
         ],
         organizer: organizers[1]._id,
         status: 'active',
@@ -142,9 +142,9 @@ const seed = async () => {
         startTime: '09:00',
         endTime: '17:00',
         rolesNeeded: [
-          { roleName: 'Host', count: 3, payPerHour: 700 },
-          { roleName: 'Security', count: 2, payPerHour: 550 },
-          { roleName: 'Waiter', count: 5, payPerHour: 500 }
+          { roleName: 'Host', count: 3, payAmount: 700 },
+          { roleName: 'Security', count: 2, payAmount: 550 },
+          { roleName: 'Waiter', count: 5, payAmount: 500 }
         ],
         organizer: organizers[0]._id,
         status: 'active',

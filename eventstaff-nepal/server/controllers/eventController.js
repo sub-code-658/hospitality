@@ -62,7 +62,7 @@ exports.getAllEvents = async (req, res, next) => {
     const [events, totalCount] = await Promise.all([
       Event.find(query)
         .populate('organizer', 'name email rating totalReviews avatar')
-        .sort({ eventDate: 1 })
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit)),
       Event.countDocuments(query)
@@ -137,6 +137,9 @@ exports.createEvent = async (req, res, next) => {
     if (req.user.role !== 'organizer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Only organizers can create events' });
     }
+
+    console.log('--- Incoming Event Payload ---');
+    console.log(JSON.stringify(req.body, null, 2));
 
     const { title, description, location, eventDate, startTime, endTime, rolesNeeded, coordinates, imageUrl } = req.body;
 

@@ -21,11 +21,11 @@ exports.initializePayment = async (req, res, next) => {
       return res.status(403).json({ message: 'Not authorized to pay for this shift' });
     }
 
-    // Calculate pay: payPerHour * hours (or simple total amount if hours not tracked, fallback to total pay)
-    // Assume shift pay is calculated on frontend or fallback from application.
-    // For eventstaff, we can look up roles needed pay rate.
-    const assignedRole = event.rolesNeeded.find(r => r.roleName === application.role);
-    const payRate = assignedRole ? assignedRole.payPerHour : 500; // default NPR 500/hr
+    // Calculate pay: payAmount * hours (or simple total amount if hours not tracked, fallback to total pay)
+    // Find the role applied for in the event's rolesNeeded array
+    const assignedRole = event.rolesNeeded.find(r => r.roleName === application.roleAppliedFor);
+    
+    const payRate = assignedRole ? assignedRole.payAmount : 500; // default NPR 500/hr
     // Let's assume standard 8 hr shift if not specified
     const amount = payRate * 8; 
 
