@@ -44,7 +44,7 @@ export default function PaymentCallbackPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-bg">
         <LoadingSpinner size="lg" />
-        <p className="mt-4 text-white/70 text-sm">{t('common.verifying_transaction_with_ese', 'Verifying transaction with eSewa...')}</p>
+        <p className="mt-4 text-gray-900/70 dark:text-white/70 text-sm">{t('common.verifying_transaction_with_ese', 'Verifying transaction with eSewa...')}</p>
       </div>
     );
   }
@@ -59,7 +59,7 @@ export default function PaymentCallbackPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="font-serif text-3xl text-white mb-3">{t('common.payment_successful', 'Payment Successful')}</h1>
+            <h1 className="font-serif text-3xl text-gray-900 dark:text-white mb-3">{t('common.payment_successful', 'Payment Successful')}</h1>
             <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>{t('common.your_transaction_has_been_secu', 'Your transaction has been securely processed and verified. The worker will be notified.')}</p>
           </>
         ) : (
@@ -69,7 +69,7 @@ export default function PaymentCallbackPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h1 className="font-serif text-3xl text-white mb-3">{t('common.payment_failed', 'Payment Failed')}</h1>
+            <h1 className="font-serif text-3xl text-gray-900 dark:text-white mb-3">{t('common.payment_failed', 'Payment Failed')}</h1>
             <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>{t('common.we_could_not_verify_your_payme', 'We could not verify your payment. Please contact support or try again.')}</p>
           </>
         )}

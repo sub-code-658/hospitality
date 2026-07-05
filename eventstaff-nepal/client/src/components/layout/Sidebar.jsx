@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="p-6">
           <div className="flex items-center space-x-2 mb-8">
             <span className="text-2xl">🎉</span>
-            <span className="text-white font-bold text-xl gradient-text">{t('common.eventstaff', 'EventStaff')}</span>
+            <span className="text-gray-900 dark:text-white font-bold text-xl gradient-text">{t('common.eventstaff', 'EventStaff')}</span>
           </div>
 
           <nav className="space-y-2">
@@ -56,8 +56,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300
                   ${isActive || location.pathname === link.path
-                    ? 'bg-white/15 text-white shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/10'
+                    ? 'bg-white/15 text-gray-900 dark:text-white shadow-lg'
+                    : 'text-gray-900/60 dark:text-white/60 hover:text-gray-900 dark:text-white hover:bg-white/10'
                   }
                 `}
               >

@@ -17,7 +17,7 @@ const Input = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label className="block text-sm font-medium text-white/80 mb-2">
+        <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">
           {label}
           {required && <span className="text-red-400 ml-1">*</span>}
         </label>
@@ -27,7 +27,7 @@ const Input = ({
         <input
           type={inputType}
           className={`
-            w-full px-4 py-3 rounded-xl glass-input text-white placeholder-white/40
+            w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40
             ${error ? 'border-red-400 focus:border-red-400' : 'border-white/15'}
             focus:outline-none transition-all duration-300
           `}
@@ -38,7 +38,7 @@ const Input = ({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white/70 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-900/50 dark:text-white/50 hover:text-gray-900/70 dark:text-white/70 transition-colors"
           >
             {showPassword ? (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@ const Input = ({
       )}
 
       {helperText && !error && (
-        <p className="text-white/50 text-sm mt-1">{helperText}</p>
+        <p className="text-gray-900/50 dark:text-white/50 text-sm mt-1">{helperText}</p>
       )}
     </div>
   );

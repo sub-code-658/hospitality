@@ -98,8 +98,8 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
             </div>
           </div>
           <div className="ml-3">
-            <span className="font-medium text-white">{selectedUser.name}</span>
-            <p className="text-xs text-white/40">
+            <span className="font-medium text-gray-900 dark:text-white">{selectedUser.name}</span>
+            <p className="text-xs text-gray-900/40 dark:text-white/40">
               {partnerTyping ? 'Typing...' : 'Online'}
             </p>
           </div>
@@ -145,12 +145,12 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
             }}
             onKeyDown={handleKeyDown}
             placeholder={t('common.type_a_message', 'Type a message...')}
-            className="flex-1 px-4 py-3 rounded-xl glass-input text-white placeholder-white/40"
+            className="flex-1 px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40"
           />
           <button
             type="submit"
             disabled={sending || !newMessage.trim()}
-            className="glass-btn text-white px-6 py-3 rounded-xl disabled:opacity-50"
+            className="glass-btn text-gray-900 dark:text-white px-6 py-3 rounded-xl disabled:opacity-50"
           >
             {sending ? <LoadingSpinner size="sm" /> : 'Send'}
           </button>

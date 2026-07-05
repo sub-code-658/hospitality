@@ -19,7 +19,7 @@ const ApplicationList = ({ applications, loading, isOrganizer = false, onStatusC
   if (!applications || applications.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-white/50">{t('common.no_applications_yet', 'No applications yet')}</p>
+        <p className="text-gray-900/50 dark:text-white/50">{t('common.no_applications_yet', 'No applications yet')}</p>
       </div>
     );
   }

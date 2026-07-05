@@ -102,27 +102,27 @@ export default function AdminPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="mb-8 animate-slide-up">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('common.admin_dashboard', 'Admin Dashboard')}</h1>
-        <p className="text-white/60">{t('common.manage_users_events_and_platfo', 'Manage users, events, and platform analytics')}</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">{t('common.admin_dashboard', 'Admin Dashboard')}</h1>
+        <p className="text-gray-900/60 dark:text-white/60">{t('common.manage_users_events_and_platfo', 'Manage users, events, and platform analytics')}</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="glass-card p-5 rounded-xl animate-scale-in">
-          <div className="text-3xl font-bold text-white mb-1">{stats.totalUsers}</div>
-          <div className="text-white/50 text-sm">{t('common.total_users', 'Total Users')}</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalUsers}</div>
+          <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.total_users', 'Total Users')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '50ms' }}>
-          <div className="text-3xl font-bold text-white mb-1">{stats.totalWorkers}</div>
-          <div className="text-white/50 text-sm">{t('common.workers', 'Workers')}</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalWorkers}</div>
+          <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.workers', 'Workers')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '100ms' }}>
-          <div className="text-3xl font-bold text-white mb-1">{stats.totalOrganizers}</div>
-          <div className="text-white/50 text-sm">{t('common.organizers', 'Organizers')}</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalOrganizers}</div>
+          <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.organizers', 'Organizers')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '150ms' }}>
-          <div className="text-3xl font-bold text-white mb-1">{stats.activeEvents}</div>
-          <div className="text-white/50 text-sm">{t('common.active_events', 'Active Events')}</div>
+          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.activeEvents}</div>
+          <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.active_events', 'Active Events')}</div>
         </div>
       </div>
 
@@ -134,8 +134,8 @@ export default function AdminPage() {
             onClick={() => setActiveTab(tab)}
             className={`px-5 py-2 rounded-xl font-medium transition-all duration-300 capitalize ${
               activeTab === tab
-                ? 'bg-primary-500 text-white'
-                : 'glass text-white/70 hover:text-white hover:bg-white/10'
+                ? 'bg-primary-500 text-gray-900 dark:text-white'
+                : 'glass text-gray-900/70 dark:text-white/70 hover:text-gray-900 dark:text-white hover:bg-white/10'
             }`}
           >
             {tab}
@@ -148,23 +148,23 @@ export default function AdminPage() {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-card p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-4">{t('common.platform_summary', 'Platform Summary')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.platform_summary', 'Platform Summary')}</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">{t('common.total_events', 'Total Events')}</span>
-                  <span className="text-white font-semibold">{stats.totalEvents}</span>
+                  <span className="text-gray-900/70 dark:text-white/70">{t('common.total_events', 'Total Events')}</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{stats.totalEvents}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">{t('common.total_applications', 'Total Applications')}</span>
-                  <span className="text-white font-semibold">{stats.totalApplications}</span>
+                  <span className="text-gray-900/70 dark:text-white/70">{t('common.total_applications', 'Total Applications')}</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{stats.totalApplications}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">Pending Applications</span>
-                  <span className="text-white font-semibold">{stats.pendingApplications}</span>
+                  <span className="text-gray-900/70 dark:text-white/70">Pending Applications</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">{stats.pendingApplications}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">Platform Revenue (NPR)</span>
-                  <span className="text-white font-semibold">
+                  <span className="text-gray-900/70 dark:text-white/70">Platform Revenue (NPR)</span>
+                  <span className="text-gray-900 dark:text-white font-semibold">
                     {stats.totalRevenue?.toLocaleString() || 0}
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export default function AdminPage() {
             </div>
 
             <div className="glass-card p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-4">{t('common.recent_users', 'Recent Users')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.recent_users', 'Recent Users')}</h3>
               <div className="space-y-3">
                 {users.slice(0, 5).map(user => (
                   <div key={user._id} className="flex items-center justify-between">
@@ -183,8 +183,8 @@ export default function AdminPage() {
                         </span>
                       </div>
                       <div>
-                        <p className="text-white font-medium">{user.name}</p>
-                        <p className="text-white/40 text-sm capitalize">{user.role}</p>
+                        <p className="text-gray-900 dark:text-white font-medium">{user.name}</p>
+                        <p className="text-gray-900/40 dark:text-white/40 text-sm capitalize">{user.role}</p>
                       </div>
                     </div>
                     <Badge variant={user.isVerified ? 'success' : 'warning'}>
@@ -200,18 +200,18 @@ export default function AdminPage() {
         {activeTab === 'users' && (
           <div className="glass-card rounded-xl overflow-hidden">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">{t('common.all_users', 'All Users')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('common.all_users', 'All Users')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.name', 'Name')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.email', 'Email')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.role', 'Role')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.joined', 'Joined')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.name', 'Name')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.email', 'Email')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.role', 'Role')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.joined', 'Joined')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -224,10 +224,10 @@ export default function AdminPage() {
                               {user.name?.charAt(0) || 'U'}
                             </span>
                           </div>
-                          <span className="text-white">{user.name}</span>
+                          <span className="text-gray-900 dark:text-white">{user.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-white/70">{user.email}</td>
+                      <td className="px-4 py-3 text-gray-900/70 dark:text-white/70">{user.email}</td>
                       <td className="px-4 py-3">
                         <Badge variant={user.role === 'worker' ? 'info' : 'default'}>{user.role}</Badge>
                       </td>
@@ -236,7 +236,7 @@ export default function AdminPage() {
                           {user.isVerified ? 'Verified' : 'Pending'}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-white/50 text-sm">
+                      <td className="px-4 py-3 text-gray-900/50 dark:text-white/50 text-sm">
                         {new Date(user.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-4 py-3">
@@ -264,29 +264,29 @@ export default function AdminPage() {
         {activeTab === 'events' && (
           <div className="glass-card rounded-xl overflow-hidden">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">{t('common.all_events', 'All Events')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('common.all_events', 'All Events')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.positions', 'Positions')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.positions', 'Positions')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {events.map(event => (
                     <tr key={event._id} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="px-4 py-3 text-white">{event.title}</td>
-                      <td className="px-4 py-3 text-white/70">{event.organizer?.name}</td>
-                      <td className="px-4 py-3 text-white/50 text-sm">
+                      <td className="px-4 py-3 text-gray-900 dark:text-white">{event.title}</td>
+                      <td className="px-4 py-3 text-gray-900/70 dark:text-white/70">{event.organizer?.name}</td>
+                      <td className="px-4 py-3 text-gray-900/50 dark:text-white/50 text-sm">
                         {new Date(event.date).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-3 text-white/70">
+                      <td className="px-4 py-3 text-gray-900/70 dark:text-white/70">
                         {event.filledPositions}/{event.totalPositions}
                       </td>
                       <td className="px-4 py-3">
@@ -310,25 +310,25 @@ export default function AdminPage() {
 
         {activeTab === 'applications' && (
           <div className="glass-card p-6 rounded-xl">
-            <h3 className="text-lg font-semibold text-white mb-4">{t('common.application_statistics', 'Application Statistics')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.application_statistics', 'Application Statistics')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="glass p-4 rounded-xl text-center">
-                <div className="text-2xl font-bold text-white mb-1">{stats.totalApplications}</div>
-                <div className="text-white/50 text-sm">{t('common.total', 'Total')}</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{stats.totalApplications}</div>
+                <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.total', 'Total')}</div>
               </div>
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-yellow-400 mb-1">{stats.pendingApplications}</div>
-                <div className="text-white/50 text-sm">Pending</div>
+                <div className="text-gray-900/50 dark:text-white/50 text-sm">Pending</div>
               </div>
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-green-400 mb-1">
                   {stats.totalApplications - stats.pendingApplications}
                 </div>
-                <div className="text-white/50 text-sm">{t('common.approved', 'Approved')}</div>
+                <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.approved', 'Approved')}</div>
               </div>
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-red-400 mb-1">0</div>
-                <div className="text-white/50 text-sm">{t('common.rejected', 'Rejected')}</div>
+                <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.rejected', 'Rejected')}</div>
               </div>
             </div>
           </div>
@@ -337,35 +337,35 @@ export default function AdminPage() {
         {activeTab === 'payments' && (
           <div className="glass-card rounded-xl overflow-hidden animate-fade-in">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">{t('common.all_platform_transactions', 'All Platform Transactions')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('common.all_platform_transactions', 'All Platform Transactions')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.worker', 'Worker')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Amount (NPR)</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.method', 'Method')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.worker', 'Worker')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">Amount (NPR)</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.method', 'Method')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-gray-900/50 dark:text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {payments.map(payment => (
                     <tr key={payment._id} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="px-4 py-3 text-white">{payment.event?.title || 'Unknown Event'}</td>
-                      <td className="px-4 py-3 text-white/70">{payment.organizer?.name || 'Organizer'}</td>
-                      <td className="px-4 py-3 text-white/70">{payment.worker?.name || 'Worker'}</td>
-                      <td className="px-4 py-3 text-white font-semibold">{payment.amount}</td>
-                      <td className="px-4 py-3 text-white/50 uppercase text-xs">{payment.paymentMethod}</td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white">{payment.event?.title || 'Unknown Event'}</td>
+                      <td className="px-4 py-3 text-gray-900/70 dark:text-white/70">{payment.organizer?.name || 'Organizer'}</td>
+                      <td className="px-4 py-3 text-gray-900/70 dark:text-white/70">{payment.worker?.name || 'Worker'}</td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white font-semibold">{payment.amount}</td>
+                      <td className="px-4 py-3 text-gray-900/50 dark:text-white/50 uppercase text-xs">{payment.paymentMethod}</td>
                       <td className="px-4 py-3">
                         <Badge variant={payment.status === 'completed' ? 'accepted' : payment.status === 'failed' ? 'rejected' : 'pending'}>
                           {payment.status}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-white/50 text-xs">
+                      <td className="px-4 py-3 text-gray-900/50 dark:text-white/50 text-xs">
                         {new Date(payment.createdAt).toLocaleDateString()}
                       </td>
                     </tr>

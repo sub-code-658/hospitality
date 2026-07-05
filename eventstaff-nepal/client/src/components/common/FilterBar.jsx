@@ -41,7 +41,7 @@ export default function FilterBar({ filters, onFilterChange, isOrganizer, onSear
             value={filters.search || ''}
             onChange={e => onFilterChange('search', e.target.value)}
             placeholder={isOrganizer ? "Name, skills..." : "Event name, location..."}
-            className="w-full bg-[#0d111c] text-white border border-[#1f2937] rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-emerald-500 outline-none text-sm appearance-none"
+            className="w-full bg-[#0d111c] text-gray-900 dark:text-white border border-[#1f2937] rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-emerald-500 outline-none text-sm appearance-none"
           />
           <button
             type="submit"
@@ -61,7 +61,7 @@ export default function FilterBar({ filters, onFilterChange, isOrganizer, onSear
             <select
               value={filters.role || ''}
               onChange={e => onFilterChange('role', e.target.value)}
-              className="w-full bg-[#0d111c] text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
+              className="w-full bg-[#0d111c] text-gray-900 dark:text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
             >
               <option value="" className="bg-[#0d111c]">{isOrganizer ? 'All Skills' : 'All Roles'}</option>
               {ROLES.map(r => (
@@ -81,7 +81,7 @@ export default function FilterBar({ filters, onFilterChange, isOrganizer, onSear
               type="date"
               value={filters.date || ''}
               onChange={e => onFilterChange('date', e.target.value)}
-              className="w-full bg-[#0d111c] text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+              className="w-full bg-[#0d111c] text-gray-900 dark:text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
               style={{ colorScheme: 'dark' }}
             />
           </div>
@@ -95,7 +95,7 @@ export default function FilterBar({ filters, onFilterChange, isOrganizer, onSear
                 <select
                   value={filters.rating || ''}
                   onChange={e => onFilterChange('rating', e.target.value)}
-                  className="w-full bg-[#0d111c] text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
+                  className="w-full bg-[#0d111c] text-gray-900 dark:text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
                 >
                   <option value="" className="bg-[#0d111c]">{t('common.any_rating', 'Any Rating')}</option>
                   <option value="4" className="bg-[#0d111c]">4+ Stars</option>
@@ -112,7 +112,7 @@ export default function FilterBar({ filters, onFilterChange, isOrganizer, onSear
                 <select
                   value={filters.availability || ''}
                   onChange={e => onFilterChange('availability', e.target.value)}
-                  className="w-full bg-[#0d111c] text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
+                  className="w-full bg-[#0d111c] text-gray-900 dark:text-white border border-[#1f2937] rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer outline-none text-sm"
                 >
                   <option value="" className="bg-[#0d111c]">{t('common.any_status', 'Any Status')}</option>
                   <option value="available" className="bg-[#0d111c]">{t('common.available_now', 'Available Now')}</option>

@@ -8,8 +8,8 @@ const ConversationList = ({ conversations, selectedUser, onSelect }) => {
   if (!conversations || conversations.length === 0) {
     return (
       <div className="p-4 text-center">
-        <p className="text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
-        <p className="text-white/30 text-sm mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
+        <p className="text-gray-900/50 dark:text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
+        <p className="text-gray-900/30 dark:text-white/30 text-sm mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
       </div>
     );
   }
@@ -42,17 +42,17 @@ const ConversationList = ({ conversations, selectedUser, onSelect }) => {
               </div>
               <div className="ml-3 flex-1 min-w-0">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-white truncate">{partner.name}</span>
-                  <span className="text-xs text-white/40">
+                  <span className="font-medium text-gray-900 dark:text-white truncate">{partner.name}</span>
+                  <span className="text-xs text-gray-900/40 dark:text-white/40">
                     {conv.lastMessage && formatDate(conv.lastMessage.sentAt, { format: 'relative' })}
                   </span>
                 </div>
-                <p className="text-sm text-white/50 truncate">
+                <p className="text-sm text-gray-900/50 dark:text-white/50 truncate">
                   {conv.lastMessage?.content || 'No messages'}
                 </p>
               </div>
               {conv.unreadCount > 0 && (
-                <span className="ml-2 bg-primary-500 text-white text-xs px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                <span className="ml-2 bg-primary-500 text-gray-900 dark:text-white text-xs px-2 py-0.5 rounded-full min-w-[20px] text-center">
                   {conv.unreadCount}
                 </span>
               )}

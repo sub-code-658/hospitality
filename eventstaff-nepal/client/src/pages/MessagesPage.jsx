@@ -121,19 +121,19 @@ export default function MessagesPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 animate-slide-up">{t('common.messages', 'Messages')}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 animate-slide-up">{t('common.messages', 'Messages')}</h1>
 
       <div className="glass-card overflow-hidden h-[600px] flex animate-scale-in">
         {/* Conversations Sidebar */}
         <div className="w-80 border-r border-white/10 flex flex-col">
           <div className="p-4 border-b border-white/10 bg-white/5">
-            <h2 className="font-semibold text-white">{t('common.conversations', 'Conversations')}</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t('common.conversations', 'Conversations')}</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
-                <p className="text-sm text-white/30 mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
+                <p className="text-gray-900/50 dark:text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
+                <p className="text-sm text-gray-900/30 dark:text-white/30 mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
               </div>
             ) : (
               conversations.map((conv) => {
@@ -159,17 +159,17 @@ export default function MessagesPage() {
                       </div>
                       <div className="ml-3 flex-1 min-w-0">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium text-white truncate">{partner.name}</span>
-                          <span className="text-xs text-white/40">
+                          <span className="font-medium text-gray-900 dark:text-white truncate">{partner.name}</span>
+                          <span className="text-xs text-gray-900/40 dark:text-white/40">
                             {conv.lastMessage && formatTime(conv.lastMessage.sentAt)}
                           </span>
                         </div>
-                        <p className="text-sm text-white/50 truncate">
+                        <p className="text-sm text-gray-900/50 dark:text-white/50 truncate">
                           {conv.lastMessage?.content || 'No messages'}
                         </p>
                       </div>
                       {conv.unreadCount > 0 && (
-                        <span className="ml-2 bg-primary-500 text-white text-xs px-2 py-0.5 rounded-full">
+                        <span className="ml-2 bg-primary-500 text-gray-900 dark:text-white text-xs px-2 py-0.5 rounded-full">
                           {conv.unreadCount}
                         </span>
                       )}
@@ -198,8 +198,8 @@ export default function MessagesPage() {
                   )}
                 </div>
                 <div className="ml-3">
-                  <span className="font-medium text-white">{selectedUser.name}</span>
-                  <p className="text-xs text-white/40">
+                  <span className="font-medium text-gray-900 dark:text-white">{selectedUser.name}</span>
+                  <p className="text-xs text-gray-900/40 dark:text-white/40">
                     {isOnline(selectedUser._id) ? 'Online' : 'Offline'}
                   </p>
                 </div>
@@ -217,13 +217,13 @@ export default function MessagesPage() {
                       <div
                         className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
                           isOwn
-                            ? 'bg-primary-500/80 text-white rounded-br-none'
-                            : 'bg-white/10 text-white/90 rounded-bl-none border border-white/10'
+                            ? 'bg-primary-500/80 text-gray-900 dark:text-white rounded-br-none'
+                            : 'bg-white/10 text-gray-900/90 dark:text-white/90 rounded-bl-none border border-white/10'
                         }`}
                       >
                         <p>{msg.content}</p>
                         <p className={`text-xs mt-1 ${
-                          isOwn ? 'text-white/60' : 'text-white/40'
+                          isOwn ? 'text-gray-900/60 dark:text-white/60' : 'text-gray-900/40 dark:text-white/40'
                         }`}>
                           {formatTime(msg.sentAt)}
                         </p>
@@ -242,7 +242,7 @@ export default function MessagesPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder={t('common.type_a_message', 'Type a message...')}
-                    className="flex-1 px-4 py-3 rounded-xl glass-input text-white placeholder-white/40"
+                    className="flex-1 px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40"
                   />
                   <button
                     type="submit"
@@ -257,8 +257,8 @@ export default function MessagesPage() {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <p className="text-xl text-white/50 mb-2">{t('common.select_a_conversation', 'Select a conversation')}</p>
-                <p className="text-sm text-white/30">Choose from your existing conversations or start a new one</p>
+                <p className="text-xl text-gray-900/50 dark:text-white/50 mb-2">{t('common.select_a_conversation', 'Select a conversation')}</p>
+                <p className="text-sm text-gray-900/30 dark:text-white/30">Choose from your existing conversations or start a new one</p>
               </div>
             </div>
           )}

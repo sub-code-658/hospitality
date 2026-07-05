@@ -134,30 +134,30 @@ export default function PostEventPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">{t('common.post_new_event', 'Post New Event')}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-10 animate-slide-up">{t('common.post_new_event', 'Post New Event')}</h1>
 
       <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6 animate-scale-in">
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.title ? 'border-red-400' : ''}`}
+            className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.title ? 'border-red-400' : ''}`}
             placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
           />
           {errors.title && <p className="text-red-300 text-sm mt-2">{errors.title}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.description', 'Description')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.description', 'Description')}</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows={4}
-            className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.description ? 'border-red-400' : ''}`}
+            className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.description ? 'border-red-400' : ''}`}
             placeholder={t('common.describe_your_event', 'Describe your event...')}
           />
           {errors.description && <p className="text-red-300 text-sm mt-2">{errors.description}</p>}
@@ -165,51 +165,51 @@ export default function PostEventPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.location', 'Location')}</label>
+            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.location', 'Location')}</label>
             <input
               type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.location ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.location ? 'border-red-400' : ''}`}
               placeholder={t('common.venue_name_and_address', 'Venue name and address')}
             />
             {errors.location && <p className="text-red-300 text-sm mt-2">{errors.location}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
+            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
             <input
               type="date"
               name="eventDate"
               value={formData.eventDate}
               onChange={handleChange}
               min={new Date().toISOString().split('T')[0]}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-white ${errors.eventDate ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.eventDate ? 'border-red-400' : ''}`}
             />
             {errors.eventDate && <p className="text-red-300 text-sm mt-2">{errors.eventDate}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
+            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
             <input
               type="time"
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-white ${errors.startTime ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.startTime ? 'border-red-400' : ''}`}
             />
             {errors.startTime && <p className="text-red-300 text-sm mt-2">{errors.startTime}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
+            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
             <input
               type="time"
               name="endTime"
               value={formData.endTime}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-white ${errors.endTime ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.endTime ? 'border-red-400' : ''}`}
             />
             {errors.endTime && <p className="text-red-300 text-sm mt-2">{errors.endTime}</p>}
           </div>
@@ -217,7 +217,7 @@ export default function PostEventPage() {
 
         {/* Map Picker */}
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
           <div className="h-64 rounded-xl overflow-hidden">
             <MapContainer
               center={[27.7172, 85.3142]}
@@ -231,13 +231,13 @@ export default function PostEventPage() {
               <LocationPicker position={mapPosition} setPosition={(pos) => setMapPosition([pos.lat, pos.lng])} />
             </MapContainer>
           </div>
-          <p className="text-sm text-white/40 mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
+          <p className="text-sm text-gray-900/40 dark:text-white/40 mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
         </div>
 
         {/* Roles Section */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm font-medium text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
+            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
             <button
               type="button"
               onClick={addRole}

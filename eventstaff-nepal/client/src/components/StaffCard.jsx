@@ -15,7 +15,7 @@ export default function StaffCard({ worker, onInvite }) {
             </div>
           )}
           <div>
-            <h3 className="text-white font-medium text-lg leading-tight group-hover:text-[var(--flame-light)] transition-colors">
+            <h3 className="text-gray-900 dark:text-white font-medium text-lg leading-tight group-hover:text-[var(--flame-light)] transition-colors">
               {worker.name}
             </h3>
             <div className="flex items-center gap-1 mt-1">

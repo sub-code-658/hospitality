@@ -66,12 +66,12 @@ export default function InviteModal({ isOpen, onClose, worker }) {
       <div className="glass-card w-full max-w-md p-6 m-4 animate-scale-in relative">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-gray-900 dark:text-white transition-colors"
         >
           ✕
         </button>
         
-        <h2 className="text-xl font-serif text-white mb-1">{t('common.invite_user', 'Invite {{name}}', { name: worker?.name || '' })}</h2>
+        <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-1">{t('common.invite_user', 'Invite {{name}}', { name: worker?.name || '' })}</h2>
         <p className="text-xs text-[var(--text-muted)] mb-6">Select an event to send an invitation.</p>
         
         {fetchingEvents ? (
@@ -88,7 +88,7 @@ export default function InviteModal({ isOpen, onClose, worker }) {
                 className="glass-input w-full"
               >
                 {events.map(ev => (
-                  <option key={ev._id} value={ev._id} className="bg-[var(--surface)] text-white">
+                  <option key={ev._id} value={ev._id} className="bg-[var(--surface)] text-gray-900 dark:text-white">
                     {ev.title} ({new Date(ev.eventDate).toLocaleDateString()})
                   </option>
                 ))}

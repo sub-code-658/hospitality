@@ -90,15 +90,15 @@ export default function NotificationsPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-8 animate-slide-up">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('common.notifications', 'Notifications')}</h1>
-          <p className="text-white/60">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">{t('common.notifications', 'Notifications')}</h1>
+          <p className="text-gray-900/60 dark:text-white/60">
             {unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
           </p>
         </div>
         {unreadCount > 0 && (
           <button
             onClick={markAllAsRead}
-            className="glass px-4 py-2 rounded-xl text-white hover:bg-white/10 transition-all"
+            className="glass px-4 py-2 rounded-xl text-gray-900 dark:text-white hover:bg-white/10 transition-all"
           >{t('common.mark_all_read', 'Mark all read')}</button>
         )}
       </div>
@@ -111,8 +111,8 @@ export default function NotificationsPage() {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all duration-300 ${
               filter === f
-                ? 'bg-primary-500 text-white'
-                : 'glass text-white/60 hover:text-white'
+                ? 'bg-primary-500 text-gray-900 dark:text-white'
+                : 'glass text-gray-900/60 dark:text-white/60 hover:text-white'
             }`}
           >
             {f}
@@ -124,7 +124,7 @@ export default function NotificationsPage() {
       <div className="space-y-3 animate-fade-in">
         {filteredNotifications.length === 0 ? (
           <div className="glass-card p-12 rounded-xl text-center">
-            <p className="text-white/50 text-lg">{t('common.no_notifications', 'No notifications')}</p>
+            <p className="text-gray-900/50 dark:text-white/50 text-lg">{t('common.no_notifications', 'No notifications')}</p>
           </div>
         ) : (
           filteredNotifications.map(notification => (
@@ -147,10 +147,10 @@ export default function NotificationsPage() {
                     </span>
                   </div>
                   <div className="flex-1">
-                    <p className={`text-white ${!notification.isRead ? 'font-medium' : ''}`}>
+                    <p className={`text-gray-900 dark:text-white ${!notification.isRead ? 'font-medium' : ''}`}>
                       {notification.content}
                     </p>
-                    <p className="text-white/40 text-sm mt-1">
+                    <p className="text-gray-900/40 dark:text-white/40 text-sm mt-1">
                       {notification.time || new Date(notification.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -159,7 +159,7 @@ export default function NotificationsPage() {
                   {!notification.isRead && (
                     <button
                       onClick={() => markAsRead(notification._id)}
-                      className="text-white/50 hover:text-white text-sm"
+                      className="text-gray-900/50 dark:text-white/50 hover:text-white text-sm"
                       title="Mark as read"
                     >
                       ✓
@@ -167,7 +167,7 @@ export default function NotificationsPage() {
                   )}
                   <button
                     onClick={() => deleteNotification(notification._id)}
-                    className="text-white/50 hover:text-red-400 text-sm"
+                    className="text-gray-900/50 dark:text-white/50 hover:text-red-400 text-sm"
                     title="Delete"
                   >
                     ✕

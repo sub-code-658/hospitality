@@ -14,10 +14,10 @@ const Button = ({
   ...props
 }) => {
   const variants = {
-    primary: 'bg-primary-600 hover:bg-primary-700 text-white border-primary-600',
+    primary: 'bg-primary-600 hover:bg-primary-700 text-gray-900 dark:text-white border-primary-600',
     secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900 border-gray-300',
-    danger: 'bg-red-600 hover:bg-red-700 text-white border-red-600',
-    ghost: 'bg-transparent hover:bg-white/10 text-white border-white/20'
+    danger: 'bg-red-600 hover:bg-red-700 text-gray-900 dark:text-white border-red-600',
+    ghost: 'bg-transparent hover:bg-white/10 text-gray-900 dark:text-white border-white/20'
   };
 
   const sizes = {

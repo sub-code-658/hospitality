@@ -56,7 +56,7 @@ export default function LeaveReviewPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-          <h1 className="font-serif text-3xl text-white mt-3">{t('common.leave_a_review', 'Leave a Review')}</h1>
+          <h1 className="font-serif text-3xl text-gray-900 dark:text-white mt-3">{t('common.leave_a_review', 'Leave a Review')}</h1>
           <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{t('common.for', 'for')}<span style={{ color: 'var(--gold)' }}>{decodeURIComponent(revieweeName)}</span>
           </p>
         </div>

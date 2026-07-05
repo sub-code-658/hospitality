@@ -18,7 +18,7 @@ const EventList = ({ events, loading, emptyMessage = 'No events found' }) => {
   if (!events || events.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-white/50 text-lg">{emptyMessage}</p>
+        <p className="text-gray-900/50 dark:text-white/50 text-lg">{emptyMessage}</p>
       </div>
     );
   }

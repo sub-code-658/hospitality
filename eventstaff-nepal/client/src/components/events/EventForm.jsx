@@ -75,26 +75,26 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
+        <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl glass-input text-white"
+          className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
           placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
         />
         {errors.title && <p className="text-red-400 text-sm mt-1">{errors.title}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.description', 'Description')}</label>
+        <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.description', 'Description')}</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 rounded-xl glass-input text-white"
+          className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
           placeholder={t('common.describe_your_event', 'Describe your event...')}
         />
         {errors.description && <p className="text-red-400 text-sm mt-1">{errors.description}</p>}
@@ -102,57 +102,57 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.location', 'Location')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.location', 'Location')}</label>
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl glass-input text-white"
+            className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
             placeholder={t('common.venue_name_and_address', 'Venue name and address')}
           />
           {errors.location && <p className="text-red-400 text-sm mt-1">{errors.location}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
           <input
             type="date"
             name="eventDate"
             value={formData.eventDate}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl glass-input text-white"
+            className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
           />
           {errors.eventDate && <p className="text-red-400 text-sm mt-1">{errors.eventDate}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
           <input
             type="time"
             name="startTime"
             value={formData.startTime}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl glass-input text-white"
+            className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
           />
           {errors.startTime && <p className="text-red-400 text-sm mt-1">{errors.startTime}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
           <input
             type="time"
             name="endTime"
             value={formData.endTime}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl glass-input text-white"
+            className="w-full px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white"
           />
           {errors.endTime && <p className="text-red-400 text-sm mt-1">{errors.endTime}</p>}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
+        <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
         <MapPicker
           position={formData.coordinates}
           setPosition={(coords) => setFormData(prev => ({ ...prev, coordinates: coords }))}
@@ -161,7 +161,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <label className="block text-sm font-medium text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
+          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
           <button
             type="button"
             onClick={addRole}
@@ -177,7 +177,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                 <select
                   value={role.roleName}
                   onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl glass-input text-white"
+                  className="w-full px-3 py-2 rounded-xl glass-input text-gray-900 dark:text-white"
                 >
                   <option value="">{t('common.select_role', 'Select role')}</option>
                   {ROLES.map(r => (
@@ -193,7 +193,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                   onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
                   placeholder={t('common.count', 'Count')}
                   min="1"
-                  className="w-full px-3 py-2 rounded-xl glass-input text-white text-center"
+                  className="w-full px-3 py-2 rounded-xl glass-input text-gray-900 dark:text-white text-center"
                 />
               </div>
               <div className="w-56 flex gap-2">
@@ -235,7 +235,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full glass-btn text-white py-4 rounded-xl font-semibold flex items-center justify-center"
+        className="w-full glass-btn text-gray-900 dark:text-white py-4 rounded-xl font-semibold flex items-center justify-center"
       >
         {isLoading ? 'Saving...' : (initialData ? 'Update Event' : 'Post Event')}
       </button>

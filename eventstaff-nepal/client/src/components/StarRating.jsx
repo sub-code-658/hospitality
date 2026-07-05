@@ -22,7 +22,7 @@ export default function StarRating({ rating, size = 'md', interactive = false, o
           className={`${interactive ? 'cursor-pointer hover:scale-110 transition-transform' : 'cursor-default'}`}
         >
           <svg
-            className={`${sizes[size]} ${star <= rating ? 'text-yellow-400' : 'text-white/20'}`}
+            className={`${sizes[size]} ${star <= rating ? 'text-yellow-400' : 'text-gray-900/20 dark:text-white/20'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >

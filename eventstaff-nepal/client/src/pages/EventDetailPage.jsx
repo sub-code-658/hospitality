@@ -124,7 +124,7 @@ export default function EventDetailPage() {
   }
 
   if (!event) {
-    return <div className="min-h-screen flex items-center justify-center"><p className="text-white">{t('common.event_not_found', 'Event not found')}</p></div>;
+    return <div className="min-h-screen flex items-center justify-center"><p className="text-gray-900 dark:text-white">{t('common.event_not_found', 'Event not found')}</p></div>;
   }
 
   const totalPay = event.rolesNeeded?.reduce((sum, role) => sum + (role.payAmount * role.count), 0) || 0;
@@ -133,12 +133,12 @@ export default function EventDetailPage() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="glass-card overflow-hidden animate-scale-in">
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary-700/80 to-primary-600/80 text-white p-8 backdrop-blur-sm">
+        <div className="bg-gradient-to-r from-primary-700/80 to-primary-600/80 text-gray-900 dark:text-white p-8 backdrop-blur-sm">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-3">{event.title}</h1>
               <div className="flex items-center gap-3">
-                <p className="text-white/70">
+                <p className="text-gray-900/70 dark:text-white/70">
                   By {event.organizer?.name || 'Unknown Organizer'}
                 </p>
                 {user && user.id !== event.organizer?._id && event.organizer?._id && (
@@ -163,9 +163,9 @@ export default function EventDetailPage() {
           {/* Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">{t('common.event_details', 'Event Details')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.event_details', 'Event Details')}</h3>
               <div className="space-y-4">
-                <div className="flex items-center text-white/70">
+                <div className="flex items-center text-gray-900/70 dark:text-white/70">
                   <svg className="w-5 h-5 mr-3 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -173,13 +173,13 @@ export default function EventDetailPage() {
                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
                   })}
                 </div>
-                <div className="flex items-center text-white/70">
+                <div className="flex items-center text-gray-900/70 dark:text-white/70">
                   <svg className="w-5 h-5 mr-3 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {event.startTime} - {event.endTime}
                 </div>
-                <div className="flex items-center text-white/70">
+                <div className="flex items-center text-gray-900/70 dark:text-white/70">
                   <svg className="w-5 h-5 mr-3 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   </svg>
@@ -189,14 +189,14 @@ export default function EventDetailPage() {
             </div>
 
             <div className="glass p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">{t('common.estimated_total_payout', 'Estimated Total Payout')}</h3>
-              <div className="text-3xl font-bold text-white mb-2">NPR {totalPay}</div>
-              <p className="text-white/50 text-sm">{t('common.based_on_all_roles_and_hours', 'Based on all roles and hours')}</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('common.estimated_total_payout', 'Estimated Total Payout')}</h3>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">NPR {totalPay}</div>
+              <p className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.based_on_all_roles_and_hours', 'Based on all roles and hours')}</p>
             </div>
           </div>
 
           <div className="mb-6 flex flex-wrap gap-3">
-            <span className="inline-flex items-center px-3 py-2 rounded-full bg-white/10 text-white/80 border border-white/10">
+            <span className="inline-flex items-center px-3 py-2 rounded-full bg-white/10 text-gray-900/80 dark:text-white/80 border border-white/10">
               {event.acceptedCount ?? 0}/{event.totalPositions ?? event.rolesNeeded?.reduce((sum, r) => sum + r.count, 0) ?? 0} hired
             </span>
             {event.filled && (
@@ -206,30 +206,30 @@ export default function EventDetailPage() {
 
           {/* Description */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-white mb-3">{t('common.description', 'Description')}</h3>
-            <p className="text-white/70 whitespace-pre-line">{event.description}</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('common.description', 'Description')}</h3>
+            <p className="text-gray-900/70 dark:text-white/70 whitespace-pre-line">{event.description}</p>
           </div>
 
           {/* Roles Table */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-white mb-3">{t('common.roles_needed', 'Roles Needed')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('common.roles_needed', 'Roles Needed')}</h3>
             <div className="glass rounded-xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.role', 'Role')}</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.count', 'Count')}</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.pay_hour', 'Pay/Hour')}</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.total', 'Total')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('common.role', 'Role')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('common.count', 'Count')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('common.pay_hour', 'Pay/Hour')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('common.total', 'Total')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
                   {event.rolesNeeded?.map((role, idx) => (
                     <tr key={idx}>
-                      <td className="px-5 py-4 text-white/80">{role.roleName}</td>
-                      <td className="px-5 py-4 text-white/60">{role.count}</td>
-                      <td className="px-5 py-4 text-white/60">NPR {role.payAmount} {role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}</td>
-                      <td className="px-5 py-4 text-white font-medium">NPR {role.payAmount * role.count}</td>
+                      <td className="px-5 py-4 text-gray-900/80 dark:text-white/80">{role.roleName}</td>
+                      <td className="px-5 py-4 text-gray-900/60 dark:text-white/60">{role.count}</td>
+                      <td className="px-5 py-4 text-gray-900/60 dark:text-white/60">NPR {role.payAmount} {role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}</td>
+                      <td className="px-5 py-4 text-gray-900 dark:text-white font-medium">NPR {role.payAmount * role.count}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -240,7 +240,7 @@ export default function EventDetailPage() {
           {/* Map */}
           {event.coordinates?.lat && event.coordinates?.lng && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-3">{t('common.location', 'Location')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{t('common.location', 'Location')}</h3>
               <div className="h-64 rounded-xl overflow-hidden">
                 <MapContainer
                   center={[event.coordinates.lat, event.coordinates.lng]}
@@ -267,10 +267,10 @@ export default function EventDetailPage() {
                     <select
                       value={selectedRole}
                       onChange={(e) => setSelectedRole(e.target.value)}
-                      className="glass-input w-full p-3 rounded-xl bg-[var(--surface-raised)] text-white mb-2"
+                      className="glass-input w-full p-3 rounded-xl bg-[var(--surface-raised)] text-gray-900 dark:text-white mb-2"
                     >
                       {event.rolesNeeded?.map((role, idx) => (
-                        <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-white">
+                        <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-gray-900 dark:text-white">
                           {role.roleName} (NPR {role.payAmount} {role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'})
                         </option>
                       ))}
@@ -282,7 +282,7 @@ export default function EventDetailPage() {
                   disabled={applying || hasApplied}
                   className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
                     hasApplied
-                      ? 'glass text-white/50 cursor-not-allowed border border-white/10'
+                      ? 'glass text-gray-900/50 dark:text-white/50 cursor-not-allowed border border-white/10'
                       : 'btn-glass'
                   }`}
                 >
@@ -298,7 +298,7 @@ export default function EventDetailPage() {
             )}
 
             {isWorker && event.status === 'active' && event.filled && (
-              <div className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white/70 border border-white/10">{t('common.this_event_is_fully_staffed_an', 'This event is fully staffed and no longer accepting applications.')}</div>
+              <div className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-gray-900/70 dark:text-white/70 border border-white/10">{t('common.this_event_is_fully_staffed_an', 'This event is fully staffed and no longer accepting applications.')}</div>
             )}
 
             {isOrganizer && (
@@ -310,7 +310,7 @@ export default function EventDetailPage() {
 
             <Link
               to={user?.role === 'organizer' ? '/dashboard' : '/worker-dashboard'}
-              className="flex-1 glass text-white/80 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all duration-300 text-center border border-white/10"
+              className="flex-1 glass text-gray-900/80 dark:text-white/80 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all duration-300 text-center border border-white/10"
             >{t('common.back_to_dashboard', 'Back to Dashboard')}</Link>
           </div>
         </div>
@@ -321,8 +321,8 @@ export default function EventDetailPage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="glass-card max-w-2xl w-full max-h-[80vh] overflow-hidden animate-scale-in">
             <div className="p-6 border-b border-white/10 flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-white">Applications for {event.title}</h3>
-              <button onClick={() => setShowApplications(false)} className="text-white/60 hover:text-white transition-colors">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Applications for {event.title}</h3>
+              <button onClick={() => setShowApplications(false)} className="text-gray-900/60 dark:text-white/60 hover:text-white transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -330,7 +330,7 @@ export default function EventDetailPage() {
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {applications.length === 0 ? (
-                <p className="text-center text-white/50 py-8">{t('common.no_applications_yet', 'No applications yet')}</p>
+                <p className="text-center text-gray-900/50 dark:text-white/50 py-8">{t('common.no_applications_yet', 'No applications yet')}</p>
               ) : (
                 applications.map(app => (
                   <ApplicationCard

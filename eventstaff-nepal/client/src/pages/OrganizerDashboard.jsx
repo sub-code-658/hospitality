@@ -168,7 +168,7 @@ export default function OrganizerDashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div className="animate-fade-in">
           <p className="text-sm tracking-[0.15em] uppercase mb-3" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.welcome_back', 'Welcome back')}</p>
-          <h1 className="font-serif text-3xl md:text-5xl text-white">{t('common.organizer_dashboard', 'Organizer Dashboard')}</h1>
+          <h1 className="font-serif text-3xl md:text-5xl text-gray-900 dark:text-white">{t('common.organizer_dashboard', 'Organizer Dashboard')}</h1>
         </div>
         <Link
           to="/post-event"
@@ -198,19 +198,19 @@ export default function OrganizerDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
         {/* Staffing Alerts */}
         <div className="card p-6 animate-fade-in stagger-4">
-          <h3 className="font-serif text-xl text-white mb-4">{t('common.staffing_alerts', 'Staffing Alerts')}</h3>
+          <h3 className="font-serif text-xl text-gray-900 dark:text-white mb-4">{t('common.staffing_alerts', 'Staffing Alerts')}</h3>
           <div className="space-y-4">
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(180, 150, 100, 0.05)', borderColor: 'rgba(180, 150, 100, 0.2)' }}>
               <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>{t('common.open_positions', 'Open Positions')}</p>
-              <p className="font-serif text-4xl text-white">{lowStaffEvents.length}</p>
+              <p className="font-serif text-4xl text-gray-900 dark:text-white">{lowStaffEvents.length}</p>
             </div>
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(201, 89, 58, 0.05)', borderColor: 'rgba(201, 89, 58, 0.2)' }}>
               <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>Urgent (24h)</p>
-              <p className="font-serif text-4xl text-white">{urgentStaffEvents.length}</p>
+              <p className="font-serif text-4xl text-gray-900 dark:text-white">{urgentStaffEvents.length}</p>
             </div>
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(125, 139, 106, 0.05)', borderColor: 'rgba(125, 139, 106, 0.2)' }}>
               <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>{t('common.fully_staffed', 'Fully Staffed')}</p>
-              <p className="font-serif text-4xl text-white">{filteredEvents.filter(evt => evt.filled).length}</p>
+              <p className="font-serif text-4xl text-gray-900 dark:text-white">{filteredEvents.filter(evt => evt.filled).length}</p>
             </div>
           </div>
         </div>
@@ -219,28 +219,28 @@ export default function OrganizerDashboard() {
         <div className="card p-6 lg:col-span-2 animate-fade-in stagger-5">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-              <h3 className="font-serif text-xl text-white">Timeline & Calendar</h3>
+              <h3 className="font-serif text-xl text-gray-900 dark:text-white">Timeline & Calendar</h3>
               <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.manage_your_event_schedule', 'Manage your event schedule')}</p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('timeline')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'timeline' ? 'text-white' : 'text-white/50'
+                  viewMode === 'timeline' ? 'text-gray-900 dark:text-white' : 'text-gray-900/50 dark:text-white/50'
                 }`}
                 style={viewMode === 'timeline' ? { background: 'rgba(180, 150, 100, 0.15)' } : {}}
               >{t('common.timeline', 'Timeline')}</button>
               <button
                 onClick={() => setViewMode('list')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'list' ? 'text-white' : 'text-white/50'
+                  viewMode === 'list' ? 'text-gray-900 dark:text-white' : 'text-gray-900/50 dark:text-white/50'
                 }`}
                 style={viewMode === 'list' ? { background: 'rgba(180, 150, 100, 0.15)' } : {}}
               >{t('common.list', 'List')}</button>
               <button
                 onClick={() => setViewMode('calendar')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'calendar' ? 'text-white' : 'text-white/50'
+                  viewMode === 'calendar' ? 'text-gray-900 dark:text-white' : 'text-gray-900/50 dark:text-white/50'
                 }`}
                 style={viewMode === 'calendar' ? { background: 'rgba(180, 150, 100, 0.15)' } : {}}
               >
@@ -259,7 +259,7 @@ export default function OrganizerDashboard() {
               {/* Calendar Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-serif text-lg text-white">{calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h4>
+                  <h4 className="font-serif text-lg text-gray-900 dark:text-white">{calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h4>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => changeMonth(-1)} className="btn-secondary text-xs px-4 py-2">{t('common.prev', 'Prev')}</button>
@@ -290,7 +290,7 @@ export default function OrganizerDashboard() {
                       } ${!isCurrentMonth ? 'opacity-40' : ''}`}
                       style={!isCurrentMonth ? { background: 'rgba(30, 25, 22, 0.3)' } : { background: 'rgba(30, 25, 22, 0.3)' }}
                     >
-                      <div className={`text-sm font-medium ${isCurrentMonth ? 'text-white' : 'text-white/30'}`}>
+                      <div className={`text-sm font-medium ${isCurrentMonth ? 'text-gray-900 dark:text-white' : 'text-gray-900/30 dark:text-white/30'}`}>
                         {day.getDate()}
                       </div>
                       <div className="mt-1.5 space-y-1">
@@ -310,7 +310,7 @@ export default function OrganizerDashboard() {
 
               {/* Daily Planner */}
               <div className="p-5 rounded-xl border" style={{ background: 'rgba(30, 25, 22, 0.5)', borderColor: 'rgba(180, 150, 100, 0.15)' }}>
-                <h4 className="font-serif text-lg text-white mb-2">Shifts on {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</h4>
+                <h4 className="font-serif text-lg text-gray-900 dark:text-white mb-2">Shifts on {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</h4>
                 {selectedDayEvents.length === 0 ? (
                   <p className="py-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>{t('common.no_events_scheduled', 'No events scheduled.')}</p>
                 ) : (
@@ -318,7 +318,7 @@ export default function OrganizerDashboard() {
                     {selectedDayEvents.map(event => (
                       <div key={event._id} className="flex flex-col md:flex-row justify-between gap-3 p-4 rounded-lg border" style={{ borderColor: 'rgba(180, 150, 100, 0.1)' }}>
                         <div>
-                          <h5 className="font-serif text-white">{event.title}</h5>
+                          <h5 className="font-serif text-gray-900 dark:text-white">{event.title}</h5>
                           <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{event.location}</p>
                         </div>
                         <div className="text-right text-sm" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>
@@ -342,7 +342,7 @@ export default function OrganizerDashboard() {
                   <div className="flex-1 p-5 rounded-xl border" style={{ background: 'rgba(30, 25, 22, 0.4)', borderColor: 'rgba(180, 150, 100, 0.15)' }}>
                     <div className="flex flex-col sm:flex-row justify-between gap-4">
                       <div>
-                        <h4 className="font-serif text-lg text-white">{event.title}</h4>
+                        <h4 className="font-serif text-lg text-gray-900 dark:text-white">{event.title}</h4>
                         <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{event.location}</p>
                       </div>
                       <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1 self-start">{formatEventState(event)}</span>
@@ -362,7 +362,7 @@ export default function OrganizerDashboard() {
                 <div key={event._id} className="p-5 rounded-xl border" style={{ background: 'rgba(30, 25, 22, 0.4)', borderColor: 'rgba(180, 150, 100, 0.15)' }}>
                   <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div>
-                      <h4 className="font-serif text-lg text-white">{event.title}</h4>
+                      <h4 className="font-serif text-lg text-gray-900 dark:text-white">{event.title}</h4>
                       <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{event.location}</p>
                     </div>
                     <div className="text-right text-sm" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>
@@ -385,7 +385,7 @@ export default function OrganizerDashboard() {
       {/* Events List */}
       <div className="card overflow-hidden animate-fade-in">
         <div className="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style={{ borderColor: 'rgba(180, 150, 100, 0.1)' }}>
-          <h2 className="font-serif text-xl text-white">{t('common.my_events', 'My Events')}</h2>
+          <h2 className="font-serif text-xl text-gray-900 dark:text-white">{t('common.my_events', 'My Events')}</h2>
           <input
             type="text"
             placeholder={t('common.search_events', 'Search events...')}
@@ -407,7 +407,7 @@ export default function OrganizerDashboard() {
                 <div key={event._id} className="p-6 rounded-xl border" style={{ background: 'rgba(30, 25, 22, 0.4)', borderColor: 'rgba(180, 150, 100, 0.15)' }}>
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-serif text-xl text-white">{event.title}</h3>
+                      <h3 className="font-serif text-xl text-gray-900 dark:text-white">{event.title}</h3>
                       <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>
                         {new Date(event.eventDate).toLocaleDateString()} | {event.startTime} - {event.endTime}
                       </p>
@@ -454,7 +454,7 @@ export default function OrganizerDashboard() {
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in" style={{ background: 'rgba(10, 10, 8, 0.8)', backdropFilter: 'blur(8px)' }}>
           <div className="card max-w-2xl w-full max-h-[80vh] overflow-hidden animate-scale-in">
             <div className="p-6 border-b flex justify-between items-center" style={{ borderColor: 'rgba(180, 150, 100, 0.15)' }}>
-              <h3 className="font-serif text-xl text-white">Applications for {selectedEvent.title}</h3>
+              <h3 className="font-serif text-xl text-gray-900 dark:text-white">Applications for {selectedEvent.title}</h3>
               <button
                 onClick={() => setShowApplications(false)}
                 className="p-2 rounded-lg transition-all duration-300"

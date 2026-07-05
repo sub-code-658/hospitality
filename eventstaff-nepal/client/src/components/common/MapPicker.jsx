@@ -63,7 +63,7 @@ const MapPicker = ({
         </MapContainer>
       </div>
       {showInstructions && (
-        <p className="text-white/50 text-sm mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
+        <p className="text-gray-900/50 dark:text-white/50 text-sm mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
       )}
     </div>
   );

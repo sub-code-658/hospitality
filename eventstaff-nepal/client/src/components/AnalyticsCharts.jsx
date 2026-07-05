@@ -5,7 +5,7 @@ const COLORS = ['#6366f1', '#22c55e', '#eab308', '#ef4444', '#8b5cf6'];
 export function StatsBarChart({ data, title }) {
   return (
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -29,7 +29,7 @@ export function StatsBarChart({ data, title }) {
 export function ApplicationsPieChart({ data, title }) {
   return (
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
@@ -60,7 +60,7 @@ export function ApplicationsPieChart({ data, title }) {
         {data.map((entry, index) => (
           <div key={entry.name} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-            <span className="text-white/70 text-sm">{entry.name}</span>
+            <span className="text-gray-900/70 dark:text-white/70 text-sm">{entry.name}</span>
           </div>
         ))}
       </div>
@@ -71,7 +71,7 @@ export function ApplicationsPieChart({ data, title }) {
 export function EventTrendChart({ data, title }) {
   return (
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -97,7 +97,7 @@ export function EventTrendChart({ data, title }) {
 export function RevenueChart({ data, title }) {
   return (
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -122,7 +122,7 @@ export function RevenueChart({ data, title }) {
 export function RatingDistributionChart({ data, title }) {
   return (
     <div className="glass-card p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />

@@ -53,7 +53,7 @@ export default function WorkerProfilePage() {
   if (!worker) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-        <p className="text-white/60 text-lg">{t('common.worker_not_found', 'Worker not found')}</p>
+        <p className="text-gray-900/60 dark:text-white/60 text-lg">{t('common.worker_not_found', 'Worker not found')}</p>
       </div>
     );
   }
@@ -79,16 +79,16 @@ export default function WorkerProfilePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-3xl font-bold text-white">{worker.name}</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{worker.name}</h1>
                     {worker.isVerified && (
                       <span className="text-primary-300 text-xl" title="Verified">✓</span>
                     )}
                   </div>
-                  <p className="text-white/70 mb-3">
+                  <p className="text-gray-900/70 dark:text-white/70 mb-3">
                     {worker.role === 'organizer' ? 'Event Organizer' : 'Hospitality Worker'}
                   </p>
                   {worker.bio && (
-                    <p className="text-white/80 text-sm max-w-2xl">{worker.bio}</p>
+                    <p className="text-gray-900/80 dark:text-white/80 text-sm max-w-2xl">{worker.bio}</p>
                   )}
                 </div>
                 {user && user.id !== worker._id && (
@@ -108,30 +108,30 @@ export default function WorkerProfilePage() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
             <div className="glass p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold text-white mb-1">{reviews.averageRating || 0}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{reviews.averageRating || 0}</div>
               <StarRating rating={Math.round(reviews.averageRating)} />
-              <div className="text-white/50 text-sm mt-1">{reviews.totalReviews} reviews</div>
+              <div className="text-gray-900/50 dark:text-white/50 text-sm mt-1">{reviews.totalReviews} reviews</div>
             </div>
             <div className="glass p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold text-white mb-1">{worker.skills?.length || 0}</div>
-              <div className="text-white/50 text-sm">{t('common.skills', 'Skills')}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{worker.skills?.length || 0}</div>
+              <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.skills', 'Skills')}</div>
             </div>
             <div className="glass p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold text-white mb-1">{worker.experience || 'N/A'}</div>
-              <div className="text-white/50 text-sm">{t('common.experience', 'Experience')}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{worker.experience || 'N/A'}</div>
+              <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.experience', 'Experience')}</div>
             </div>
             <div className="glass p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold text-white mb-1">
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
                 {worker.totalReviews || 0}
               </div>
-              <div className="text-white/50 text-sm">{t('common.jobs_done', 'Jobs Done')}</div>
+              <div className="text-gray-900/50 dark:text-white/50 text-sm">{t('common.jobs_done', 'Jobs Done')}</div>
             </div>
           </div>
 
           {/* Skills */}
           {worker.skills && worker.skills.length > 0 && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-4">{t('common.skills', 'Skills')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.skills', 'Skills')}</h3>
               <div className="flex flex-wrap gap-2">
                 {worker.skills.map((skill, idx) => (
                   <span key={idx} className="bg-primary-500/20 text-primary-300 px-4 py-2 rounded-full text-sm border border-primary-400/30">
@@ -145,18 +145,18 @@ export default function WorkerProfilePage() {
           {/* Rating Breakdown */}
           {reviews.totalReviews > 0 && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-4">{t('common.rating_breakdown', 'Rating Breakdown')}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.rating_breakdown', 'Rating Breakdown')}</h3>
               <div className="glass p-6 rounded-xl">
                 {ratingBreakdown.map(({ stars, count, percentage }) => (
                   <div key={stars} className="flex items-center gap-3 mb-2">
-                    <span className="text-white/70 w-12">{stars} ★</span>
+                    <span className="text-gray-900/70 dark:text-white/70 w-12">{stars} ★</span>
                     <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-yellow-400 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-white/50 text-sm w-12">{count}</span>
+                    <span className="text-gray-900/50 dark:text-white/50 text-sm w-12">{count}</span>
                   </div>
                 ))}
               </div>
@@ -165,9 +165,9 @@ export default function WorkerProfilePage() {
 
           {/* Reviews */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">{t('common.reviews', 'Reviews')}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('common.reviews', 'Reviews')}</h3>
             {reviews.reviews?.length === 0 ? (
-              <p className="text-white/50 text-center py-8">{t('common.no_reviews_yet', 'No reviews yet')}</p>
+              <p className="text-gray-900/50 dark:text-white/50 text-center py-8">{t('common.no_reviews_yet', 'No reviews yet')}</p>
             ) : (
               <div className="space-y-4">
                 {reviews.reviews?.map(review => (
@@ -180,16 +180,16 @@ export default function WorkerProfilePage() {
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-white">{review.reviewer?.name}</p>
-                          <p className="text-white/40 text-sm">{review.event?.title}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{review.reviewer?.name}</p>
+                          <p className="text-gray-900/40 dark:text-white/40 text-sm">{review.event?.title}</p>
                         </div>
                       </div>
                       <StarRating rating={review.rating} size="sm" />
                     </div>
                     {review.comment && (
-                      <p className="text-white/70 text-sm mt-2">{review.comment}</p>
+                      <p className="text-gray-900/70 dark:text-white/70 text-sm mt-2">{review.comment}</p>
                     )}
-                    <p className="text-white/30 text-xs mt-2">
+                    <p className="text-gray-900/30 dark:text-white/30 text-xs mt-2">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </p>
                   </div>
