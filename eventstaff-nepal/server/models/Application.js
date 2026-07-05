@@ -14,8 +14,8 @@ const applicationSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: {
-      values: ['pending', 'accepted', 'rejected'],
-      message: 'Status must be pending, accepted, or rejected'
+      values: ['pending', 'accepted', 'rejected', 'completed'],
+      message: 'Status must be pending, accepted, rejected, or completed'
     },
     default: 'pending'
   },

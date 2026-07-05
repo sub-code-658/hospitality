@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { initiateConversation } from '../utils/messageUtils';
@@ -8,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Badge from '../components/ui/Badge';
 
 export default function WorkerProfilePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [worker, setWorker] = useState(null);
   const [reviews, setReviews] = useState({ reviews: [], averageRating: 0, totalReviews: 0 });
@@ -51,7 +53,7 @@ export default function WorkerProfilePage() {
   if (!worker) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-        <p className="text-white/60 text-lg">Worker not found</p>
+        <p className="text-white/60 text-lg">{t('common.worker_not_found', 'Worker not found')}</p>
       </div>
     );
   }
@@ -94,9 +96,7 @@ export default function WorkerProfilePage() {
                     onClick={() => initiateConversation(worker._id || id, navigate)}
                     className="btn-glass px-4 py-2 flex items-center gap-2"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                    Message
-                  </button>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>{t('common.message', 'Message')}</button>
                 )}
               </div>
             </div>
@@ -114,24 +114,24 @@ export default function WorkerProfilePage() {
             </div>
             <div className="glass p-4 rounded-xl text-center">
               <div className="text-3xl font-bold text-white mb-1">{worker.skills?.length || 0}</div>
-              <div className="text-white/50 text-sm">Skills</div>
+              <div className="text-white/50 text-sm">{t('common.skills', 'Skills')}</div>
             </div>
             <div className="glass p-4 rounded-xl text-center">
               <div className="text-3xl font-bold text-white mb-1">{worker.experience || 'N/A'}</div>
-              <div className="text-white/50 text-sm">Experience</div>
+              <div className="text-white/50 text-sm">{t('common.experience', 'Experience')}</div>
             </div>
             <div className="glass p-4 rounded-xl text-center">
               <div className="text-3xl font-bold text-white mb-1">
                 {worker.totalReviews || 0}
               </div>
-              <div className="text-white/50 text-sm">Jobs Done</div>
+              <div className="text-white/50 text-sm">{t('common.jobs_done', 'Jobs Done')}</div>
             </div>
           </div>
 
           {/* Skills */}
           {worker.skills && worker.skills.length > 0 && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-4">Skills</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">{t('common.skills', 'Skills')}</h3>
               <div className="flex flex-wrap gap-2">
                 {worker.skills.map((skill, idx) => (
                   <span key={idx} className="bg-primary-500/20 text-primary-300 px-4 py-2 rounded-full text-sm border border-primary-400/30">
@@ -145,7 +145,7 @@ export default function WorkerProfilePage() {
           {/* Rating Breakdown */}
           {reviews.totalReviews > 0 && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-4">Rating Breakdown</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">{t('common.rating_breakdown', 'Rating Breakdown')}</h3>
               <div className="glass p-6 rounded-xl">
                 {ratingBreakdown.map(({ stars, count, percentage }) => (
                   <div key={stars} className="flex items-center gap-3 mb-2">
@@ -165,9 +165,9 @@ export default function WorkerProfilePage() {
 
           {/* Reviews */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Reviews</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">{t('common.reviews', 'Reviews')}</h3>
             {reviews.reviews?.length === 0 ? (
-              <p className="text-white/50 text-center py-8">No reviews yet</p>
+              <p className="text-white/50 text-center py-8">{t('common.no_reviews_yet', 'No reviews yet')}</p>
             ) : (
               <div className="space-y-4">
                 {reviews.reviews?.map(review => (

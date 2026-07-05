@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +8,7 @@ import ApplicationCard from '../components/ApplicationCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function OrganizerDashboard() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -165,8 +167,8 @@ export default function OrganizerDashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div className="animate-fade-in">
-          <p className="text-sm tracking-[0.15em] uppercase mb-3" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>Welcome back</p>
-          <h1 className="font-serif text-3xl md:text-5xl text-white">Organizer Dashboard</h1>
+          <p className="text-sm tracking-[0.15em] uppercase mb-3" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.welcome_back', 'Welcome back')}</p>
+          <h1 className="font-serif text-3xl md:text-5xl text-white">{t('common.organizer_dashboard', 'Organizer Dashboard')}</h1>
         </div>
         <Link
           to="/post-event"
@@ -180,11 +182,11 @@ export default function OrganizerDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="card p-6 animate-fade-in stagger-1">
           <div className="font-serif text-5xl gold-text mb-2">{events.length}</div>
-          <div className="text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>Total Events</div>
+          <div className="text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.total_events', 'Total Events')}</div>
         </div>
         <div className="card p-6 animate-fade-in stagger-2">
           <div className="font-serif text-5xl mb-2" style={{ color: '#7d8b6a' }}>{events.filter(e => e.status === 'active').length}</div>
-          <div className="text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>Active Events</div>
+          <div className="text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.active_events', 'Active Events')}</div>
         </div>
         <div className="card p-6 animate-fade-in stagger-3">
           <div className="font-serif text-5xl mb-2" style={{ color: '#c9a56c' }}>{applications.filter(a => a.status === 'pending').length}</div>
@@ -196,10 +198,10 @@ export default function OrganizerDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
         {/* Staffing Alerts */}
         <div className="card p-6 animate-fade-in stagger-4">
-          <h3 className="font-serif text-xl text-white mb-4">Staffing Alerts</h3>
+          <h3 className="font-serif text-xl text-white mb-4">{t('common.staffing_alerts', 'Staffing Alerts')}</h3>
           <div className="space-y-4">
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(180, 150, 100, 0.05)', borderColor: 'rgba(180, 150, 100, 0.2)' }}>
-              <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>Open Positions</p>
+              <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>{t('common.open_positions', 'Open Positions')}</p>
               <p className="font-serif text-4xl text-white">{lowStaffEvents.length}</p>
             </div>
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(201, 89, 58, 0.05)', borderColor: 'rgba(201, 89, 58, 0.2)' }}>
@@ -207,7 +209,7 @@ export default function OrganizerDashboard() {
               <p className="font-serif text-4xl text-white">{urgentStaffEvents.length}</p>
             </div>
             <div className="p-5 rounded-xl border" style={{ background: 'rgba(125, 139, 106, 0.05)', borderColor: 'rgba(125, 139, 106, 0.2)' }}>
-              <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>Fully Staffed</p>
+              <p className="text-sm mb-2" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>{t('common.fully_staffed', 'Fully Staffed')}</p>
               <p className="font-serif text-4xl text-white">{filteredEvents.filter(evt => evt.filled).length}</p>
             </div>
           </div>
@@ -218,7 +220,7 @@ export default function OrganizerDashboard() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
               <h3 className="font-serif text-xl text-white">Timeline & Calendar</h3>
-              <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>Manage your event schedule</p>
+              <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{t('common.manage_your_event_schedule', 'Manage your event schedule')}</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -227,18 +229,14 @@ export default function OrganizerDashboard() {
                   viewMode === 'timeline' ? 'text-white' : 'text-white/50'
                 }`}
                 style={viewMode === 'timeline' ? { background: 'rgba(180, 150, 100, 0.15)' } : {}}
-              >
-                Timeline
-              </button>
+              >{t('common.timeline', 'Timeline')}</button>
               <button
                 onClick={() => setViewMode('list')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   viewMode === 'list' ? 'text-white' : 'text-white/50'
                 }`}
                 style={viewMode === 'list' ? { background: 'rgba(180, 150, 100, 0.15)' } : {}}
-              >
-                List
-              </button>
+              >{t('common.list', 'List')}</button>
               <button
                 onClick={() => setViewMode('calendar')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
@@ -253,8 +251,8 @@ export default function OrganizerDashboard() {
 
           {filteredEvents.length === 0 ? (
             <div className="text-center py-12">
-              <p className="mb-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>No events to display yet.</p>
-              <Link to="/post-event" className="gold-text text-sm hover:underline">Post your first event</Link>
+              <p className="mb-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>{t('common.no_events_to_display_yet', 'No events to display yet.')}</p>
+              <Link to="/post-event" className="gold-text text-sm hover:underline">{t('common.post_your_first_event', 'Post your first event')}</Link>
             </div>
           ) : viewMode === 'calendar' ? (
             <div className="space-y-6">
@@ -264,8 +262,8 @@ export default function OrganizerDashboard() {
                   <h4 className="font-serif text-lg text-white">{calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h4>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => changeMonth(-1)} className="btn-secondary text-xs px-4 py-2">Prev</button>
-                  <button onClick={() => changeMonth(1)} className="btn-secondary text-xs px-4 py-2">Next</button>
+                  <button onClick={() => changeMonth(-1)} className="btn-secondary text-xs px-4 py-2">{t('common.prev', 'Prev')}</button>
+                  <button onClick={() => changeMonth(1)} className="btn-secondary text-xs px-4 py-2">{t('common.next', 'Next')}</button>
                 </div>
               </div>
 
@@ -314,7 +312,7 @@ export default function OrganizerDashboard() {
               <div className="p-5 rounded-xl border" style={{ background: 'rgba(30, 25, 22, 0.5)', borderColor: 'rgba(180, 150, 100, 0.15)' }}>
                 <h4 className="font-serif text-lg text-white mb-2">Shifts on {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</h4>
                 {selectedDayEvents.length === 0 ? (
-                  <p className="py-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>No events scheduled.</p>
+                  <p className="py-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>{t('common.no_events_scheduled', 'No events scheduled.')}</p>
                 ) : (
                   <div className="space-y-4">
                     {selectedDayEvents.map(event => (
@@ -347,7 +345,7 @@ export default function OrganizerDashboard() {
                         <h4 className="font-serif text-lg text-white">{event.title}</h4>
                         <p className="text-sm mt-1" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{event.location}</p>
                       </div>
-                      <span className="tag text-xs self-start">{formatEventState(event)}</span>
+                      <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1 self-start">{formatEventState(event)}</span>
                     </div>
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm" style={{ color: 'rgba(180, 150, 100, 0.7)' }}>
                       <div>{new Date(event.eventDate).toLocaleDateString()} | {event.startTime} - {event.endTime}</div>
@@ -374,8 +372,8 @@ export default function OrganizerDashboard() {
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3 text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>
                     <span>{event.acceptedCount ?? 0}/{event.totalPositions ?? 0} hired</span>
-                    <span className="tag text-xs">{event.filled ? 'Filled' : 'Open'}</span>
-                    <span className="tag text-xs">{formatEventState(event)}</span>
+                    <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1">{event.filled ? 'Filled' : 'Open'}</span>
+                    <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1">{formatEventState(event)}</span>
                   </div>
                 </div>
               ))}
@@ -387,10 +385,10 @@ export default function OrganizerDashboard() {
       {/* Events List */}
       <div className="card overflow-hidden animate-fade-in">
         <div className="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style={{ borderColor: 'rgba(180, 150, 100, 0.1)' }}>
-          <h2 className="font-serif text-xl text-white">My Events</h2>
+          <h2 className="font-serif text-xl text-white">{t('common.my_events', 'My Events')}</h2>
           <input
             type="text"
-            placeholder="Search events..."
+            placeholder={t('common.search_events', 'Search events...')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="input-field w-full md:w-64 text-sm"
@@ -400,8 +398,8 @@ export default function OrganizerDashboard() {
         <div className="p-6">
           {filteredEvents.length === 0 ? (
             <div className="text-center py-12">
-              <p className="mb-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>No events found</p>
-              <Link to="/post-event" className="gold-text text-sm hover:underline">Post your first event</Link>
+              <p className="mb-4" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>{t('common.no_events_found', 'No events found')}</p>
+              <Link to="/post-event" className="gold-text text-sm hover:underline">{t('common.post_your_first_event', 'Post your first event')}</Link>
             </div>
           ) : (
             <div className="space-y-6">
@@ -414,31 +412,29 @@ export default function OrganizerDashboard() {
                         {new Date(event.eventDate).toLocaleDateString()} | {event.startTime} - {event.endTime}
                       </p>
                     </div>
-                    <span className={`tag text-xs ${event.status === 'active' ? '' : ''}`}>
+                    <span className={`tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1 ${event.status === 'active' ? '' : ''}`}>
                       {event.status}
                     </span>
                   </div>
                   <p className="text-sm mb-5" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>{event.location}</p>
                   <div className="flex flex-wrap gap-2 mb-5">
                     {event.rolesNeeded.map((role, idx) => (
-                      <span key={idx} className="tag text-xs">
+                      <span key={idx} className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1">
                         {role.roleName} ({role.count})
                       </span>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-3 mb-5 text-sm" style={{ color: 'rgba(180, 150, 100, 0.6)' }}>
-                    <span className="tag text-xs">
+                    <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1">
                       {event.acceptedCount ?? 0}/{event.totalPositions ?? event.rolesNeeded.reduce((sum, r) => sum + r.count, 0)} hired
                     </span>
-                    {event.filled && <span className="tag text-xs" style={{ background: 'rgba(125, 139, 106, 0.15)', borderColor: 'rgba(125, 139, 106, 0.3)' }}>Filled</span>}
+                    {event.filled && <span className="tag text-xs flex items-center justify-center whitespace-nowrap rounded-full px-3 py-1" style={{ background: 'rgba(125, 139, 106, 0.15)', borderColor: 'rgba(125, 139, 106, 0.3)' }}>{t('common.filled', 'Filled')}</span>}
                   </div>
                   <div className="flex gap-3">
                     <Link
                       to={`/events/${event._id}`}
                       className="btn-secondary text-sm px-5 py-2.5"
-                    >
-                      View Details
-                    </Link>
+                    >{t('common.view_details', 'View Details')}</Link>
                     <button
                       onClick={() => handleViewApplications(event)}
                       className="btn-primary text-sm px-5 py-2.5"
@@ -473,7 +469,7 @@ export default function OrganizerDashboard() {
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {applications.length === 0 ? (
-                <p className="text-center py-8" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>No applications yet</p>
+                <p className="text-center py-8" style={{ color: 'rgba(180, 150, 100, 0.4)' }}>{t('common.no_applications_yet', 'No applications yet')}</p>
               ) : (
                 applications.map(app => (
                   <div key={app._id}>
@@ -489,9 +485,7 @@ export default function OrganizerDashboard() {
                         <Link
                           to={`/reviews/leave?revieweeId=${app.worker?._id}&eventId=${selectedEvent?._id}&revieweeName=${encodeURIComponent(app.worker?.name || 'Worker')}`}
                           style={{ color: 'var(--gold)', fontSize: '0.8rem' }}
-                        >
-                          Leave Review
-                        </Link>
+                        >{t('common.leave_review', 'Leave Review')}</Link>
                       </div>
                     )}
                   </div>

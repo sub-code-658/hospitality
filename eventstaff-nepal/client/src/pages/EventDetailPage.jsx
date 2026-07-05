@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
@@ -21,6 +22,7 @@ const defaultIcon = L.icon({
 });
 
 export default function EventDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user } = useAuth();
   const { addToast } = useToast();
@@ -122,7 +124,7 @@ export default function EventDetailPage() {
   }
 
   if (!event) {
-    return <div className="min-h-screen flex items-center justify-center"><p className="text-white">Event not found</p></div>;
+    return <div className="min-h-screen flex items-center justify-center"><p className="text-white">{t('common.event_not_found', 'Event not found')}</p></div>;
   }
 
   const totalPay = event.rolesNeeded?.reduce((sum, role) => sum + (role.payAmount * role.count), 0) || 0;
@@ -144,9 +146,7 @@ export default function EventDetailPage() {
                     onClick={() => initiateConversation(event.organizer._id, navigate)}
                     className="btn-glass px-2 py-1 text-[10px] flex items-center gap-1"
                   >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                    Message
-                  </button>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>{t('common.message', 'Message')}</button>
                 )}
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function EventDetailPage() {
           {/* Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">Event Details</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">{t('common.event_details', 'Event Details')}</h3>
               <div className="space-y-4">
                 <div className="flex items-center text-white/70">
                   <svg className="w-5 h-5 mr-3 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,9 +189,9 @@ export default function EventDetailPage() {
             </div>
 
             <div className="glass p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">Estimated Total Payout</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">{t('common.estimated_total_payout', 'Estimated Total Payout')}</h3>
               <div className="text-3xl font-bold text-white mb-2">NPR {totalPay}</div>
-              <p className="text-white/50 text-sm">Based on all roles and hours</p>
+              <p className="text-white/50 text-sm">{t('common.based_on_all_roles_and_hours', 'Based on all roles and hours')}</p>
             </div>
           </div>
 
@@ -200,29 +200,27 @@ export default function EventDetailPage() {
               {event.acceptedCount ?? 0}/{event.totalPositions ?? event.rolesNeeded?.reduce((sum, r) => sum + r.count, 0) ?? 0} hired
             </span>
             {event.filled && (
-              <span className="inline-flex items-center px-3 py-2 rounded-full bg-green-500/20 text-green-200 border border-green-400/30">
-                Position Filled
-              </span>
+              <span className="inline-flex items-center px-3 py-2 rounded-full bg-green-500/20 text-green-200 border border-green-400/30">{t('common.position_filled', 'Position Filled')}</span>
             )}
           </div>
 
           {/* Description */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-white mb-3">Description</h3>
+            <h3 className="text-lg font-semibold text-white mb-3">{t('common.description', 'Description')}</h3>
             <p className="text-white/70 whitespace-pre-line">{event.description}</p>
           </div>
 
           {/* Roles Table */}
           <div className="mb-10">
-            <h3 className="text-lg font-semibold text-white mb-3">Roles Needed</h3>
+            <h3 className="text-lg font-semibold text-white mb-3">{t('common.roles_needed', 'Roles Needed')}</h3>
             <div className="glass rounded-xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">Role</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">Count</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">Pay/Hour</th>
-                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">Total</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.role', 'Role')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.count', 'Count')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.pay_hour', 'Pay/Hour')}</th>
+                    <th className="px-5 py-4 text-left text-sm font-semibold text-white">{t('common.total', 'Total')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
@@ -242,7 +240,7 @@ export default function EventDetailPage() {
           {/* Map */}
           {event.coordinates?.lat && event.coordinates?.lng && (
             <div className="mb-10">
-              <h3 className="text-lg font-semibold text-white mb-3">Location</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">{t('common.location', 'Location')}</h3>
               <div className="h-64 rounded-xl overflow-hidden">
                 <MapContainer
                   center={[event.coordinates.lat, event.coordinates.lng]}
@@ -265,9 +263,7 @@ export default function EventDetailPage() {
               <div className="flex-1 w-full flex flex-col gap-2">
                 {showRoleDropdown && (
                   <div className="animate-fade-in">
-                    <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-1">
-                      Select Role
-                    </label>
+                    <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-1">{t('common.select_role', 'Select Role')}</label>
                     <select
                       value={selectedRole}
                       onChange={(e) => setSelectedRole(e.target.value)}
@@ -296,34 +292,26 @@ export default function EventDetailPage() {
                   <button 
                     onClick={() => setShowRoleDropdown(false)}
                     className="text-xs text-[var(--text-muted)] hover:text-white mt-1 w-full text-center"
-                  >
-                    Cancel
-                  </button>
+                  >{t('common.cancel', 'Cancel')}</button>
                 )}
               </div>
             )}
 
             {isWorker && event.status === 'active' && event.filled && (
-              <div className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white/70 border border-white/10">
-                This event is fully staffed and no longer accepting applications.
-              </div>
+              <div className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white/70 border border-white/10">{t('common.this_event_is_fully_staffed_an', 'This event is fully staffed and no longer accepting applications.')}</div>
             )}
 
             {isOrganizer && (
               <button
                 onClick={fetchApplications}
                 className="flex-1 btn-glass py-3 rounded-xl font-semibold"
-              >
-                View Applications
-              </button>
+              >{t('common.view_applications', 'View Applications')}</button>
             )}
 
             <Link
               to={user?.role === 'organizer' ? '/dashboard' : '/worker-dashboard'}
               className="flex-1 glass text-white/80 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all duration-300 text-center border border-white/10"
-            >
-              Back to Dashboard
-            </Link>
+            >{t('common.back_to_dashboard', 'Back to Dashboard')}</Link>
           </div>
         </div>
       </div>
@@ -342,7 +330,7 @@ export default function EventDetailPage() {
             </div>
             <div className="p-6 overflow-y-auto max-h-[60vh]">
               {applications.length === 0 ? (
-                <p className="text-center text-white/50 py-8">No applications yet</p>
+                <p className="text-center text-white/50 py-8">{t('common.no_applications_yet', 'No applications yet')}</p>
               ) : (
                 applications.map(app => (
                   <ApplicationCard

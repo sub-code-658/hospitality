@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import Badge from '../components/ui/Badge';
 
 export default function AdminPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -100,27 +102,27 @@ export default function AdminPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="mb-8 animate-slide-up">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-        <p className="text-white/60">Manage users, events, and platform analytics</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('common.admin_dashboard', 'Admin Dashboard')}</h1>
+        <p className="text-white/60">{t('common.manage_users_events_and_platfo', 'Manage users, events, and platform analytics')}</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="glass-card p-5 rounded-xl animate-scale-in">
           <div className="text-3xl font-bold text-white mb-1">{stats.totalUsers}</div>
-          <div className="text-white/50 text-sm">Total Users</div>
+          <div className="text-white/50 text-sm">{t('common.total_users', 'Total Users')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '50ms' }}>
           <div className="text-3xl font-bold text-white mb-1">{stats.totalWorkers}</div>
-          <div className="text-white/50 text-sm">Workers</div>
+          <div className="text-white/50 text-sm">{t('common.workers', 'Workers')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '100ms' }}>
           <div className="text-3xl font-bold text-white mb-1">{stats.totalOrganizers}</div>
-          <div className="text-white/50 text-sm">Organizers</div>
+          <div className="text-white/50 text-sm">{t('common.organizers', 'Organizers')}</div>
         </div>
         <div className="glass-card p-5 rounded-xl animate-scale-in" style={{ animationDelay: '150ms' }}>
           <div className="text-3xl font-bold text-white mb-1">{stats.activeEvents}</div>
-          <div className="text-white/50 text-sm">Active Events</div>
+          <div className="text-white/50 text-sm">{t('common.active_events', 'Active Events')}</div>
         </div>
       </div>
 
@@ -146,14 +148,14 @@ export default function AdminPage() {
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-card p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-4">Platform Summary</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">{t('common.platform_summary', 'Platform Summary')}</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">Total Events</span>
+                  <span className="text-white/70">{t('common.total_events', 'Total Events')}</span>
                   <span className="text-white font-semibold">{stats.totalEvents}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/70">Total Applications</span>
+                  <span className="text-white/70">{t('common.total_applications', 'Total Applications')}</span>
                   <span className="text-white font-semibold">{stats.totalApplications}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -170,7 +172,7 @@ export default function AdminPage() {
             </div>
 
             <div className="glass-card p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Users</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">{t('common.recent_users', 'Recent Users')}</h3>
               <div className="space-y-3">
                 {users.slice(0, 5).map(user => (
                   <div key={user._id} className="flex items-center justify-between">
@@ -198,18 +200,18 @@ export default function AdminPage() {
         {activeTab === 'users' && (
           <div className="glass-card rounded-xl overflow-hidden">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">All Users</h3>
+              <h3 className="text-lg font-semibold text-white">{t('common.all_users', 'All Users')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Name</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Email</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Role</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Status</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Joined</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Actions</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.name', 'Name')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.email', 'Email')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.role', 'Role')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.joined', 'Joined')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -243,16 +245,12 @@ export default function AdminPage() {
                             <button
                               onClick={() => handleVerifyUser(user._id)}
                               className="text-sm text-green-400 hover:text-green-300"
-                            >
-                              Verify
-                            </button>
+                            >{t('common.verify', 'Verify')}</button>
                           )}
                           <button
                             onClick={() => handleDeleteUser(user._id)}
                             className="text-sm text-red-400 hover:text-red-300"
-                          >
-                            Delete
-                          </button>
+                          >{t('common.delete', 'Delete')}</button>
                         </div>
                       </td>
                     </tr>
@@ -266,18 +264,18 @@ export default function AdminPage() {
         {activeTab === 'events' && (
           <div className="glass-card rounded-xl overflow-hidden">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">All Events</h3>
+              <h3 className="text-lg font-semibold text-white">{t('common.all_events', 'All Events')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Event</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Organizer</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Date</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Positions</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Status</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Actions</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.positions', 'Positions')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.actions', 'Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -300,9 +298,7 @@ export default function AdminPage() {
                         <button
                           onClick={() => handleDeleteEvent(event._id)}
                           className="text-sm text-red-400 hover:text-red-300"
-                        >
-                          Delete
-                        </button>
+                        >{t('common.delete', 'Delete')}</button>
                       </td>
                     </tr>
                   ))}
@@ -314,11 +310,11 @@ export default function AdminPage() {
 
         {activeTab === 'applications' && (
           <div className="glass-card p-6 rounded-xl">
-            <h3 className="text-lg font-semibold text-white mb-4">Application Statistics</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">{t('common.application_statistics', 'Application Statistics')}</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-white mb-1">{stats.totalApplications}</div>
-                <div className="text-white/50 text-sm">Total</div>
+                <div className="text-white/50 text-sm">{t('common.total', 'Total')}</div>
               </div>
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-yellow-400 mb-1">{stats.pendingApplications}</div>
@@ -328,11 +324,11 @@ export default function AdminPage() {
                 <div className="text-2xl font-bold text-green-400 mb-1">
                   {stats.totalApplications - stats.pendingApplications}
                 </div>
-                <div className="text-white/50 text-sm">Approved</div>
+                <div className="text-white/50 text-sm">{t('common.approved', 'Approved')}</div>
               </div>
               <div className="glass p-4 rounded-xl text-center">
                 <div className="text-2xl font-bold text-red-400 mb-1">0</div>
-                <div className="text-white/50 text-sm">Rejected</div>
+                <div className="text-white/50 text-sm">{t('common.rejected', 'Rejected')}</div>
               </div>
             </div>
           </div>
@@ -341,19 +337,19 @@ export default function AdminPage() {
         {activeTab === 'payments' && (
           <div className="glass-card rounded-xl overflow-hidden animate-fade-in">
             <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-semibold text-white">All Platform Transactions</h3>
+              <h3 className="text-lg font-semibold text-white">{t('common.all_platform_transactions', 'All Platform Transactions')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Event</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Organizer</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Worker</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.event', 'Event')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.organizer', 'Organizer')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.worker', 'Worker')}</th>
                     <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Amount (NPR)</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Method</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Status</th>
-                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">Date</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.method', 'Method')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.status', 'Status')}</th>
+                    <th className="text-left text-white/50 text-sm font-medium px-4 py-3">{t('common.date', 'Date')}</th>
                   </tr>
                 </thead>
                 <tbody>

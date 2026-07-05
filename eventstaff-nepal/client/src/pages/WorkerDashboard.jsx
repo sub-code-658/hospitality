@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -6,16 +7,22 @@ import { useToast } from '../components/Toast';
 import EventCard from '../components/EventCard';
 import ApplicationCard from '../components/ApplicationCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import FilterBar from '../components/common/FilterBar';
 
 export default function WorkerDashboard() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [myApplications, setMyApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
+  const [filters, setFilters] = useState({ search: '', role: '', date: '' });
+  const [filteredJobs, setFilteredJobs] = useState([]);
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
 
   useEffect(() => {
     fetchData();
@@ -39,29 +46,35 @@ export default function WorkerDashboard() {
     }
   };
 
-  const handleApply = async (eventId) => {
-    try {
-      await api.post('/applications', { eventId });
-      addToast('Application submitted successfully!', 'success');
-      fetchData();
-    } catch (error) {
-      addToast(error.response?.data?.message || 'Failed to apply', 'error');
-    }
-  };
+  // handleApply was removed since application is done on detail page
 
-  const allRoles = [...new Set((events || []).flatMap(e => e.rolesNeeded?.map(r => r.roleName) || []))];
+  useEffect(() => {
+    const { search, role, date } = filters;
+    const filtered = (events || []).filter((event) => {
+      const searchLower = (search || '').toLowerCase();
+      const matchesSearch = !search || 
+        (event.title || '').toLowerCase().includes(searchLower) || 
+        (event.location || '').toLowerCase().includes(searchLower);
+        
+      const matchesRole = !role || role === 'All Roles' || event.rolesNeeded?.some(r => r.roleName === role);
+      
+      const matchesDate = !date || new Date(event.eventDate).toLocaleDateString() === new Date(date).toLocaleDateString();
 
-  const filteredEvents = (events || []).filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = !roleFilter || event.rolesNeeded?.some(r => r.roleName === roleFilter);
-    return matchesSearch && matchesRole;
-  });
+      return matchesSearch && matchesRole && matchesDate;
+    });
+    
+    console.log('Current Filters:', { search, role, date });
+    console.log('Filtered Results:', filtered);
+    setFilteredJobs(filtered);
+  }, [events, filters]);
 
   const appliedEventIds = (myApplications || []).map(a => a.event?._id || a.event);
 
   const acceptedApps = (myApplications || []).filter(a => a.status === 'accepted');
   const pendingApps = (myApplications || []).filter(a => a.status === 'pending');
+  const rejectedApps = (myApplications || []).filter(a => a.status === 'rejected');
+  const completedApps = (myApplications || []).filter(a => a.status === 'completed');
+  const totalApps = pendingApps.length + acceptedApps.length + rejectedApps.length;
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center"><LoadingSpinner /></div>;
@@ -70,90 +83,80 @@ export default function WorkerDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="mb-10 animate-slide-up">
-        <h1 className="text-3xl md:text-4xl font-bold text-white">Worker Dashboard</h1>
-        <p className="text-white/60 mt-2">Welcome back, {user?.name}!</p>
+        <h1 className="text-4xl font-bold text-[color:var(--text)] tracking-tight">{t('common.worker_dashboard', 'Worker Dashboard')}</h1>
+        <p className="text-[color:var(--text-muted)] mt-2">{t('common.welcome_user', 'Welcome back, {{name}}!', { name: user?.name || '' })}</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-5 mb-10">
         <div className="glass-card p-6 text-center animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="text-3xl font-bold text-white mb-2">{myApplications.length}</div>
-          <div className="text-white/60 text-sm">Total Applications</div>
+          <div className="text-3xl font-bold text-[color:var(--text)] mb-2">{totalApps}</div>
+          <div className="text-[color:var(--text-muted)] text-sm">{t('common.total_applications', 'Total Applications')}</div>
         </div>
         <div className="glass-card p-6 text-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="text-3xl font-bold text-green-300 mb-2">{acceptedApps.length}</div>
-          <div className="text-white/60 text-sm">Upcoming Events</div>
+          <div className="text-3xl font-bold text-[color:var(--sage)] mb-2">{acceptedApps.length}</div>
+          <div className="text-[color:var(--text-muted)] text-sm">{t('common.upcoming_shifts', 'Upcoming Shifts')}</div>
         </div>
         <div className="glass-card p-6 text-center animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <div className="text-3xl font-bold text-yellow-300 mb-2">{pendingApps.length}</div>
-          <div className="text-white/60 text-sm">Pending</div>
+          <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-300 mb-2">{pendingApps.length}</div>
+          <div className="text-[color:var(--text-muted)] text-sm">{t('common.pending_applications', 'Pending Applications')}</div>
         </div>
         <div className="glass-card p-6 text-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <div className="text-3xl font-bold text-white/60 mb-2">{myApplications.filter(a => a.status === 'rejected').length}</div>
-          <div className="text-white/60 text-sm">Rejected</div>
+          <div className="text-3xl font-bold text-[color:var(--text-muted)] mb-2">{rejectedApps.length}</div>
+          <div className="text-[color:var(--text-muted)] text-sm">{t('common.rejected_applications', 'Rejected Applications')}</div>
+        </div>
+        <div className="glass-card p-6 text-center animate-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="text-3xl font-bold text-[color:var(--flame)] mb-2">{completedApps.length}</div>
+          <div className="text-[color:var(--text-muted)] text-sm">{t('common.completed_shifts', 'Completed Shifts')}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Available Jobs */}
         <div className="lg:col-span-2">
-          <div className="glass-card overflow-hidden animate-slide-up" style={{ animationDelay: '0.5s' }}>
-            <div className="p-6 border-b border-white/10">
-              <h2 className="text-xl font-semibold text-white mb-4">Available Jobs</h2>
-              <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  placeholder="Search events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 px-4 py-3 rounded-xl glass-input"
-                />
-                <select
-                  value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-4 py-3 rounded-xl glass-input"
-                >
-                  <option value="" className="bg-gray-800">All Roles</option>
-                  {allRoles.map(role => (
-                    <option key={role} value={role} className="bg-gray-800">{role}</option>
-                  ))}
-                </select>
-              </div>
+          <div className={`glass-card overflow-hidden animate-slide-up ${filteredJobs.length === 0 ? 'h-fit' : ''}`} style={{ animationDelay: '0.5s' }}>
+            <div className="p-6 border-b border-[color:var(--border)]">
+              <h2 className="text-xl font-semibold text-[color:var(--text)] mb-4">{t('common.available_jobs', 'Available Jobs')}</h2>
+              <FilterBar
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                isOrganizer={false}
+              />
             </div>
             <div className="p-6">
-              {filteredEvents.length === 0 ? (
-                <p className="text-center text-white/50 py-8">No events available</p>
+              {filteredJobs.length === 0 ? (
+                <div className="text-center py-10">
+                  <p className="text-[color:var(--text-muted)] font-medium text-lg mb-2">{t('common.no_jobs_match', 'No jobs match your criteria.')}</p>
+                  <p className="text-[color:var(--text-dim)] text-sm">{t('common.check_back_later', 'Check back later for new opportunities!')}</p>
+                </div>
               ) : (
                 <div className="space-y-4">
-                  {filteredEvents.map(event => (
-                    <div key={event._id} className="glass p-5 rounded-xl">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-semibold text-white">{event.title}</h3>
-                          <p className="text-sm text-white/60">
-                            {new Date(event.eventDate).toLocaleDateString()} | {event.startTime} - {event.endTime}
-                          </p>
-                          <p className="text-sm text-white/60">{event.location}</p>
+                  {filteredJobs.map(event => (
+                    <div key={event._id} className="glass p-5 rounded-xl flex flex-col md:flex-row md:items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-[color:var(--text)] text-lg mb-1">{event.title}</h3>
+                        <p className="text-sm text-[color:var(--text-muted)] mb-3">
+                          {new Date(event.eventDate).toLocaleDateString()} &bull; {event.location}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {event.rolesNeeded?.map((role, idx) => (
+                            <span key={idx} className="bg-[color:var(--surface-raised)] text-[color:var(--text-muted)] px-3 py-1 rounded-full text-xs font-medium border border-[color:var(--border-hover)]">
+                              {role.roleName} &bull; NPR {role.payAmount}{role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}
+                            </span>
+                          ))}
                         </div>
-                        {appliedEventIds.includes(event._id) ? (
-                          <span className="bg-white/10 text-white/60 px-3 py-1 rounded-full text-sm border border-white/20">
-                            Applied
-                          </span>
-                        ) : (
-                          <button
-                            onClick={() => handleApply(event._id)}
-                            className="btn-glass px-4 py-2 rounded-xl text-sm"
-                          >
-                            Apply Now
-                          </button>
-                        )}
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        {event.rolesNeeded?.map((role, idx) => (
-                          <span key={idx} className="bg-primary-500/20 text-primary-300 px-2 py-1 rounded-full text-xs border border-primary-400/30">
-                            {role.roleName} - NPR {role.payAmount}{role.paymentType === 'per_hour' ? '/hr' : role.paymentType === 'per_day' ? '/day' : '/event'}
-                          </span>
-                        ))}
+                      <div className="shrink-0 flex items-center">
+                        {appliedEventIds.includes(event._id) ? (
+                          <span className="flex items-center justify-center whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium bg-[color:var(--surface-raised)] text-[color:var(--text-muted)] border border-[color:var(--border-hover)] w-full md:w-auto text-center">{t('common.applied', 'Applied')}</span>
+                        ) : (
+                          <Link
+                            to={`/events/${event._id}`}
+                            className="btn-glass px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap w-full md:w-auto text-center"
+                          >
+                            {t('common.apply_now', 'Apply Now')}
+                          </Link>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -166,25 +169,23 @@ export default function WorkerDashboard() {
         {/* My Applications Sidebar */}
         <div className="lg:col-span-1">
           <div className="glass-card overflow-hidden animate-slide-up" style={{ animationDelay: '0.6s' }}>
-            <div className="p-6 border-b border-white/10">
-              <h2 className="text-xl font-semibold text-white">My Applications</h2>
+            <div className="p-6 border-b border-[color:var(--border)]">
+              <h2 className="text-xl font-semibold text-[color:var(--text)]">{t('common.my_applications', 'My Applications')}</h2>
             </div>
             <div className="p-4">
               {myApplications.length === 0 ? (
-                <p className="text-center text-white/50 py-4">No applications yet</p>
+                <p className="text-center text-[color:var(--text-dim)] py-4">{t('common.no_applications_yet', 'No applications yet')}</p>
               ) : (
                 <div className="space-y-3">
                   {myApplications.slice(0, 10).map(app => (
                     <div key={app._id}>
                       <ApplicationCard application={app} />
-                      {app.status === 'accepted' && (
+                      {app.status === 'completed' && app.isPaid && (
                         <div className="px-1 pb-1 -mt-2">
                           <Link
                             to={`/reviews/leave?revieweeId=${app.event?.organizer?._id}&eventId=${app.event?._id}&revieweeName=${encodeURIComponent(app.event?.organizer?.name || 'Organizer')}`}
                             style={{ color: 'var(--gold)', fontSize: '0.8rem' }}
-                          >
-                            Leave Review
-                          </Link>
+                          >{t('common.leave_review', 'Leave Review')}</Link>
                         </div>
                       )}
                     </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -62,9 +63,7 @@ const MapPicker = ({
         </MapContainer>
       </div>
       {showInstructions && (
-        <p className="text-white/50 text-sm mt-2">
-          Click on the map to set the event location
-        </p>
+        <p className="text-white/50 text-sm mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
       )}
     </div>
   );

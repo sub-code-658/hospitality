@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -29,6 +30,7 @@ function LocationPicker({ position, setPosition }) {
 }
 
 export default function EditEventPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { user } = useAuth();
   const { addToast } = useToast();
@@ -174,51 +176,51 @@ export default function EditEventPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">Edit Event</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">{t('common.edit_event', 'Edit Event')}</h1>
 
       <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6 animate-scale-in">
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Event Title</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
             className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.title ? 'border-red-400' : ''}`}
-            placeholder="e.g., Corporate Gala Dinner"
+            placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
           />
           {errors.title && <p className="text-red-300 text-sm mt-2">{errors.title}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Description</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.description', 'Description')}</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows={4}
             className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.description ? 'border-red-400' : ''}`}
-            placeholder="Describe your event..."
+            placeholder={t('common.describe_your_event', 'Describe your event...')}
           />
           {errors.description && <p className="text-red-300 text-sm mt-2">{errors.description}</p>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Location</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.location', 'Location')}</label>
             <input
               type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
               className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.location ? 'border-red-400' : ''}`}
-              placeholder="Venue name and address"
+              placeholder={t('common.venue_name_and_address', 'Venue name and address')}
             />
             {errors.location && <p className="text-red-300 text-sm mt-2">{errors.location}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Event Date</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
             <input
               type="date"
               name="eventDate"
@@ -230,7 +232,7 @@ export default function EditEventPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Start Time</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
             <input
               type="time"
               name="startTime"
@@ -242,7 +244,7 @@ export default function EditEventPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">End Time</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
             <input
               type="time"
               name="endTime"
@@ -256,7 +258,7 @@ export default function EditEventPage() {
 
         {/* Map Picker */}
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Pin Location on Map</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
           <div className="h-64 rounded-xl overflow-hidden">
             <MapContainer
               center={mapPosition}
@@ -270,13 +272,13 @@ export default function EditEventPage() {
               <LocationPicker position={mapPosition} setPosition={(pos) => setMapPosition([pos.lat, pos.lng])} />
             </MapContainer>
           </div>
-          <p className="text-sm text-white/40 mt-2">Click on the map to update the event location</p>
+          <p className="text-sm text-white/40 mt-2">{t('common.click_on_the_map_to_update_the', 'Click on the map to update the event location')}</p>
         </div>
 
         {/* Roles Section */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm font-medium text-white/80">Roles Needed</label>
+            <label className="block text-sm font-medium text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
             <button
               type="button"
               onClick={addRole}
@@ -293,7 +295,7 @@ export default function EditEventPage() {
                     type="text"
                     value={role.roleName}
                     onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
-                    placeholder="Role (e.g., Waiter)"
+                    placeholder={t('common.role_e_g_waiter', 'Role (e.g., Waiter)')}
                     className="w-full px-3 py-2 rounded-xl input-field text-sm"
                   />
                   {errors[`role_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`role_${index}`]}</p>}
@@ -303,7 +305,7 @@ export default function EditEventPage() {
                     type="number"
                     value={role.count}
                     onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
-                    placeholder="Count"
+                    placeholder={t('common.count', 'Count')}
                     min="1"
                     className="w-full px-3 py-2 rounded-xl input-field text-sm text-center"
                   />
@@ -315,7 +317,7 @@ export default function EditEventPage() {
                       type="number"
                       value={role.payAmount}
                       onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
-                      placeholder="Amount"
+                      placeholder={t('common.amount', 'Amount')}
                       min="0"
                       className="w-full px-3 py-2 rounded-xl input-field text-sm"
                     />
@@ -326,9 +328,9 @@ export default function EditEventPage() {
                     onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
                     className="w-24 px-2 py-2 rounded-xl input-field text-sm"
                   >
-                    <option value="per_hour">/ Hour</option>
-                    <option value="per_day">/ Day</option>
-                    <option value="per_event">/ Event</option>
+                    <option value="per_hour">{t('common.hour', '/ Hour')}</option>
+                    <option value="per_day">{t('common.day', '/ Day')}</option>
+                    <option value="per_event">{t('common.event', '/ Event')}</option>
                   </select>
                 </div>
                 {roles.length > 1 && (
@@ -350,15 +352,13 @@ export default function EditEventPage() {
             type="button"
             onClick={() => navigate('/dashboard')}
             className="flex-1 btn-secondary py-4 rounded-xl font-semibold"
-          >
-            Cancel
-          </button>
+          >{t('common.cancel', 'Cancel')}</button>
           <button
             type="submit"
             disabled={loading}
             className="flex-1 btn-glass py-4 rounded-xl font-semibold flex items-center justify-center"
           >
-            {loading ? <LoadingSpinner size="sm" /> : 'Save Changes'}
+            {loading ? <LoadingSpinner size="sm" /> : t('common.save_changes', 'Save Changes')}
           </button>
         </div>
       </form>

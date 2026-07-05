@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const STATUS_COLOR = {
   active: '#6baf8a',
@@ -8,6 +9,7 @@ const STATUS_COLOR = {
 };
 
 export default function EventCard({ event, showOrganizer = false }) {
+  const { t } = useTranslation();
   const formatDate = (date) =>
     new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
@@ -29,7 +31,7 @@ export default function EventCard({ event, showOrganizer = false }) {
             {event.title}
           </h3>
           <span
-            className="flex-shrink-0 text-[0.65rem] font-bold uppercase tracking-widest px-2 py-1 rounded"
+            className="flex items-center justify-center whitespace-nowrap flex-shrink-0 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
             style={{
               background: `${barColor}18`,
               border: `1px solid ${barColor}30`,
@@ -100,16 +102,12 @@ export default function EventCard({ event, showOrganizer = false }) {
             >
               NPR {totalPay.toLocaleString()}
             </span>
-            <span className="text-xs ml-1" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              est. total
-            </span>
+            <span className="text-xs ml-1" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{t('common.est_total', 'est. total')}</span>
           </div>
           <span
             className="label text-[0.6rem] flex items-center gap-1.5 transition-colors duration-200"
             style={{ color: 'var(--text-dim)' }}
-          >
-            Details
-            <svg
+          >{t('common.details', 'Details')}<svg
               width="12"
               height="12"
               fill="none"

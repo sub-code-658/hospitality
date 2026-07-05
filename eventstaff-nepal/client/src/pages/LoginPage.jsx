@@ -62,15 +62,15 @@ export default function LoginPage() {
         <div className="text-center mb-12 animate-fade-in">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
             <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-            <span className="font-serif text-2xl" style={{ color: '#003300', fontWeight: 400 }}>EventStaff<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>NEPAL</span>
+            <span className="font-serif text-2xl" style={{ color: '#003300', fontWeight: 400 }}>{t('common.eventstaff', 'EventStaff')}<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>{t('common.nepal', 'NEPAL')}</span>
             </span>
           </Link>
           <h1
             className="font-serif block"
             style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: '#003300', fontWeight: 300, lineHeight: 1.1 }}
-          >Welcome<span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>Back</span>
+          >{t('common.welcome', 'Welcome')}<span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>{t('common.back', 'Back')}</span>
           </h1>
-          <p className="mt-3 text-sm" style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Sign in to your account</p>
+          <p className="mt-3 text-sm" style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{t('common.sign_in_to_your_account', 'Sign in to your account')}</p>
         </div>
 
         {/* Card */}
@@ -112,7 +112,7 @@ export default function LoginPage() {
                 htmlFor="email"
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
                 style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-              >Email Address</label>
+              >{t('common.email_address', 'Email Address')}</label>
               <input
                 id="email"
                 type="email"
@@ -120,7 +120,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={e => { setEmail(e.target.value); setErrors(prev => ({ ...prev, email: '' })); }}
                 className="input-field"
-                placeholder="you@example.com"
+                placeholder={t('common.you_example_com', 'you@example.com')}
                 autoComplete="username"
                 required
                 enterKeyHint="next"
@@ -137,7 +137,7 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="block text-xs font-semibold uppercase tracking-widest mb-2.5"
                 style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-              >Password</label>
+              >{t('common.password', 'Password')}</label>
               <div className="relative">
                 <input
                   id="password"
@@ -185,7 +185,7 @@ export default function LoginPage() {
             </div>
 
             <button type="submit" disabled={loading} className="btn-glass w-full py-3.5 mt-2">
-              {loading ? <LoadingSpinner size="sm" /> : 'Sign In'}
+              {loading ? <LoadingSpinner size="sm" /> : t('common.sign_in', 'Sign In')}
             </button>
           </form>
 
@@ -194,7 +194,7 @@ export default function LoginPage() {
             <p
               className="text-center text-xs uppercase tracking-widest mb-4"
               style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-            >Quick fill — test credentials</p>
+            >{t('common.quick_fill_test_credentials', 'Quick fill — test credentials')}</p>
             <div className="flex gap-3">
               {['organizer', 'worker'].map(type => (
                 <button
@@ -228,7 +228,7 @@ export default function LoginPage() {
               style={{ color: 'var(--flame)' }}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--flame-light)'}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--flame)'}
-            >Register here</Link>
+            >{t('common.register_here', 'Register here')}</Link>
           </p>
         </div>
       </div>

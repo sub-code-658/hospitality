@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useToast } from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function PaymentCallbackPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -42,7 +44,7 @@ export default function PaymentCallbackPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-bg">
         <LoadingSpinner size="lg" />
-        <p className="mt-4 text-white/70 text-sm">Verifying transaction with eSewa...</p>
+        <p className="mt-4 text-white/70 text-sm">{t('common.verifying_transaction_with_ese', 'Verifying transaction with eSewa...')}</p>
       </div>
     );
   }
@@ -57,10 +59,8 @@ export default function PaymentCallbackPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="font-serif text-3xl text-white mb-3">Payment Successful</h1>
-            <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
-              Your transaction has been securely processed and verified. The worker will be notified.
-            </p>
+            <h1 className="font-serif text-3xl text-white mb-3">{t('common.payment_successful', 'Payment Successful')}</h1>
+            <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>{t('common.your_transaction_has_been_secu', 'Your transaction has been securely processed and verified. The worker will be notified.')}</p>
           </>
         ) : (
           <>
@@ -69,18 +69,14 @@ export default function PaymentCallbackPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <h1 className="font-serif text-3xl text-white mb-3">Payment Failed</h1>
-            <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
-              We could not verify your payment. Please contact support or try again.
-            </p>
+            <h1 className="font-serif text-3xl text-white mb-3">{t('common.payment_failed', 'Payment Failed')}</h1>
+            <p className="text-sm mb-8" style={{ color: 'var(--text-muted)' }}>{t('common.we_could_not_verify_your_payme', 'We could not verify your payment. Please contact support or try again.')}</p>
           </>
         )}
         <button
           onClick={() => navigate('/dashboard')}
           className="btn-primary w-full py-3.5"
-        >
-          Return to Dashboard
-        </button>
+        >{t('common.return_to_dashboard', 'Return to Dashboard')}</button>
       </div>
     </div>
   );

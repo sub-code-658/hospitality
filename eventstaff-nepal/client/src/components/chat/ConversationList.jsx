@@ -1,4 +1,5 @@
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { formatDate } from '../../utils/formatDate';
 
 const ConversationList = ({ conversations, selectedUser, onSelect }) => {
@@ -7,8 +8,8 @@ const ConversationList = ({ conversations, selectedUser, onSelect }) => {
   if (!conversations || conversations.length === 0) {
     return (
       <div className="p-4 text-center">
-        <p className="text-white/50">No conversations yet</p>
-        <p className="text-white/30 text-sm mt-1">Start chatting with organizers or workers</p>
+        <p className="text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
+        <p className="text-white/30 text-sm mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -46,7 +46,7 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif;
     background-color: var(--bg);
     min-height: 100vh;
     color: var(--text);
@@ -87,8 +87,7 @@
     color: var(--text);
   }
 
-  /* Global input/textarea/select styles for dark mode visibility */
-  input, textarea, select { color: var(--text) !important; background-color: #FFFFFF !important; }
+  /* Global input/textarea/select styles removed to prevent breaking Tailwind utilities */
 
   *:focus-visible {
     outline: 2px solid rgba(184, 159, 100, 0.5);

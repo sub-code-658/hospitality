@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from './context/AuthContext';
 import { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
@@ -25,19 +26,20 @@ const OrganizerDashboard = lazy(() => import('./pages/OrganizerDashboard'));
 
 function App() {
   const { user, loading } = useAuth();
+  const { t, i18n } = useTranslation();
 
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#060912' }}>
         <div className="spinner" />
-        <span className="label text-[0.65rem]" style={{ color: 'var(--flame)' }}>Loading</span>
+        <span className="label text-[0.65rem]" style={{ color: 'var(--flame)' }}>{t('common.loading', 'Loading')}</span>
       </div>
     );
   }
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div key={i18n.language} className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
           <Routes>

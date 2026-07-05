@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -29,6 +30,7 @@ function LocationPicker({ position, setPosition }) {
 }
 
 export default function PostEventPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -132,51 +134,51 @@ export default function PostEventPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">Post New Event</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 animate-slide-up">{t('common.post_new_event', 'Post New Event')}</h1>
 
       <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6 animate-scale-in">
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Event Title</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
             className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.title ? 'border-red-400' : ''}`}
-            placeholder="e.g., Corporate Gala Dinner"
+            placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
           />
           {errors.title && <p className="text-red-300 text-sm mt-2">{errors.title}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Description</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.description', 'Description')}</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows={4}
             className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.description ? 'border-red-400' : ''}`}
-            placeholder="Describe your event..."
+            placeholder={t('common.describe_your_event', 'Describe your event...')}
           />
           {errors.description && <p className="text-red-300 text-sm mt-2">{errors.description}</p>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Location</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.location', 'Location')}</label>
             <input
               type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
               className={`w-full px-4 py-4 rounded-xl glass-input text-white placeholder-white/40 ${errors.location ? 'border-red-400' : ''}`}
-              placeholder="Venue name and address"
+              placeholder={t('common.venue_name_and_address', 'Venue name and address')}
             />
             {errors.location && <p className="text-red-300 text-sm mt-2">{errors.location}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Event Date</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
             <input
               type="date"
               name="eventDate"
@@ -189,7 +191,7 @@ export default function PostEventPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Start Time</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
             <input
               type="time"
               name="startTime"
@@ -201,7 +203,7 @@ export default function PostEventPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">End Time</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
             <input
               type="time"
               name="endTime"
@@ -215,7 +217,7 @@ export default function PostEventPage() {
 
         {/* Map Picker */}
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Pin Location on Map</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
           <div className="h-64 rounded-xl overflow-hidden">
             <MapContainer
               center={[27.7172, 85.3142]}
@@ -229,13 +231,13 @@ export default function PostEventPage() {
               <LocationPicker position={mapPosition} setPosition={(pos) => setMapPosition([pos.lat, pos.lng])} />
             </MapContainer>
           </div>
-          <p className="text-sm text-white/40 mt-2">Click on the map to set the event location</p>
+          <p className="text-sm text-white/40 mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
         </div>
 
         {/* Roles Section */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm font-medium text-white/80">Roles Needed</label>
+            <label className="block text-sm font-medium text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
             <button
               type="button"
               onClick={addRole}
@@ -253,14 +255,14 @@ export default function PostEventPage() {
                     onChange={(e) => handleRoleChange(index, 'roleSelect', e.target.value)}
                     className="w-full px-3 py-2 rounded-xl input-field text-sm"
                   >
-                    <option value="Waiter">Waiter</option>
-                    <option value="Chef">Chef</option>
+                    <option value="Waiter">{t('common.waiter', 'Waiter')}</option>
+                    <option value="Chef">{t('common.chef', 'Chef')}</option>
                     <option value="Bartender">Bartender</option>
-                    <option value="DJ">DJ</option>
-                    <option value="Host/Hostess">Host/Hostess</option>
-                    <option value="Security">Security</option>
-                    <option value="Cleaner">Cleaner</option>
-                    <option value="Other">Other</option>
+                    <option value="DJ">{t('common.dj', 'DJ')}</option>
+                    <option value="Host/Hostess">{t('common.host_hostess', 'Host/Hostess')}</option>
+                    <option value="Security">{t('common.security', 'Security')}</option>
+                    <option value="Cleaner">{t('common.cleaner', 'Cleaner')}</option>
+                    <option value="Other">{t('common.other', 'Other')}</option>
                   </select>
                   
                   {role.roleSelect === 'Other' && (
@@ -268,7 +270,7 @@ export default function PostEventPage() {
                       type="text"
                       value={role.customRole}
                       onChange={(e) => handleRoleChange(index, 'customRole', e.target.value)}
-                      placeholder="Specify role"
+                      placeholder={t('common.specify_role', 'Specify role')}
                       className="w-full px-3 py-2 rounded-xl input-field text-sm mt-1"
                     />
                   )}
@@ -279,7 +281,7 @@ export default function PostEventPage() {
                     type="number"
                     value={role.count}
                     onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
-                    placeholder="Count"
+                    placeholder={t('common.count', 'Count')}
                     min="1"
                     className="w-full px-3 py-2 rounded-xl input-field text-sm text-center"
                   />
@@ -291,7 +293,7 @@ export default function PostEventPage() {
                       type="number"
                       value={role.payAmount}
                       onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
-                      placeholder="Amount"
+                      placeholder={t('common.amount', 'Amount')}
                       min="0"
                       className="w-full px-3 py-2 rounded-xl input-field text-sm"
                     />
@@ -302,9 +304,9 @@ export default function PostEventPage() {
                     onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
                     className="w-24 px-2 py-2 rounded-xl input-field text-sm"
                   >
-                    <option value="per_hour">/ Hour</option>
-                    <option value="per_day">/ Day</option>
-                    <option value="per_event">/ Event</option>
+                    <option value="per_hour">{t('common.hour', '/ Hour')}</option>
+                    <option value="per_day">{t('common.day', '/ Day')}</option>
+                    <option value="per_event">{t('common.event', '/ Event')}</option>
                   </select>
                 </div>
                 {roles.length > 1 && (
@@ -326,7 +328,7 @@ export default function PostEventPage() {
           disabled={loading}
           className="w-full btn-glass py-4 rounded-xl font-semibold flex items-center justify-center"
         >
-          {loading ? <LoadingSpinner size="sm" /> : 'Post Event'}
+          {loading ? <LoadingSpinner size="sm" /> : t('common.post_event', 'Post Event')}
         </button>
       </form>
     </div>

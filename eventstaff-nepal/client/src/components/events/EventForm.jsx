@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ROLES } from '../../utils/constants';
 import MapPicker from '../common/MapPicker';
 import { KATHMANDU_CENTER } from '../../utils/constants';
@@ -74,47 +75,47 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">Event Title</label>
+        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
           className="w-full px-4 py-3 rounded-xl glass-input text-white"
-          placeholder="e.g., Corporate Gala Dinner"
+          placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
         />
         {errors.title && <p className="text-red-400 text-sm mt-1">{errors.title}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">Description</label>
+        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.description', 'Description')}</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
           rows={4}
           className="w-full px-4 py-3 rounded-xl glass-input text-white"
-          placeholder="Describe your event..."
+          placeholder={t('common.describe_your_event', 'Describe your event...')}
         />
         {errors.description && <p className="text-red-400 text-sm mt-1">{errors.description}</p>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Location</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.location', 'Location')}</label>
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-xl glass-input text-white"
-            placeholder="Venue name and address"
+            placeholder={t('common.venue_name_and_address', 'Venue name and address')}
           />
           {errors.location && <p className="text-red-400 text-sm mt-1">{errors.location}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Event Date</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
           <input
             type="date"
             name="eventDate"
@@ -126,7 +127,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">Start Time</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
           <input
             type="time"
             name="startTime"
@@ -138,7 +139,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/80 mb-2">End Time</label>
+          <label className="block text-sm font-medium text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
           <input
             type="time"
             name="endTime"
@@ -151,7 +152,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-2">Pin Location on Map</label>
+        <label className="block text-sm font-medium text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
         <MapPicker
           position={formData.coordinates}
           setPosition={(coords) => setFormData(prev => ({ ...prev, coordinates: coords }))}
@@ -160,7 +161,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
 
       <div>
         <div className="flex justify-between items-center mb-4">
-          <label className="block text-sm font-medium text-white/80">Roles Needed</label>
+          <label className="block text-sm font-medium text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
           <button
             type="button"
             onClick={addRole}
@@ -178,7 +179,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                   onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
                   className="w-full px-3 py-2 rounded-xl glass-input text-white"
                 >
-                  <option value="">Select role</option>
+                  <option value="">{t('common.select_role', 'Select role')}</option>
                   {ROLES.map(r => (
                     <option key={r} value={r}>{r}</option>
                   ))}
@@ -190,7 +191,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                   type="number"
                   value={role.count}
                   onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
-                  placeholder="Count"
+                  placeholder={t('common.count', 'Count')}
                   min="1"
                   className="w-full px-3 py-2 rounded-xl glass-input text-white text-center"
                 />
@@ -201,7 +202,7 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                     type="number"
                     value={role.payAmount}
                     onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
-                    placeholder="Amount"
+                    placeholder={t('common.amount', 'Amount')}
                     min="0"
                     className="w-full px-3 py-2 rounded-xl input-field text-sm"
                   />
@@ -212,9 +213,9 @@ const EventForm = ({ initialData, onSubmit, isLoading }) => {
                   onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
                   className="w-24 px-2 py-2 rounded-xl input-field text-sm"
                 >
-                  <option value="per_hour">/ Hour</option>
-                  <option value="per_day">/ Day</option>
-                  <option value="per_event">/ Event</option>
+                  <option value="per_hour">{t('common.hour', '/ Hour')}</option>
+                  <option value="per_day">{t('common.day', '/ Day')}</option>
+                  <option value="per_event">{t('common.event', '/ Event')}</option>
                 </select>
               </div>
               {formData.rolesNeeded.length > 1 && (

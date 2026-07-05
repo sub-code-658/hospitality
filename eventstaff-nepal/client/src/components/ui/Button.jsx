@@ -1,4 +1,5 @@
 import LoadingSpinner from './LoadingSpinner';
+import { useTranslation } from 'react-i18next';
 
 const Button = ({
   children,
@@ -42,7 +43,7 @@ const Button = ({
       {loading ? (
         <>
           <LoadingSpinner size="sm" />
-          <span className="ml-2">Loading...</span>
+          <span className="ml-2">{t('common.loading', 'Loading...')}</span>
         </>
       ) : children}
     </button>

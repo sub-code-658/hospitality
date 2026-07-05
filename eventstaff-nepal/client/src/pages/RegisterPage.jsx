@@ -96,15 +96,15 @@ export default function RegisterPage() {
         <div className="text-center mb-12 animate-fade-in">
           <Link to="/" className="inline-flex items-center gap-2.5 mb-8">
             <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-            <span className="font-serif text-2xl" style={{ color: '#003300', fontWeight: 400 }}>EventStaff<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>NEPAL</span>
+            <span className="font-serif text-2xl" style={{ color: '#003300', fontWeight: 400 }}>{t('common.eventstaff', 'EventStaff')}<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>{t('common.nepal', 'NEPAL')}</span>
             </span>
           </Link>
           <h1
             className="font-serif block"
             style={{ fontSize: 'clamp(2.5rem, 7vw, 4rem)', color: '#003300', fontWeight: 300, lineHeight: 1.1 }}
-          >Create<span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>Account</span>
+          >{t('common.create', 'Create')}<span className="flame-text" style={{ fontStyle: 'italic', fontWeight: 600 }}>{t('common.account', 'Account')}</span>
           </h1>
-          <p className="mt-3 text-sm" style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Join EventStaff Nepal today</p>
+          <p className="mt-3 text-sm" style={{ color: '#6B7A66', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{t('common.join_eventstaff_nepal_today', 'Join EventStaff Nepal today')}</p>
         </div>
 
         {/* Card */}
@@ -136,7 +136,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
+              <FieldLabel htmlFor="name">{t('common.full_name', 'Full Name')}</FieldLabel>
               <input
                 id="name"
                 type="text"
@@ -144,7 +144,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="Your full name"
+                placeholder={t('common.your_full_name', 'Your full name')}
                 autoComplete="name"
                 required
                 enterKeyHint="next"
@@ -153,7 +153,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="email">Email Address</FieldLabel>
+              <FieldLabel htmlFor="email">{t('common.email_address', 'Email Address')}</FieldLabel>
               <input
                 id="email"
                 type="email"
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="you@example.com"
+                placeholder={t('common.you_example_com', 'you@example.com')}
                 autoComplete="username"
                 required
                 enterKeyHint="next"
@@ -170,7 +170,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="new-password">Password</FieldLabel>
+              <FieldLabel htmlFor="new-password">{t('common.password', 'Password')}</FieldLabel>
               <div className="relative">
                 <input
                   id="new-password"
@@ -179,7 +179,7 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleChange}
                   className="input-field pr-12"
-                  placeholder="Min. 6 characters"
+                  placeholder={t('common.min_6_characters', 'Min. 6 characters')}
                   autoComplete="new-password"
                   required
                   enterKeyHint="next"
@@ -214,7 +214,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+              <FieldLabel htmlFor="confirm-password">{t('common.confirm_password', 'Confirm Password')}</FieldLabel>
               <div className="relative">
                 <input
                   id="confirm-password"
@@ -223,7 +223,7 @@ export default function RegisterPage() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className="input-field pr-12"
-                  placeholder="Re-enter password"
+                  placeholder={t('common.re_enter_password', 'Re-enter password')}
                   autoComplete="new-password"
                   required
                   enterKeyHint="done"
@@ -260,7 +260,7 @@ export default function RegisterPage() {
             {role === 'worker' && (
               <>
                 <div>
-                  <FieldLabel>Skills</FieldLabel>
+                  <FieldLabel>{t('common.skills', 'Skills')}</FieldLabel>
                   <div className="flex flex-wrap gap-2">
                     {SKILLS.map(skill => {
                       const active = formData.skills.includes(skill);
@@ -280,7 +280,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <FieldLabel>Experience Level</FieldLabel>
+                  <FieldLabel>{t('common.experience_level', 'Experience Level')}</FieldLabel>
                   <select
                     name="experience"
                     value={formData.experience}
@@ -297,7 +297,7 @@ export default function RegisterPage() {
             )}
 
             <button type="submit" disabled={loading} className="btn-glass w-full py-3.5 mt-2">
-              {loading ? <LoadingSpinner size="sm" /> : 'Create Account'}
+              {loading ? <LoadingSpinner size="sm" /> : t('common.create_account', 'Create Account')}
             </button>
           </form>
 
@@ -312,7 +312,7 @@ export default function RegisterPage() {
               style={{ color: 'var(--flame)' }}
               onMouseEnter={e => e.currentTarget.style.color = 'var(--flame-light)'}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--flame)'}
-            >Sign in</Link>
+            >{t('common.sign_in', 'Sign in')}</Link>
           </p>
         </div>
       </div>

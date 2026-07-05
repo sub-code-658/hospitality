@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -8,9 +9,11 @@ import StaffCard from '../components/StaffCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/ui/EmptyState';
 import InviteModal from '../components/InviteModal';
+import FilterBar from '../components/common/FilterBar';
 import { ROLES } from '../utils/constants';
 
 export default function EventsPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { addToast } = useToast();
   const [searchParams] = useSearchParams();
@@ -93,7 +96,7 @@ export default function EventsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
       {/* Header */}
       <div className="mb-12 animate-fade-in">
-        <p className="label mb-3">Explore</p>
+        <p className="label mb-3">{t('common.explore', 'Explore')}</p>
         <h1
           className="font-serif mb-2"
           style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: 'var(--text)', fontWeight: 400, lineHeight: 1.1 }}
@@ -108,107 +111,14 @@ export default function EventsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters sidebar */}
         <aside className="lg:col-span-1">
-          <div className="panel p-6 sticky top-24 animate-fade-in">
-            <div className="flex items-center justify-between mb-6">
-              <span className="label text-[0.65rem]">Filters</span>
-              <button
-                onClick={clearFilters}
-                className="text-xs transition-colors duration-150"
-                style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--flame)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-              >
-                Clear all
-              </button>
-            </div>
-
-            {/* Search */}
-            <form
-              onSubmit={e => { e.preventDefault(); fetchData(); }}
-              className="mb-6"
-            >
-              <FilterLabel>Search</FilterLabel>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={filters.search}
-                  onChange={e => handleFilterChange('search', e.target.value)}
-                  placeholder={isOrganizer ? "Name, skills..." : "Event name, location..."}
-                  className="input-field pr-10 text-sm"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150"
-                  style={{ color: 'var(--text-dim)' }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--flame)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-dim)'}
-                >
-                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
-            </form>
-
-            <div className="space-y-5">
-              <div>
-                <FilterLabel>{isOrganizer ? 'Skills' : 'Role Type'}</FilterLabel>
-                <select
-                  value={filters.role}
-                  onChange={e => handleFilterChange('role', e.target.value)}
-                  className="input-field text-sm"
-                  style={{ color: '#111827', colorScheme: 'dark' }}
-                >
-                  <option value="">{isOrganizer ? 'All Skills' : 'All Roles'}</option>
-                  {ROLES.map(r => (
-                    <option key={r} value={r} style={{ background: 'var(--surface)' }}>{r}</option>
-                  ))}
-                </select>
-              </div>
-
-              {!isOrganizer && (
-                <div>
-                  <FilterLabel>Date</FilterLabel>
-                  <input
-                    type="date"
-                    value={filters.date}
-                    onChange={e => handleFilterChange('date', e.target.value)}
-                    className="input-field text-sm"
-                    style={{ colorScheme: 'dark' }}
-                  />
-                </div>
-              )}
-
-              {isOrganizer && (
-                <>
-                  <div>
-                    <FilterLabel>Rating</FilterLabel>
-                    <select
-                      value={filters.rating}
-                      onChange={e => handleFilterChange('rating', e.target.value)}
-                      className="input-field text-sm"
-                      style={{ color: '#111827', colorScheme: 'dark' }}
-                    >
-                      <option value="">Any Rating</option>
-                      <option value="4">4+ Stars</option>
-                      <option value="3">3+ Stars</option>
-                    </select>
-                  </div>
-                  <div>
-                    <FilterLabel>Availability</FilterLabel>
-                    <select
-                      value={filters.availability}
-                      onChange={e => handleFilterChange('availability', e.target.value)}
-                      className="input-field text-sm"
-                      style={{ color: '#111827', colorScheme: 'dark' }}
-                    >
-                      <option value="">Any Status</option>
-                      <option value="available">Available Now</option>
-                    </select>
-                  </div>
-                </>
-              )}
-            </div>
+          <div className="sticky top-24">
+            <FilterBar
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onSearchSubmit={fetchData}
+              onClearFilters={clearFilters}
+              isOrganizer={isOrganizer}
+            />
 
             {/* Post event CTA for organisers */}
             {isOrganizer && (
@@ -267,9 +177,7 @@ export default function EventsPage() {
                     onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
                     disabled={pagination.currentPage === 1}
                     className="btn-secondary px-5 py-2.5 text-xs disabled:opacity-30"
-                  >
-                    ← Previous
-                  </button>
+                  >{t('common.previous', '← Previous')}</button>
                   <span
                     className="text-xs px-4"
                     style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
@@ -280,9 +188,7 @@ export default function EventsPage() {
                     onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
                     disabled={pagination.currentPage === pagination.totalPages}
                     className="btn-secondary px-5 py-2.5 text-xs disabled:opacity-30"
-                  >
-                    Next →
-                  </button>
+                  >{t('common.next', 'Next →')}</button>
                 </div>
               )}
             </>

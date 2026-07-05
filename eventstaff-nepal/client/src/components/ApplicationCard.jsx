@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { initiateConversation } from '../utils/messageUtils';
 
 export default function ApplicationCard({ application, eventRoles = [], isOrganizer = false, onStatusChange, onAssign = async () => {} }) {
+  const { t } = useTranslation();
   const [assignedRole, setAssignedRole] = useState(application.assignedRole || '');
   const [shiftNotes, setShiftNotes] = useState(application.shiftNotes || '');
   const [saving, setSaving] = useState(false);
@@ -61,9 +63,10 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
   }, [application]);
 
   const statusColors = {
-    pending: 'bg-yellow-500/20 text-yellow-200 border-yellow-400/30',
-    accepted: 'bg-green-500/20 text-green-200 border-green-400/30',
-    rejected: 'bg-red-500/20 text-red-200 border-red-400/30'
+    pending: 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-200 border-yellow-500/40 dark:border-yellow-400/30',
+    accepted: 'bg-green-500/20 text-green-700 dark:text-green-200 border-green-500/40 dark:border-green-400/30',
+    rejected: 'bg-red-500/20 text-red-700 dark:text-red-200 border-red-500/40 dark:border-red-400/30',
+    completed: 'bg-blue-500/20 text-blue-700 dark:text-blue-200 border-blue-500/40 dark:border-blue-400/30'
   };
 
   const formatDate = (date) => {
@@ -97,25 +100,23 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
     <div className="glass-card p-5 mb-4">
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h4 className="font-semibold text-white">
+          <h4 className="font-semibold text-[color:var(--text)]">
             {application.event?.title || 'Event'}
           </h4>
           {application.worker && (
             <div className="flex items-center gap-3 mt-1">
-              <p className="text-sm text-white/60">
+              <p className="text-sm text-[color:var(--text-muted)]">
                 {application.worker.name || application.worker.email}
               </p>
               <button 
                 onClick={() => initiateConversation(application.worker._id || application.worker, navigate)}
                 className="btn-glass px-2 py-1 text-[10px] flex items-center gap-1"
               >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                Message
-              </button>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>{t('common.message', 'Message')}</button>
             </div>
           )}
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium border ${statusColors[application.status]}`}>
+        <span className={`flex items-center justify-center whitespace-nowrap px-3 py-1 rounded-full text-xs font-medium border ${statusColors[application.status]}`}>
           {application.status}
         </span>
       </div>
@@ -123,7 +124,7 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
       {application.worker?.skills && application.worker.skills.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {application.worker.skills.map((skill, idx) => (
-            <span key={idx} className="bg-white/10 text-white/70 px-2 py-1 rounded-full text-xs border border-white/20">
+            <span key={idx} className="bg-[color:var(--surface-raised)] text-[color:var(--text-muted)] px-2 py-1 rounded-full text-xs border border-[color:var(--border-hover)]">
               {skill}
             </span>
           ))}
@@ -131,36 +132,39 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
       )}
 
       {application.message && (
-        <p className="text-sm text-white/60 italic mb-4">"{application.message}"</p>
+        <p className="text-sm text-[color:var(--text-muted)] italic mb-4">"{application.message}"</p>
       )}
 
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-[color:var(--text-dim)]">
         Applied: {formatDate(application.appliedAt)}
       </p>
 
-      {application.assigned && (
-        <div className="glass p-4 rounded-2xl mt-4 border border-green-400/20">
-          <p className="text-sm text-green-200 font-medium">Assigned Role</p>
-          <p className="text-white/80 mt-2">{application.assignedRole || 'Assigned'}</p>
-          {application.shiftNotes && (
-            <p className="text-sm text-white/60 mt-2">{application.shiftNotes}</p>
-          )}
-        </div>
-      )}
+      <div className="glass p-4 rounded-2xl mt-4 border border-[color:var(--border)]">
+        <p className="text-sm text-[color:var(--text-muted)] font-medium">{t('common.applied_as', 'Applied As:')}</p>
+        <p className="text-[color:var(--text)] mt-1 mb-3">{application.roleAppliedFor}</p>
+        
+        {application.assigned && (
+          <>
+            <p className="text-sm text-[color:var(--sage)] font-medium">{t('common.assigned_as', 'Assigned As:')}</p>
+            <p className="text-[color:var(--text)] mt-1">{application.assignedRole || 'Assigned'}</p>
+            {application.shiftNotes && (
+              <p className="text-sm text-[color:var(--text-muted)] mt-2">{application.shiftNotes}</p>
+            )}
+          </>
+        )}
+      </div>
 
       {application.status === 'accepted' && (
-        <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+        <div className="mt-4 pt-4 border-t border-[color:var(--border)] flex flex-col gap-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-white/60">Shift Payment:</span>
+            <span className="text-sm text-[color:var(--text-muted)]">{t('common.shift_payment', 'Shift Payment:')}</span>
             {application.isPaid ? (
-              <span className="px-3 py-1 bg-green-500/20 text-green-300 border border-green-500/30 text-xs font-semibold uppercase tracking-wider rounded-full flex items-center gap-1.5">
+              <span className="flex items-center justify-center whitespace-nowrap px-3 py-1 bg-green-500/20 text-[color:var(--sage)] border border-green-500/30 text-xs font-semibold uppercase tracking-wider rounded-full gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-                Paid
-              </span>
+                </svg>{t('common.paid', 'Paid')}</span>
             ) : (
-              <span className="text-xs text-yellow-300 font-semibold uppercase tracking-wider">Unpaid</span>
+              <span className="flex items-center justify-center whitespace-nowrap px-3 py-1 bg-yellow-500/20 text-yellow-600 dark:text-yellow-300 border border-yellow-500/30 text-xs font-semibold uppercase tracking-wider rounded-full">{t('common.payment_pending', 'Payment Pending')}</span>
             )}
           </div>
           
@@ -177,17 +181,17 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
       )}
 
       {isOrganizer && application.status === 'accepted' && (
-        <div className="glass p-4 rounded-2xl mt-4 border border-white/10">
-          <h5 className="text-sm font-semibold text-white mb-3">Assign shift</h5>
+        <div className="glass p-4 rounded-2xl mt-4 border border-[color:var(--border)]">
+          <h5 className="text-sm font-semibold text-[color:var(--text)] mb-3">{t('common.assign_shift', 'Assign shift')}</h5>
           <form onSubmit={handleAssignSubmit} className="grid gap-4">
             <select
               value={assignedRole}
               onChange={(e) => setAssignedRole(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl glass-input text-white"
+              className="w-full px-4 py-3 rounded-xl glass-input text-[color:var(--text)]"
             >
-              <option value="">Select role</option>
+              <option value="">{t('common.select_role', 'Select role')}</option>
               {eventRoles.map((role, idx) => (
-                <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-white">
+                <option key={idx} value={role.roleName} className="bg-[var(--surface)] text-[color:var(--text)]">
                   {role.roleName}
                 </option>
               ))}
@@ -196,15 +200,15 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
               rows={3}
               value={shiftNotes}
               onChange={(e) => setShiftNotes(e.target.value)}
-              placeholder="Shift instructions or notes"
-              className="w-full px-4 py-3 rounded-xl glass-input text-white"
+              placeholder={t('common.shift_instructions_or_notes', 'Shift instructions or notes')}
+              className="w-full px-4 py-3 rounded-xl glass-input text-[color:var(--text)]"
             />
-            <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-[color:var(--text-muted)] cursor-pointer">
               <input 
                 type="checkbox" 
                 checked={sendDirectMessage} 
                 onChange={(e) => setSendDirectMessage(e.target.checked)} 
-                className="rounded border-white/20 bg-white/5 text-primary-500 focus:ring-primary-500" 
+                className="rounded border-[color:var(--border-hover)] bg-[color:var(--surface-raised)] text-primary-500 focus:ring-primary-500" 
               />
               Send this update as a direct message
             </label>
@@ -220,19 +224,15 @@ export default function ApplicationCard({ application, eventRoles = [], isOrgani
       )}
 
       {isOrganizer && application.status === 'pending' && (
-        <div className="flex gap-3 mt-4 pt-4 border-t border-white/10">
+        <div className="flex gap-3 mt-4 pt-4 border-t border-[color:var(--border)]">
           <button
             onClick={() => onStatusChange(application._id, 'accepted')}
-            className="flex-1 glass text-green-300 px-4 py-2 rounded-xl hover:bg-green-500/20 transition-all duration-300 border border-green-400/30"
-          >
-            Accept
-          </button>
+            className="flex-1 glass text-[color:var(--sage)] px-4 py-2 rounded-xl hover:bg-green-500/20 transition-all duration-300 border border-green-400/30"
+          >{t('common.accept', 'Accept')}</button>
           <button
             onClick={() => onStatusChange(application._id, 'rejected')}
-            className="flex-1 glass text-red-300 px-4 py-2 rounded-xl hover:bg-red-500/20 transition-all duration-300 border border-red-400/30"
-          >
-            Reject
-          </button>
+            className="flex-1 glass text-[color:var(--crimson)] px-4 py-2 rounded-xl hover:bg-red-500/10 transition-all duration-300 border border-red-500/20 dark:border-red-400/30 dark:hover:bg-red-500/20"
+          >{t('common.reject', 'Reject')}</button>
         </div>
       )}
     </div>

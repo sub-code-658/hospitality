@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import MessageBubble from './MessageBubble';
@@ -143,7 +144,7 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
               handleTyping();
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
+            placeholder={t('common.type_a_message', 'Type a message...')}
             className="flex-1 px-4 py-3 rounded-xl glass-input text-white placeholder-white/40"
           />
           <button

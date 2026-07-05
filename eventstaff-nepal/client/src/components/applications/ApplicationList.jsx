@@ -1,4 +1,5 @@
 import ApplicationCard from './ApplicationCard';
+import { useTranslation } from 'react-i18next';
 
 const ApplicationList = ({ applications, loading, isOrganizer = false, onStatusChange, onAssign }) => {
   if (loading) {
@@ -18,7 +19,7 @@ const ApplicationList = ({ applications, loading, isOrganizer = false, onStatusC
   if (!applications || applications.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-white/50">No applications yet</p>
+        <p className="text-white/50">{t('common.no_applications_yet', 'No applications yet')}</p>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -43,7 +44,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="p-6">
           <div className="flex items-center space-x-2 mb-8">
             <span className="text-2xl">🎉</span>
-            <span className="text-white font-bold text-xl gradient-text">EventStaff</span>
+            <span className="text-white font-bold text-xl gradient-text">{t('common.eventstaff', 'EventStaff')}</span>
           </div>
 
           <nav className="space-y-2">

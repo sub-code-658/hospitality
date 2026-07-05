@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -6,6 +7,7 @@ import { useToast } from '../components/Toast';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function MessagesPage() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { socket, onlineUsers } = useSocket();
   const { addToast } = useToast();
@@ -119,19 +121,19 @@ export default function MessagesPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 animate-slide-up">Messages</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 animate-slide-up">{t('common.messages', 'Messages')}</h1>
 
       <div className="glass-card overflow-hidden h-[600px] flex animate-scale-in">
         {/* Conversations Sidebar */}
         <div className="w-80 border-r border-white/10 flex flex-col">
           <div className="p-4 border-b border-white/10 bg-white/5">
-            <h2 className="font-semibold text-white">Conversations</h2>
+            <h2 className="font-semibold text-white">{t('common.conversations', 'Conversations')}</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-white/50">No conversations yet</p>
-                <p className="text-sm text-white/30 mt-1">Start chatting with organizers or workers</p>
+                <p className="text-white/50">{t('common.no_conversations_yet', 'No conversations yet')}</p>
+                <p className="text-sm text-white/30 mt-1">{t('common.start_chatting_with_organizers', 'Start chatting with organizers or workers')}</p>
               </div>
             ) : (
               conversations.map((conv) => {
@@ -239,7 +241,7 @@ export default function MessagesPage() {
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type a message..."
+                    placeholder={t('common.type_a_message', 'Type a message...')}
                     className="flex-1 px-4 py-3 rounded-xl glass-input text-white placeholder-white/40"
                   />
                   <button
@@ -255,7 +257,7 @@ export default function MessagesPage() {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <p className="text-xl text-white/50 mb-2">Select a conversation</p>
+                <p className="text-xl text-white/50 mb-2">{t('common.select_a_conversation', 'Select a conversation')}</p>
                 <p className="text-sm text-white/30">Choose from your existing conversations or start a new one</p>
               </div>
             </div>

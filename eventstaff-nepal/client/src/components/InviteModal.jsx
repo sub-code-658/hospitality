@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { useToast } from './Toast';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function InviteModal({ isOpen, onClose, worker }) {
+  const { t } = useTranslation();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchingEvents, setFetchingEvents] = useState(true);
@@ -69,21 +71,17 @@ export default function InviteModal({ isOpen, onClose, worker }) {
           ✕
         </button>
         
-        <h2 className="text-xl font-serif text-white mb-1">Invite {worker?.name}</h2>
+        <h2 className="text-xl font-serif text-white mb-1">{t('common.invite_user', 'Invite {{name}}', { name: worker?.name || '' })}</h2>
         <p className="text-xs text-[var(--text-muted)] mb-6">Select an event to send an invitation.</p>
         
         {fetchingEvents ? (
           <div className="flex justify-center py-8"><LoadingSpinner /></div>
         ) : events.length === 0 ? (
-          <div className="py-6 text-center text-[var(--text-muted)] text-sm">
-            You don't have any active events to invite staff to.
-          </div>
+          <div className="py-6 text-center text-[var(--text-muted)] text-sm">{t('common.you_don_t_have_any_active_even', "You don't have any active events to invite staff to.")}</div>
         ) : (
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-2">
-                Select Event
-              </label>
+              <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-2">{t('common.select_event', 'Select Event')}</label>
               <select
                 value={selectedEvent}
                 onChange={(e) => setSelectedEvent(e.target.value)}
@@ -98,14 +96,12 @@ export default function InviteModal({ isOpen, onClose, worker }) {
             </div>
             
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-2">
-                Message
-              </label>
+              <label className="block text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-2">{t('common.message', 'Message')}</label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="glass-input w-full h-32 resize-none"
-                placeholder="Write your invitation message..."
+                placeholder={t('common.write_your_invitation_message', 'Write your invitation message...')}
               />
             </div>
             

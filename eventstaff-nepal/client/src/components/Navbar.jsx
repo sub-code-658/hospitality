@@ -118,7 +118,7 @@ export default function Navbar() {
               style={{ color: 'var(--text)', fontWeight: 500 }}
             >
               EventStaff{' '}
-              <span style={{ color: '#003300', fontStyle: 'italic' }}>Nepal</span>
+              <span style={{ color: 'var(--sage)', fontStyle: 'italic' }}>Nepal</span>
             </span>
           </Link>
 
@@ -151,9 +151,8 @@ export default function Navbar() {
 
               <button
                 onClick={() => {
-                  const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                  const nextLng = (i18n.language || 'en').startsWith('en') ? 'ne' : 'en';
                   i18n.changeLanguage(nextLng);
-                  localStorage.setItem('lng', nextLng);
                 }}
                 className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300"
                 style={{
@@ -163,9 +162,9 @@ export default function Navbar() {
                 }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-                title="Change Language"
+                title={t('common.change_language', 'Change Language')}
               >
-                {i18n.language === 'en' ? 'NE' : 'EN'}
+                {(i18n.language || 'en').startsWith('en') ? 'NE' : 'EN'}
               </button>
             </div>
 
@@ -208,14 +207,14 @@ export default function Navbar() {
                       }}
                     >
                       <div className="px-5 py-3.5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
-                        <span className="label text-[0.65rem]">Notifications</span>
+                        <span className="label text-[0.65rem]">{t('nav.notifications')}</span>
                         <Link to="/notifications" className="text-xs" style={{ color: 'var(--flame)' }} onClick={() => setShowNotifs(false)}>
-                          View all
+                          {t('common.view_all', 'View all')}
                         </Link>
                       </div>
                       <div className="max-h-72 overflow-y-auto">
                         {notifications.length === 0 ? (
-                          <p className="p-5 text-center text-xs" style={{ color: 'var(--text-dim)' }}>No new notifications</p>
+                          <p className="p-5 text-center text-xs" style={{ color: 'var(--text-dim)' }}>{t('common.no_notifications')}</p>
                         ) : (
                           notifications.slice(0, 6).map(n => (
                             <div
@@ -260,7 +259,7 @@ export default function Navbar() {
                     className=""
                     style={{ color: 'var(--gold)' }}
                   >
-                    Admin
+                    {t('nav.admin')}
                   </NavLink>
                 )}
 
@@ -319,7 +318,7 @@ export default function Navbar() {
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        {user?.role === 'organizer' ? 'My Wallet' : 'My Reviews'}
+                        {user?.role === 'organizer' ? t('nav.my_wallet', 'My Wallet') : t('nav.my_reviews', 'My Reviews')}
                       </Link>
                       <Link
                         to="/settings"
@@ -329,7 +328,7 @@ export default function Navbar() {
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Settings
+                        {t('common.settings', 'Settings')}
                       </Link>
                       <Link
                         to="/help"
@@ -339,7 +338,7 @@ export default function Navbar() {
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Help Center
+                        {t('common.help_center', 'Help Center')}
                       </Link>
                       <div style={{ height: 1, background: 'var(--border)' }} />
                       <button
@@ -394,7 +393,7 @@ export default function Navbar() {
         }}
       >
         <div className="px-4 py-4 flex flex-col gap-1">
-            <span className="text-[0.65rem] uppercase tracking-wider font-bold mb-1" style={{ color: 'var(--text-dim)' }}>Preferences</span>
+            <span className="text-[0.65rem] uppercase tracking-wider font-bold mb-1" style={{ color: 'var(--text-dim)' }}>{t('common.preferences', 'Preferences')}</span>
             <div className="flex gap-2">
               <button
                 onClick={() => {
@@ -404,19 +403,18 @@ export default function Navbar() {
                 className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
                 style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
               >
-                {theme === 'dark' ? 'Day' : 'Dark'}
+                {theme === 'dark' ? t('common.day', 'Day') : t('common.dark', 'Dark')}
               </button>
               <button
                 onClick={() => {
-                  const nextLng = i18n.language === 'en' ? 'ne' : 'en';
+                  const nextLng = (i18n.language || 'en').startsWith('en') ? 'ne' : 'en';
                   i18n.changeLanguage(nextLng);
-                  localStorage.setItem('lng', nextLng);
                   setMobileOpen(false);
                 }}
                 className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
                 style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
               >
-                {i18n.language === 'en' ? 'NE' : 'EN'}
+                {(i18n.language || 'en').startsWith('en') ? 'NE' : 'EN'}
               </button>
             </div>
 
@@ -442,9 +440,9 @@ export default function Navbar() {
               ))}
               <div className="h-px bg-[var(--border)] my-1" />
               {[
-                { to: user?.role === 'organizer' ? '/wallet' : '/reviews', label: user?.role === 'organizer' ? 'My Wallet' : 'My Reviews' },
-                { to: '/settings', label: 'Settings' },
-                { to: '/help', label: 'Help Center' },
+                { to: user?.role === 'organizer' ? '/wallet' : '/reviews', label: user?.role === 'organizer' ? t('nav.my_wallet', 'My Wallet') : t('nav.my_reviews', 'My Reviews') },
+                { to: '/settings', label: t('common.settings', 'Settings') },
+                { to: '/help', label: t('common.help_center', 'Help Center') },
               ].map(({ to, label }) => (
                 <Link
                   key={to}

@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useToast } from '../components/Toast';
 
 export default function LeaveReviewPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -21,10 +23,8 @@ export default function LeaveReviewPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="card p-8 max-w-md w-full text-center">
-          <p className="font-serif text-xl" style={{ color: 'var(--crimson)' }}>Invalid review link</p>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-            Missing required parameters. Please use the link from your dashboard.
-          </p>
+          <p className="font-serif text-xl" style={{ color: 'var(--crimson)' }}>{t('common.invalid_review_link', 'Invalid review link')}</p>
+          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{t('common.missing_required_parameters_pl', 'Missing required parameters. Please use the link from your dashboard.')}</p>
         </div>
       </div>
     );
@@ -56,9 +56,8 @@ export default function LeaveReviewPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-          <h1 className="font-serif text-3xl text-white mt-3">Leave a Review</h1>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-            for <span style={{ color: 'var(--gold)' }}>{decodeURIComponent(revieweeName)}</span>
+          <h1 className="font-serif text-3xl text-white mt-3">{t('common.leave_a_review', 'Leave a Review')}</h1>
+          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{t('common.for', 'for')}<span style={{ color: 'var(--gold)' }}>{decodeURIComponent(revieweeName)}</span>
           </p>
         </div>
 
@@ -68,9 +67,7 @@ export default function LeaveReviewPage() {
             <label
               className="block text-xs font-semibold uppercase tracking-widest mb-4"
               style={{ color: 'var(--text-muted)' }}
-            >
-              Rating
-            </label>
+            >{t('common.rating', 'Rating')}</label>
             <div className="flex gap-2 justify-center">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -107,14 +104,13 @@ export default function LeaveReviewPage() {
             <label
               className="block text-xs font-semibold uppercase tracking-widest mb-2"
               style={{ color: 'var(--text-muted)' }}
-            >
-              Comment <span style={{ color: 'var(--text-dim, rgba(237,232,224,0.2))' }}>(optional)</span>
+            >{t('common.comment', 'Comment')}<span style={{ color: 'var(--text-dim, rgba(237,232,224,0.2))' }}>(optional)</span>
             </label>
             <textarea
               rows={4}
               value={comment}
               onChange={(e) => setComment(e.target.value.slice(0, 500))}
-              placeholder="Share your experience..."
+              placeholder={t('common.share_your_experience', 'Share your experience...')}
               className="input-field w-full resize-none"
               style={{ fontFamily: 'inherit' }}
             />
@@ -129,9 +125,7 @@ export default function LeaveReviewPage() {
               type="button"
               onClick={() => navigate(-1)}
               className="btn-secondary flex-1 py-3"
-            >
-              Cancel
-            </button>
+            >{t('common.cancel', 'Cancel')}</button>
             <button
               type="submit"
               disabled={submitting || rating === 0}

@@ -97,7 +97,7 @@ export default function HomePage() {
               lineHeight: 1,
               whiteSpace: 'nowrap',
             }}
-          >NEPAL</span>
+          >{t('common.nepal', 'NEPAL')}</span>
         </div>
 
         {/* Ambient spot */}
@@ -158,7 +158,7 @@ export default function HomePage() {
               opacity: 0.4,
               fontSize: '0.6rem',
             }}
-          >EVENTSTAFF NEPAL — EST. 2024</span>
+          >{t('common.eventstaff_nepal_est_2024', 'EVENTSTAFF NEPAL — EST. 2024')}</span>
         </div>
 
         {/* Scroll indicator */}
@@ -226,11 +226,11 @@ export default function HomePage() {
 
           {eventsLoading ? (
             <div className="flex justify-center py-16"><LoadingSpinner /></div>) : fetchError ? (<div className="card p-8 text-center">
-              <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>Failed to load events</p>
+              <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>{t('common.failed_to_load_events', 'Failed to load events')}</p>
               <button
                 onClick={fetchFeaturedEvents}
                 className="btn-glass px-6 py-2.5 text-xs"
-              >Try again</button>
+              >{t('common.try_again', 'Try again')}</button>
             </div>) : (<div className="grid md:grid-cols-2 gap-6">
               {/* Ongoing */}
               <div className="card p-8">
@@ -250,7 +250,7 @@ export default function HomePage() {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <span className="font-serif text-lg truncate" style={{ color: 'var(--text)', fontWeight: 400 }}>{event.title}</span>
-                          <span className="tag" style={{ flexShrink: 0 }}>Live</span>
+                          <span className="tag" style={{ flexShrink: 0 }}>{t('common.live', 'Live')}</span>
                         </div>
                         <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{event.location}</span>
                         <div className="flex items-center gap-3 text-xs mt-1" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -288,7 +288,7 @@ export default function HomePage() {
                           <span
                             className="tag flex-shrink-0"
                             style={{ background: 'rgba(201,168,76,0.1)', borderColor: 'rgba(201,168,76,0.2)', color: 'var(--gold-light)' }}
-                          >Soon</span>
+                          >{t('common.soon', 'Soon')}</span>
                         </div>
                         <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{event.location}</span>
                         <div className="flex items-center gap-3 text-xs mt-1" style={{ color: 'var(--text-dim)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
@@ -379,7 +379,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <span style={{ color: 'var(--flame)', fontSize: '0.85rem' }}>◆</span>
-            <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>EventStaff<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>NEPAL</span>
+            <span className="font-serif text-lg" style={{ color: 'var(--text)', fontWeight: 400 }}>{t('common.eventstaff', 'EventStaff')}<span style={{ fontStyle: 'italic', color: 'var(--flame)' }}>{t('common.nepal', 'NEPAL')}</span>
             </span>
           </div>
           <nav className="flex items-center gap-6">
