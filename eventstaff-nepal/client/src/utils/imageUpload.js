@@ -1,30 +1,33 @@
-import api from '../api/axios';
+import api from "../services/axios";
 
-export async function uploadImage(file, type = 'profile') {
+export async function uploadImage(file, type = "profile") {
   if (!file) return null;
 
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('type', type);
+  formData.append("file", file);
+  formData.append("type", type);
 
   try {
-    const res = await api.post('/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    const res = await api.post("/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return res.data.url;
   } catch (error) {
-    console.error('Image upload failed:', error);
+    console.error("Image upload failed:", error);
     throw error;
   }
 }
 
 export function validateImageFile(file, maxSizeMB = 5) {
-  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
   if (!validTypes.includes(file.type)) {
-    return { valid: false, error: 'Only JPG, PNG, and WebP files are allowed' };
+    return { valid: false, error: "Only JPG, PNG, and WebP files are allowed" };
   }
   if (file.size > maxSizeMB * 1024 * 1024) {
-    return { valid: false, error: `File size must be less than ${maxSizeMB}MB` };
+    return {
+      valid: false,
+      error: `File size must be less than ${maxSizeMB}MB`,
+    };
   }
   return { valid: true };
 }

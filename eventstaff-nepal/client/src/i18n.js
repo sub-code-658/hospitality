@@ -1,8 +1,8 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import enTranslation from './locales/en.json';
-import neTranslation from './locales/ne.json';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import enTranslation from "./locales/en.json";
+import neTranslation from "./locales/ne.json";
 
 i18n
   .use(LanguageDetector)
@@ -10,17 +10,17 @@ i18n
   .init({
     resources: {
       en: { translation: enTranslation },
-      ne: { translation: neTranslation }
+      ne: { translation: neTranslation },
     },
-    fallbackLng: 'en',
+    fallbackLng: "en",
     debug: true,
     detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
+      order: ["localStorage", "navigator"],
+      caches: ["localStorage"],
     },
     interpolation: {
-      escapeValue: false
-    }
+      escapeValue: false,
+    },
   });
 
 export default i18n;

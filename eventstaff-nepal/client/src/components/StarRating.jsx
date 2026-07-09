@@ -1,8 +1,13 @@
-export default function StarRating({ rating, size = 'md', interactive = false, onChange }) {
+export default function StarRating({
+  rating,
+  size = "md",
+  interactive = false,
+  onChange,
+}) {
   const sizes = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6'
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
   };
 
   const handleClick = (value) => {
@@ -19,10 +24,10 @@ export default function StarRating({ rating, size = 'md', interactive = false, o
           type="button"
           onClick={() => handleClick(star)}
           disabled={!interactive}
-          className={`${interactive ? 'cursor-pointer hover:scale-110 transition-transform' : 'cursor-default'}`}
+          className={`${interactive ? "cursor-pointer hover:scale-110 transition-transform" : "cursor-default"}`}
         >
           <svg
-            className={`${sizes[size]} ${star <= rating ? 'text-yellow-400' : 'text-gray-900/20 dark:text-white/20'}`}
+            className={`${sizes[size]} ${star <= rating ? "text-[color:var(--text-main)]" : "text-[color:var(--text-main)]/20 text-[color:var(--text-primary)]/20"}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >

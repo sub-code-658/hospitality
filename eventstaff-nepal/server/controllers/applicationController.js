@@ -2,6 +2,7 @@ const Application = require('../models/Application');
 const Event = require('../models/Event');
 const Message = require('../models/Message');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const checkScheduleConflict = require('../utils/scheduleConflict');
 const { sendEmailNotification, sendSMSNotification } = require('../utils/notificationService');
 
@@ -79,6 +80,25 @@ exports.applyToEvent = async (req, res, next) => {
         <p>Log in to your dashboard to review and manage applications.</p>
       `;
       sendEmailNotification(event.organizer.email, emailSubject, emailHtml).catch(console.error);
+    }
+
+    // In-app notification to organizer
+    if (event.organizer) {
+      const organizerId = event.organizer._id || event.organizer;
+      const notification = new Notification({
+        user: organizerId,
+        content: `New application received for ${event.title} from ${populatedApplication.worker.name || 'Anonymous'}`,
+        type: 'application',
+        link: `/event/${event._id}`
+      });
+      await notification.save();
+      
+      const io = req.app.get('io');
+      if (io) {
+        io.to(organizerId.toString()).emit('newNotification', notification);
+        // Navbar currently fetches notifications on 'newMessage'
+        io.to(organizerId.toString()).emit('newMessage', {}); 
+      }
     }
 
     res.status(201).json(populatedApplication);

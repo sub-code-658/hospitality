@@ -5,6 +5,7 @@ const { auth } = require('../middleware/auth');
 const { messageValidator } = require('../utils/validators');
 
 // Protected routes
+router.post('/initiate', auth, messageController.initiateConversation);
 router.get('/conversations', auth, messageController.getConversations);
 router.get('/unread-count', auth, messageController.getUnreadCount);
 router.get('/:userId', auth, messageController.getMessages);

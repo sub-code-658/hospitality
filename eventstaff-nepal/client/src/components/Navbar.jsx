@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
-import { useSocket } from '../context/SocketContext';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/axios";
+import { useSocket } from "../context/SocketContext";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -18,19 +18,19 @@ export default function Navbar() {
   const notifsRef = useRef(null);
   const userMenuRef = useRef(null);
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.body.style.backgroundColor = '#060912';
-      document.body.classList.add('dark');
-      document.body.classList.remove('light');
+    if (theme === "dark") {
+      document.body.style.backgroundColor = "#060912";
+      document.body.classList.add("dark");
+      document.body.classList.remove("light");
     } else {
-      document.body.style.backgroundColor = 'var(--bg)';
-      document.body.classList.add('light');
-      document.body.classList.remove('dark');
+      document.body.style.backgroundColor = "var(--bg)";
+      document.body.classList.add("light");
+      document.body.classList.remove("dark");
     }
-    localStorage.setItem('theme', theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   useEffect(() => {
@@ -42,30 +42,37 @@ export default function Navbar() {
 
   useEffect(() => {
     if (socket) {
-      socket.on('newMessage', () => { fetchUnreadCount(); fetchNotifications(); });
+      socket.on("newMessage", () => {
+        fetchUnreadCount();
+        fetchNotifications();
+      });
     }
-    return () => { if (socket) socket.off('newMessage'); };
+    return () => {
+      if (socket) socket.off("newMessage");
+    };
   }, [socket]);
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (notifsRef.current && !notifsRef.current.contains(e.target)) setShowNotifs(false);
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setShowUserMenu(false);
+      if (notifsRef.current && !notifsRef.current.contains(e.target))
+        setShowNotifs(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target))
+        setShowUserMenu(false);
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   const fetchUnreadCount = async () => {
     try {
-      const res = await api.get('/messages/unread-count');
+      const res = await api.get("/messages/unread-count");
       setUnreadCount(res.data.unreadCount);
     } catch {}
   };
 
   const fetchNotifications = async () => {
     try {
-      const res = await api.get('/notifications');
+      const res = await api.get("/notifications");
       setNotifications(res.data.notifications || []);
     } catch {}
   };
@@ -73,16 +80,19 @@ export default function Navbar() {
   const handleLogout = () => {
     if (socket) socket.disconnect();
     logout();
-    navigate('/');
+    navigate("/");
   };
 
-  const NavLink = ({ to, children, className = '' }) => (
+  const NavLink = ({ to, children, className = "" }) => (
     <Link
       to={to}
       className={`text-xs font-semibold tracking-widest uppercase transition-colors duration-200 ${className}`}
-      style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-      onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-      onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+      style={{
+        color: "var(--text-muted)",
+        fontFamily: "Plus Jakarta Sans, sans-serif",
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
     >
       {children}
     </Link>
@@ -92,22 +102,24 @@ export default function Navbar() {
     <nav
       className="sticky top-0 z-50 transition-colors duration-300"
       style={{
-        background: 'var(--surface)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid var(--border)',
+        background: "var(--surface)",
+        backdropFilter: "blur(16px)",
+        borderBottom: "1px solid var(--border)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 group flex-shrink-0"
+          >
             <span
               style={{
-                color: 'var(--flame)',
-                fontSize: '1.1rem',
+                color: "var(--accent)",
+                fontSize: "1.1rem",
                 lineHeight: 1,
-                transition: 'transform 0.3s ease',
+                transition: "transform 0.3s ease",
               }}
               className="group-hover:rotate-45 inline-block transition-transform duration-300"
             >
@@ -115,10 +127,12 @@ export default function Navbar() {
             </span>
             <span
               className="font-serif text-xl tracking-tight"
-              style={{ color: 'var(--text)', fontWeight: 500 }}
+              style={{ color: "var(--text)", fontWeight: 500 }}
             >
-              EventStaff{' '}
-              <span style={{ color: 'var(--sage)', fontStyle: 'italic' }}>Nepal</span>
+              EventStaff{" "}
+              <span style={{ color: "var(--accent)", fontStyle: "italic" }}>
+                Nepal
+              </span>
             </span>
           </Link>
 
@@ -127,72 +141,132 @@ export default function Navbar() {
             {/* Theme & Language Controls */}
             <div className="flex items-center gap-2 mr-2">
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300"
                 style={{
-                  borderColor: 'rgba(232, 104, 30, 0.2)',
-                  color: 'var(--text-muted)',
-                  background: 'rgba(232, 234, 230, 0.1)'
+                  borderColor: "rgba(232, 104, 30, 0.2)",
+                  color: "var(--text-muted)",
+                  background: "rgba(232, 234, 230, 0.1)",
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-muted)")
+                }
                 title="Toggle Theme"
               >
-                {theme === 'dark' ? (
-                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" className="text-yellow-400">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                {theme === "dark" ? (
+                  <svg
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    className="text-[color:var(--text-main)]"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
                   </svg>
                 ) : (
-                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  <svg
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                    />
                   </svg>
                 )}
               </button>
 
               <button
                 onClick={() => {
-                  const nextLng = (i18n.language || 'en').startsWith('en') ? 'ne' : 'en';
+                  const nextLng = (i18n.language || "en").startsWith("en")
+                    ? "ne"
+                    : "en";
                   i18n.changeLanguage(nextLng);
                 }}
                 className="px-2.5 py-1.5 rounded-lg border text-[0.7rem] font-bold uppercase tracking-wider transition-all duration-300"
                 style={{
-                  borderColor: 'rgba(232, 104, 30, 0.2)',
-                  color: 'var(--text-muted)',
-                  background: 'rgba(232, 234, 230, 0.1)'
+                  borderColor: "rgba(232, 104, 30, 0.2)",
+                  color: "var(--text-muted)",
+                  background: "rgba(232, 234, 230, 0.1)",
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
-                title={t('common.change_language', 'Change Language')}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-muted)")
+                }
+                title={t("common.change_language", "Change Language")}
               >
-                {(i18n.language || 'en').startsWith('en') ? 'NE' : 'EN'}
+                {(i18n.language || "en").startsWith("en") ? "NE" : "EN"}
               </button>
             </div>
 
             {user ? (
               <>
-                <NavLink to={user.role === 'organizer' ? '/dashboard' : '/worker-dashboard'}>
-                  {t('nav.dashboard')}
+                <NavLink
+                  to={
+                    user.role === "organizer"
+                      ? "/dashboard"
+                      : "/worker-dashboard"
+                  }
+                >
+                  {t("nav.dashboard")}
                 </NavLink>
-                <NavLink to="/events">{t('nav.events')}</NavLink>
+                <NavLink to="/events">{t("nav.events")}</NavLink>
 
                 {/* Notifications */}
                 <div className="relative" ref={notifsRef}>
                   <button
-                    onClick={() => setShowNotifs(v => !v)}
+                    onClick={() => setShowNotifs((v) => !v)}
                     className="relative p-2 rounded-md transition-colors duration-200"
-                    style={{ color: 'var(--text-muted)' }}
-                    onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                    style={{ color: "var(--text-muted)" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "var(--text)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "var(--text-muted)")
+                    }
                   >
-                    <svg className="w-4.5 h-4.5" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    <svg
+                      className="w-4.5 h-4.5"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
                     </svg>
                     {unreadCount > 0 && (
                       <span
                         className="absolute -top-0.5 -right-0.5 flex items-center justify-center rounded-full text-[#060912] font-bold"
-                        style={{ width: 16, height: 16, fontSize: '0.6rem', background: 'var(--flame)' }}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          fontSize: "0.6rem",
+                          background: "var(--accent)",
+                        }}
                       >
-                        {unreadCount > 9 ? '9+' : unreadCount}
+                        {unreadCount > 9 ? "9+" : unreadCount}
                       </span>
                     )}
                   </button>
@@ -201,31 +275,64 @@ export default function Navbar() {
                     <div
                       className="absolute right-0 mt-2.5 w-80 rounded-lg overflow-hidden animate-scale-in"
                       style={{
-                        background: 'var(--surface-raised)',
-                        border: '1px solid var(--border)',
-                        boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+                        background: "var(--surface-raised)",
+                        border: "1px solid var(--border)",
+                        boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
                       }}
                     >
-                      <div className="px-5 py-3.5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
-                        <span className="label text-[0.65rem]">{t('nav.notifications')}</span>
-                        <Link to="/notifications" className="text-xs" style={{ color: 'var(--flame)' }} onClick={() => setShowNotifs(false)}>
-                          {t('common.view_all', 'View all')}
+                      <div
+                        className="px-5 py-3.5 flex items-center justify-between"
+                        style={{ borderBottom: "1px solid var(--border)" }}
+                      >
+                        <span className="label text-[0.65rem]">
+                          {t("nav.notifications")}
+                        </span>
+                        <Link
+                          to="/notifications"
+                          className="text-xs"
+                          style={{ color: "var(--accent)" }}
+                          onClick={() => setShowNotifs(false)}
+                        >
+                          {t("common.view_all", "View all")}
                         </Link>
                       </div>
                       <div className="max-h-72 overflow-y-auto">
                         {notifications.length === 0 ? (
-                          <p className="p-5 text-center text-xs" style={{ color: 'var(--text-dim)' }}>{t('common.no_notifications')}</p>
+                          <p
+                            className="p-5 text-center text-xs"
+                            style={{ color: "var(--text-dim)" }}
+                          >
+                            {t("common.no_notifications")}
+                          </p>
                         ) : (
-                          notifications.slice(0, 6).map(n => (
+                          notifications.slice(0, 6).map((n) => (
                             <div
                               key={n._id}
                               className="px-5 py-3.5 cursor-default transition-colors duration-150"
-                              style={{ borderBottom: '1px solid var(--border)' }}
-                              onMouseEnter={e => e.currentTarget.style.background = 'rgba(232, 104, 30, 0.04)'}
-                              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                              style={{
+                                borderBottom: "1px solid var(--border)",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.background =
+                                  "rgba(232, 104, 30, 0.04)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.background =
+                                  "transparent")
+                              }
                             >
-                              <p className="text-sm leading-snug" style={{ color: 'var(--text)' }}>{n.content}</p>
-                              <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>{n.time}</p>
+                              <p
+                                className="text-sm leading-snug"
+                                style={{ color: "var(--text)" }}
+                              >
+                                {n.content}
+                              </p>
+                              <p
+                                className="text-xs mt-1"
+                                style={{ color: "var(--text-dim)" }}
+                              >
+                                {n.time}
+                              </p>
                             </div>
                           ))
                         )}
@@ -238,55 +345,97 @@ export default function Navbar() {
                 <Link
                   to="/messages"
                   className="relative p-2 rounded-md transition-colors duration-200"
-                  style={{ color: 'var(--text-muted)' }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                  style={{ color: "var(--text-muted)" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--text)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "var(--text-muted)")
+                  }
                 >
-                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
                   </svg>
                   {unreadCount > 0 && (
                     <span
                       className="absolute -top-0.5 -right-0.5 rounded-full"
-                      style={{ width: 7, height: 7, background: 'var(--flame)' }}
+                      style={{
+                        width: 7,
+                        height: 7,
+                        background: "var(--accent)",
+                      }}
                     />
                   )}
                 </Link>
 
-                {user?.role === 'admin' && (
+                {user?.role === "admin" && (
                   <NavLink
                     to="/admin"
                     className=""
-                    style={{ color: 'var(--gold)' }}
+                    style={{ color: "var(--accent)" }}
                   >
-                    {t('nav.admin')}
+                    {t("nav.admin")}
                   </NavLink>
                 )}
 
                 {/* User avatar menu */}
                 <div className="relative" ref={userMenuRef}>
                   <button
-                    onClick={() => setShowUserMenu(v => !v)}
+                    onClick={() => setShowUserMenu((v) => !v)}
                     className="flex items-center gap-2 rounded-md px-2 py-1.5 transition-colors duration-200"
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(232, 104, 30, 0.07)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background =
+                        "rgba(232, 104, 30, 0.07)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
                   >
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
                       style={{
-                        background: 'rgba(232, 104, 30, 0.15)',
-                        border: '1px solid rgba(232, 104, 30, 0.25)',
-                        color: 'var(--flame-light)',
-                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                        background: "rgba(232, 104, 30, 0.15)",
+                        border: "1px solid rgba(232, 104, 30, 0.25)",
+                        color: "var(--flame-light)",
+                        fontFamily: "Plus Jakarta Sans, sans-serif",
                       }}
                     >
-                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      {user?.name?.charAt(0)?.toUpperCase() || "U"}
                     </div>
-                    <span className="text-xs font-medium hidden lg:block" style={{ color: 'var(--text)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                      {user?.name?.split(' ')[0]}
+                    <span
+                      className="text-xs font-medium hidden lg:block"
+                      style={{
+                        color: "var(--text)",
+                        fontFamily: "Plus Jakarta Sans, sans-serif",
+                      }}
+                    >
+                      {user?.name?.split(" ")[0]}
                     </span>
-                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--text-dim)' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <svg
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      style={{ color: "var(--text-dim)" }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
 
@@ -294,61 +443,116 @@ export default function Navbar() {
                     <div
                       className="absolute right-0 mt-2 w-44 rounded-lg overflow-hidden animate-scale-in"
                       style={{
-                        background: 'var(--surface-raised)',
-                        border: '1px solid var(--border)',
-                        boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+                        background: "var(--surface-raised)",
+                        border: "1px solid var(--border)",
+                        boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
                       }}
                     >
                       <Link
                         to="/profile"
                         className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                        style={{
+                          color: "var(--text-muted)",
+                          fontFamily: "Plus Jakarta Sans, sans-serif",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background =
+                            "rgba(232, 104, 30, 0.06)";
+                          e.currentTarget.style.color = "var(--text)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
+                          e.currentTarget.style.color = "var(--text-muted)";
+                        }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        {t('nav.profile')}
+                        {t("nav.profile")}
                       </Link>
-                      <div style={{ height: 1, background: 'var(--border)' }} />
-                      <Link
-                        to={user?.role === 'organizer' ? "/wallet" : "/reviews"}
-                        className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        {user?.role === 'organizer' ? t('nav.my_wallet', 'My Wallet') : t('nav.my_reviews', 'My Reviews')}
-                      </Link>
+                      <div style={{ height: 1, background: "var(--border)" }} />
+                      {user?.role !== "organizer" && (
+                        <Link
+                          to="/reviews"
+                          className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
+                          style={{
+                            color: "var(--text-muted)",
+                            fontFamily: "Plus Jakarta Sans, sans-serif",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                              "rgba(232, 104, 30, 0.06)";
+                            e.currentTarget.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.color = "var(--text-muted)";
+                          }}
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          {t("nav.my_reviews", "My Reviews")}
+                        </Link>
+                      )}
                       <Link
                         to="/settings"
                         className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                        style={{
+                          color: "var(--text-muted)",
+                          fontFamily: "Plus Jakarta Sans, sans-serif",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background =
+                            "rgba(232, 104, 30, 0.06)";
+                          e.currentTarget.style.color = "var(--text)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent";
+                          e.currentTarget.style.color = "var(--text-muted)";
+                        }}
                         onClick={() => setShowUserMenu(false)}
                       >
-                        {t('common.settings', 'Settings')}
+                        {t("common.settings", "Settings")}
                       </Link>
-                      <Link
-                        to="/help"
-                        className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-                        style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        {t('common.help_center', 'Help Center')}
-                      </Link>
-                      <div style={{ height: 1, background: 'var(--border)' }} />
+                      {user?.role !== "organizer" && (
+                        <Link
+                          to="/help"
+                          className="flex items-center gap-2.5 px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
+                          style={{
+                            color: "var(--text-muted)",
+                            fontFamily: "Plus Jakarta Sans, sans-serif",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                              "rgba(232, 104, 30, 0.06)";
+                            e.currentTarget.style.color = "var(--text)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.color = "var(--text-muted)";
+                          }}
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          {t("common.help_center", "Help Center")}
+                        </Link>
+                      )}
+                      <div style={{ height: 1, background: "var(--border)" }} />
                       <button
-                        onClick={() => { handleLogout(); setShowUserMenu(false); }}
+                        onClick={() => {
+                          handleLogout();
+                          setShowUserMenu(false);
+                        }}
                         className="flex items-center gap-2.5 w-full text-left px-4 py-3 text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-                        style={{ color: 'var(--crimson)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(204, 59, 59, 0.07)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        style={{
+                          color: "var(--crimson)",
+                          fontFamily: "Plus Jakarta Sans, sans-serif",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background =
+                            "rgba(204, 59, 59, 0.07)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "transparent")
+                        }
                       >
-                        {t('nav.logout')}
+                        {t("nav.logout")}
                       </button>
                     </div>
                   )}
@@ -356,9 +560,14 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-glass px-5 py-2.5 text-xs mr-2">{t('nav.login')}</Link>
+                <Link
+                  to="/login"
+                  className="btn-glass px-5 py-2.5 text-xs mr-2"
+                >
+                  {t("nav.login")}
+                </Link>
                 <Link to="/register" className="btn-glass px-5 py-2.5 text-xs">
-                  {t('nav.register')}
+                  {t("nav.register")}
                 </Link>
               </>
             )}
@@ -367,16 +576,35 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             className="md:hidden p-2 rounded-md transition-colors duration-200"
-            style={{ color: 'var(--text-muted)' }}
-            onClick={() => setMobileOpen(v => !v)}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            style={{ color: "var(--text-muted)" }}
+            onClick={() => setMobileOpen((v) => !v)}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--text-muted)")
+            }
           >
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileOpen
-                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-              }
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {mobileOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
             </svg>
           </button>
         </div>
@@ -386,103 +614,184 @@ export default function Navbar() {
       <div
         className="md:hidden overflow-hidden transition-all duration-300"
         style={{
-          maxHeight: mobileOpen ? '400px' : '0',
+          maxHeight: mobileOpen ? "400px" : "0",
           opacity: mobileOpen ? 1 : 0,
-          background: 'var(--surface)',
-          borderTop: mobileOpen ? '1px solid var(--border)' : 'none',
+          background: "var(--surface)",
+          borderTop: mobileOpen ? "1px solid var(--border)" : "none",
         }}
       >
         <div className="px-4 py-4 flex flex-col gap-1">
-            <span className="text-[0.65rem] uppercase tracking-wider font-bold mb-1" style={{ color: 'var(--text-dim)' }}>{t('common.preferences', 'Preferences')}</span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  setTheme(theme === 'dark' ? 'light' : 'dark');
-                  setMobileOpen(false);
-                }}
-                className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
-                style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
-              >
-                {theme === 'dark' ? t('common.day', 'Day') : t('common.dark', 'Dark')}
-              </button>
-              <button
-                onClick={() => {
-                  const nextLng = (i18n.language || 'en').startsWith('en') ? 'ne' : 'en';
-                  i18n.changeLanguage(nextLng);
-                  setMobileOpen(false);
-                }}
-                className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
-                style={{ borderColor: 'var(--border)', color: 'var(--text)', background: 'var(--surface-raised)' }}
-              >
-                {(i18n.language || 'en').startsWith('en') ? 'NE' : 'EN'}
-              </button>
-            </div>
+          <span
+            className="text-[0.65rem] uppercase tracking-wider font-bold mb-1"
+            style={{ color: "var(--text-dim)" }}
+          >
+            {t("common.preferences", "Preferences")}
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setTheme(theme === "dark" ? "light" : "dark");
+                setMobileOpen(false);
+              }}
+              className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
+              style={{
+                borderColor: "var(--border)",
+                color: "var(--text)",
+                background: "var(--surface-raised)",
+              }}
+            >
+              {theme === "dark"
+                ? t("common.day", "Day")
+                : t("common.dark", "Dark")}
+            </button>
+            <button
+              onClick={() => {
+                const nextLng = (i18n.language || "en").startsWith("en")
+                  ? "ne"
+                  : "en";
+                i18n.changeLanguage(nextLng);
+                setMobileOpen(false);
+              }}
+              className="px-3 py-1.5 rounded border text-xs font-bold uppercase tracking-wider transition-all duration-300"
+              style={{
+                borderColor: "var(--border)",
+                color: "var(--text)",
+                background: "var(--surface-raised)",
+              }}
+            >
+              {(i18n.language || "en").startsWith("en") ? "NE" : "EN"}
+            </button>
+          </div>
 
           {user ? (
             <>
               {[
-                { to: user.role === 'organizer' ? '/dashboard' : '/worker-dashboard', label: t('nav.dashboard') },
-                { to: '/events', label: t('nav.events') },
-                { to: '/messages', label: `${t('nav.messages')}${unreadCount > 0 ? ` (${unreadCount})` : ''}` },
-                { to: '/profile', label: t('nav.profile') },
+                {
+                  to:
+                    user.role === "organizer"
+                      ? "/dashboard"
+                      : "/worker-dashboard",
+                  label: t("nav.dashboard"),
+                },
+                { to: "/events", label: t("nav.events") },
+                {
+                  to: "/messages",
+                  label: `${t("nav.messages")}${unreadCount > 0 ? ` (${unreadCount})` : ""}`,
+                },
+                { to: "/profile", label: t("nav.profile") },
               ].map(({ to, label }) => (
                 <Link
                   key={to}
                   to={to}
                   onClick={() => setMobileOpen(false)}
                   className="px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
-                  style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                  style={{
+                    color: "var(--text-muted)",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(232, 104, 30, 0.06)";
+                    e.currentTarget.style.color = "var(--text)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--text-muted)";
+                  }}
                 >
                   {label}
                 </Link>
               ))}
               <div className="h-px bg-[var(--border)] my-1" />
               {[
-                { to: user?.role === 'organizer' ? '/wallet' : '/reviews', label: user?.role === 'organizer' ? t('nav.my_wallet', 'My Wallet') : t('nav.my_reviews', 'My Reviews') },
-                { to: '/settings', label: t('common.settings', 'Settings') },
-                { to: '/help', label: t('common.help_center', 'Help Center') },
+                ...(user?.role !== "organizer"
+                  ? [
+                      {
+                        to: "/reviews",
+                        label: t("nav.my_reviews", "My Reviews"),
+                      },
+                    ]
+                  : []),
+                { to: "/settings", label: t("common.settings", "Settings") },
+                ...(user?.role !== "organizer"
+                  ? [
+                      {
+                        to: "/help",
+                        label: t("common.help_center", "Help Center"),
+                      },
+                    ]
+                  : []),
               ].map(({ to, label }) => (
                 <Link
                   key={to}
                   to={to}
                   onClick={() => setMobileOpen(false)}
                   className="px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest transition-colors duration-150"
-                  style={{ color: 'var(--text-muted)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232, 104, 30, 0.06)'; e.currentTarget.style.color = 'var(--text)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                  style={{
+                    color: "var(--text-muted)",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(232, 104, 30, 0.06)";
+                    e.currentTarget.style.color = "var(--text)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--text-muted)";
+                  }}
                 >
                   {label}
                 </Link>
               ))}
-              {user?.role === 'admin' && (
+              {user?.role === "admin" && (
                 <Link
                   to="/admin"
                   onClick={() => setMobileOpen(false)}
                   className="px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest"
-                  style={{ color: 'var(--gold)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                  style={{
+                    color: "var(--accent)",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
                 >
-                  {t('nav.admin')}
+                  {t("nav.admin")}
                 </Link>
               )}
               <button
-                onClick={() => { handleLogout(); setMobileOpen(false); }}
+                onClick={() => {
+                  handleLogout();
+                  setMobileOpen(false);
+                }}
                 className="text-left px-3 py-3 rounded-md text-xs font-semibold uppercase tracking-widest transition-colors duration-150 mt-2"
-                style={{ color: 'var(--crimson)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(204, 59, 59, 0.07)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                style={{
+                  color: "var(--crimson)",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "rgba(204, 59, 59, 0.07)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
               >
-                {t('nav.logout')}
+                {t("nav.logout")}
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-glass text-center mt-2">
-                {t('nav.login')}
+              <Link
+                to="/login"
+                onClick={() => setMobileOpen(false)}
+                className="btn-glass text-center mt-2"
+              >
+                {t("nav.login")}
               </Link>
-              <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-glass text-center mt-2">
-                {t('nav.register')}
+              <Link
+                to="/register"
+                onClick={() => setMobileOpen(false)}
+                className="btn-glass text-center mt-2"
+              >
+                {t("nav.register")}
               </Link>
             </>
           )}

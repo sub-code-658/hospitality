@@ -1,22 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../components/Toast';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../services/axios";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../components/Toast";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 });
 
 function LocationPicker({ position, setPosition }) {
@@ -37,21 +35,23 @@ export default function EditEventPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [roles, setRoles] = useState([{ roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
+  const [roles, setRoles] = useState([
+    { roleName: "", count: 1, paymentType: "per_hour", payAmount: "" },
+  ]);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    location: '',
-    eventDate: '',
-    startTime: '',
-    endTime: ''
+    title: "",
+    description: "",
+    location: "",
+    eventDate: "",
+    startTime: "",
+    endTime: "",
   });
   const [mapPosition, setMapPosition] = useState([27.7172, 85.3142]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (user && user.role !== 'organizer' && user.role !== 'admin') {
-      navigate('/');
+    if (user && user.role !== "organizer" && user.role !== "admin") {
+      navigate("/");
       return;
     }
     fetchEvent();
@@ -63,33 +63,35 @@ export default function EditEventPage() {
       const event = res.data;
 
       const rawDate = event.eventDate
-        ? new Date(event.eventDate).toISOString().split('T')[0]
-        : '';
+        ? new Date(event.eventDate).toISOString().split("T")[0]
+        : "";
 
       setFormData({
-        title: event.title || '',
-        description: event.description || '',
-        location: event.location || '',
+        title: event.title || "",
+        description: event.description || "",
+        location: event.location || "",
         eventDate: rawDate,
-        startTime: event.startTime || '',
-        endTime: event.endTime || ''
+        startTime: event.startTime || "",
+        endTime: event.endTime || "",
       });
 
       if (event.rolesNeeded && event.rolesNeeded.length > 0) {
-        setRoles(event.rolesNeeded.map(r => ({
-          roleName: r.roleName || '',
-          count: r.count ?? 1,
-          paymentType: r.paymentType ?? 'per_hour',
-          payAmount: r.payAmount ?? ''
-        })));
+        setRoles(
+          event.rolesNeeded.map((r) => ({
+            roleName: r.roleName || "",
+            count: r.count ?? 1,
+            paymentType: r.paymentType ?? "per_hour",
+            payAmount: r.payAmount ?? "",
+          })),
+        );
       }
 
       if (event.coordinates && event.coordinates.lat && event.coordinates.lng) {
         setMapPosition([event.coordinates.lat, event.coordinates.lng]);
       }
     } catch (error) {
-      addToast('Failed to load event details', 'error');
-      navigate('/dashboard');
+      addToast("Failed to load event details", "error");
+      navigate("/dashboard");
     } finally {
       setFetching(false);
     }
@@ -98,7 +100,7 @@ export default function EditEventPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    if (errors[name]) setErrors({ ...errors, [name]: '' });
+    if (errors[name]) setErrors({ ...errors, [name]: "" });
   };
 
   const handleRoleChange = (index, field, value) => {
@@ -108,7 +110,10 @@ export default function EditEventPage() {
   };
 
   const addRole = () => {
-    setRoles([...roles, { roleName: '', count: 1, paymentType: 'per_hour', payAmount: '' }]);
+    setRoles([
+      ...roles,
+      { roleName: "", count: 1, paymentType: "per_hour", payAmount: "" },
+    ]);
   };
 
   const removeRole = (index) => {
@@ -119,25 +124,28 @@ export default function EditEventPage() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-    if (!formData.location.trim()) newErrors.location = 'Location is required';
-    if (!formData.eventDate) newErrors.eventDate = 'Date is required';
-    if (!formData.startTime) newErrors.startTime = 'Start time is required';
-    if (!formData.endTime) newErrors.endTime = 'End time is required';
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.eventDate) newErrors.eventDate = "Date is required";
+    if (!formData.startTime) newErrors.startTime = "Start time is required";
+    if (!formData.endTime) newErrors.endTime = "End time is required";
 
     if (formData.eventDate && formData.startTime && formData.endTime) {
       const start = new Date(`${formData.eventDate}T${formData.startTime}`);
       const end = new Date(`${formData.eventDate}T${formData.endTime}`);
       if (end <= start) {
-        newErrors.endTime = 'End time must be after start time';
+        newErrors.endTime = "End time must be after start time";
       }
     }
 
     roles.forEach((role, idx) => {
-      if (!role.roleName) newErrors[`role_${idx}`] = 'Role name is required';
-      if (!role.count || role.count < 1) newErrors[`count_${idx}`] = 'Valid count is required';
-      if (role.payAmount === '' || role.payAmount < 0) newErrors[`pay_${idx}`] = 'Valid pay amount is required';
+      if (!role.roleName) newErrors[`role_${idx}`] = "Role name is required";
+      if (!role.count || role.count < 1)
+        newErrors[`count_${idx}`] = "Valid count is required";
+      if (role.payAmount === "" || role.payAmount < 0)
+        newErrors[`pay_${idx}`] = "Valid pay amount is required";
     });
     return newErrors;
   };
@@ -155,12 +163,15 @@ export default function EditEventPage() {
       await api.put(`/events/${id}`, {
         ...formData,
         rolesNeeded: roles,
-        coordinates: { lat: mapPosition[0], lng: mapPosition[1] }
+        coordinates: { lat: mapPosition[0], lng: mapPosition[1] },
       });
-      addToast('Event updated successfully!', 'success');
-      navigate('/dashboard');
+      addToast("Event updated successfully!", "success");
+      navigate("/dashboard");
     } catch (error) {
-      addToast(error.response?.data?.message || 'Failed to update event', 'error');
+      addToast(
+        error.response?.data?.message || "Failed to update event",
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -176,109 +187,159 @@ export default function EditEventPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-10 animate-slide-up">{t('common.edit_event', 'Edit Event')}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-[color:var(--text-main)] text-[color:var(--text-primary)] mb-10 animate-slide-up">
+        {t("common.edit_event", "Edit Event")}
+      </h1>
 
-      <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6 animate-scale-in">
+      <form
+        onSubmit={handleSubmit}
+        className="glass-card p-8 space-y-6 animate-scale-in"
+      >
         <div>
-          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_title', 'Event Title')}</label>
+          <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+            {t("common.event_title", "Event Title")}
+          </label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.title ? 'border-red-400' : ''}`}
-            placeholder={t('common.e_g_corporate_gala_dinner', 'e.g., Corporate Gala Dinner')}
+            className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] placeholder-white/40 ${errors.title ? "border-red-400" : ""}`}
+            placeholder={t(
+              "common.e_g_corporate_gala_dinner",
+              "e.g., Corporate Gala Dinner",
+            )}
           />
-          {errors.title && <p className="text-red-300 text-sm mt-2">{errors.title}</p>}
+          {errors.title && (
+            <p className="text-red-300 text-sm mt-2">{errors.title}</p>
+          )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.description', 'Description')}</label>
+          <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+            {t("common.description", "Description")}
+          </label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows={4}
-            className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.description ? 'border-red-400' : ''}`}
-            placeholder={t('common.describe_your_event', 'Describe your event...')}
+            className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] placeholder-white/40 ${errors.description ? "border-red-400" : ""}`}
+            placeholder={t(
+              "common.describe_your_event",
+              "Describe your event...",
+            )}
           />
-          {errors.description && <p className="text-red-300 text-sm mt-2">{errors.description}</p>}
+          {errors.description && (
+            <p className="text-red-300 text-sm mt-2">{errors.description}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.location', 'Location')}</label>
+            <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+              {t("common.location", "Location")}
+            </label>
             <input
               type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40 ${errors.location ? 'border-red-400' : ''}`}
-              placeholder={t('common.venue_name_and_address', 'Venue name and address')}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] placeholder-white/40 ${errors.location ? "border-red-400" : ""}`}
+              placeholder={t(
+                "common.venue_name_and_address",
+                "Venue name and address",
+              )}
             />
-            {errors.location && <p className="text-red-300 text-sm mt-2">{errors.location}</p>}
+            {errors.location && (
+              <p className="text-red-300 text-sm mt-2">{errors.location}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.event_date', 'Event Date')}</label>
+            <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+              {t("common.event_date", "Event Date")}
+            </label>
             <input
               type="date"
               name="eventDate"
               value={formData.eventDate}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.eventDate ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] ${errors.eventDate ? "border-red-400" : ""}`}
             />
-            {errors.eventDate && <p className="text-red-300 text-sm mt-2">{errors.eventDate}</p>}
+            {errors.eventDate && (
+              <p className="text-red-300 text-sm mt-2">{errors.eventDate}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.start_time', 'Start Time')}</label>
+            <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+              {t("common.start_time", "Start Time")}
+            </label>
             <input
               type="time"
               name="startTime"
               value={formData.startTime}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.startTime ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] ${errors.startTime ? "border-red-400" : ""}`}
             />
-            {errors.startTime && <p className="text-red-300 text-sm mt-2">{errors.startTime}</p>}
+            {errors.startTime && (
+              <p className="text-red-300 text-sm mt-2">{errors.startTime}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.end_time', 'End Time')}</label>
+            <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+              {t("common.end_time", "End Time")}
+            </label>
             <input
               type="time"
               name="endTime"
               value={formData.endTime}
               onChange={handleChange}
-              className={`w-full px-4 py-4 rounded-xl glass-input text-gray-900 dark:text-white ${errors.endTime ? 'border-red-400' : ''}`}
+              className={`w-full px-4 py-4 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] ${errors.endTime ? "border-red-400" : ""}`}
             />
-            {errors.endTime && <p className="text-red-300 text-sm mt-2">{errors.endTime}</p>}
+            {errors.endTime && (
+              <p className="text-red-300 text-sm mt-2">{errors.endTime}</p>
+            )}
           </div>
         </div>
 
         {/* Map Picker */}
         <div>
-          <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80 mb-2">{t('common.pin_location_on_map', 'Pin Location on Map')}</label>
+          <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80 mb-2">
+            {t("common.pin_location_on_map", "Pin Location on Map")}
+          </label>
           <div className="h-64 rounded-xl overflow-hidden">
             <MapContainer
               center={mapPosition}
               zoom={13}
-              style={{ height: '100%', width: '100%' }}
+              style={{ height: "100%", width: "100%" }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <LocationPicker position={mapPosition} setPosition={(pos) => setMapPosition([pos.lat, pos.lng])} />
+              <LocationPicker
+                position={mapPosition}
+                setPosition={(pos) => setMapPosition([pos.lat, pos.lng])}
+              />
             </MapContainer>
           </div>
-          <p className="text-sm text-gray-900/40 dark:text-white/40 mt-2">{t('common.click_on_the_map_to_update_the', 'Click on the map to update the event location')}</p>
+          <p className="text-sm text-[color:var(--text-main)]/40 text-[color:var(--text-primary)]/40 mt-2">
+            {t(
+              "common.click_on_the_map_to_update_the",
+              "Click on the map to update the event location",
+            )}
+          </p>
         </div>
 
         {/* Roles Section */}
         <div>
           <div className="flex justify-between items-center mb-4">
-            <label className="block text-sm font-medium text-gray-900/80 dark:text-white/80">{t('common.roles_needed', 'Roles Needed')}</label>
+            <label className="block text-sm font-medium text-[color:var(--text-main)]/80 text-[color:var(--text-primary)]/80">
+              {t("common.roles_needed", "Roles Needed")}
+            </label>
             <button
               type="button"
               onClick={addRole}
@@ -289,48 +350,78 @@ export default function EditEventPage() {
           </div>
           <div className="space-y-4">
             {roles.map((role, index) => (
-              <div key={index} className="flex gap-4 items-start p-4 glass rounded-xl">
+              <div
+                key={index}
+                className="flex gap-4 items-start p-4 glass rounded-xl"
+              >
                 <div className="flex-1">
                   <input
                     type="text"
                     value={role.roleName}
-                    onChange={(e) => handleRoleChange(index, 'roleName', e.target.value)}
-                    placeholder={t('common.role_e_g_waiter', 'Role (e.g., Waiter)')}
+                    onChange={(e) =>
+                      handleRoleChange(index, "roleName", e.target.value)
+                    }
+                    placeholder={t(
+                      "common.role_e_g_waiter",
+                      "Role (e.g., Waiter)",
+                    )}
                     className="w-full px-3 py-2 rounded-xl input-field text-sm"
                   />
-                  {errors[`role_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`role_${index}`]}</p>}
+                  {errors[`role_${index}`] && (
+                    <p className="text-red-300 text-xs mt-1">
+                      {errors[`role_${index}`]}
+                    </p>
+                  )}
                 </div>
                 <div className="w-24">
                   <input
                     type="number"
                     value={role.count}
-                    onChange={(e) => handleRoleChange(index, 'count', e.target.value)}
-                    placeholder={t('common.count', 'Count')}
+                    onChange={(e) =>
+                      handleRoleChange(index, "count", e.target.value)
+                    }
+                    placeholder={t("common.count", "Count")}
                     min="1"
                     className="w-full px-3 py-2 rounded-xl input-field text-sm text-center"
                   />
-                  {errors[`count_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`count_${index}`]}</p>}
+                  {errors[`count_${index}`] && (
+                    <p className="text-red-300 text-xs mt-1">
+                      {errors[`count_${index}`]}
+                    </p>
+                  )}
                 </div>
                 <div className="w-56 flex gap-2">
                   <div className="flex-1">
                     <input
                       type="number"
                       value={role.payAmount}
-                      onChange={(e) => handleRoleChange(index, 'payAmount', e.target.value)}
-                      placeholder={t('common.amount', 'Amount')}
+                      onChange={(e) =>
+                        handleRoleChange(index, "payAmount", e.target.value)
+                      }
+                      placeholder={t("common.amount", "Amount")}
                       min="0"
                       className="w-full px-3 py-2 rounded-xl input-field text-sm"
                     />
-                    {errors[`pay_${index}`] && <p className="text-red-300 text-xs mt-1">{errors[`pay_${index}`]}</p>}
+                    {errors[`pay_${index}`] && (
+                      <p className="text-red-300 text-xs mt-1">
+                        {errors[`pay_${index}`]}
+                      </p>
+                    )}
                   </div>
                   <select
                     value={role.paymentType}
-                    onChange={(e) => handleRoleChange(index, 'paymentType', e.target.value)}
+                    onChange={(e) =>
+                      handleRoleChange(index, "paymentType", e.target.value)
+                    }
                     className="w-24 px-2 py-2 rounded-xl input-field text-sm"
                   >
-                    <option value="per_hour">{t('common.hour', '/ Hour')}</option>
-                    <option value="per_day">{t('common.day', '/ Day')}</option>
-                    <option value="per_event">{t('common.event', '/ Event')}</option>
+                    <option value="per_hour">
+                      {t("common.hour", "/ Hour")}
+                    </option>
+                    <option value="per_day">{t("common.day", "/ Day")}</option>
+                    <option value="per_event">
+                      {t("common.event", "/ Event")}
+                    </option>
                   </select>
                 </div>
                 {roles.length > 1 && (
@@ -350,15 +441,21 @@ export default function EditEventPage() {
         <div className="flex gap-4">
           <button
             type="button"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate("/dashboard")}
             className="flex-1 btn-secondary py-4 rounded-xl font-semibold"
-          >{t('common.cancel', 'Cancel')}</button>
+          >
+            {t("common.cancel", "Cancel")}
+          </button>
           <button
             type="submit"
             disabled={loading}
             className="flex-1 btn-glass py-4 rounded-xl font-semibold flex items-center justify-center"
           >
-            {loading ? <LoadingSpinner size="sm" /> : t('common.save_changes', 'Save Changes')}
+            {loading ? (
+              <LoadingSpinner size="sm" />
+            ) : (
+              t("common.save_changes", "Save Changes")
+            )}
           </button>
         </div>
       </form>

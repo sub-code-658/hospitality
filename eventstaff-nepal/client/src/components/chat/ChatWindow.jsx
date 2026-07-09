@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../context/AuthContext';
-import { useSocket } from '../../context/SocketContext';
-import MessageBubble from './MessageBubble';
-import LoadingSpinner from '../ui/LoadingSpinner';
+import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/AuthContext";
+import { useSocket } from "../../context/SocketContext";
+import MessageBubble from "./MessageBubble";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
   const { user } = useAuth();
   const { socket, emitTyping, emitStopTyping } = useSocket();
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [typing, setTyping] = useState(false);
   const [partnerTyping, setPartnerTyping] = useState(false);
@@ -21,13 +21,13 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('userTyping', ({ senderId }) => {
+      socket.on("userTyping", ({ senderId }) => {
         if (senderId === selectedUser?._id) {
           setPartnerTyping(true);
         }
       });
 
-      socket.on('userStoppedTyping', ({ senderId }) => {
+      socket.on("userStoppedTyping", ({ senderId }) => {
         if (senderId === selectedUser?._id) {
           setPartnerTyping(false);
         }
@@ -36,14 +36,14 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
 
     return () => {
       if (socket) {
-        socket.off('userTyping');
-        socket.off('userStoppedTyping');
+        socket.off("userTyping");
+        socket.off("userStoppedTyping");
       }
     };
   }, [socket, selectedUser]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleTyping = () => {
@@ -72,14 +72,14 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
     setSending(true);
     try {
       await onSendMessage(newMessage.trim());
-      setNewMessage('');
+      setNewMessage("");
     } finally {
       setSending(false);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend(e);
     }
@@ -89,18 +89,20 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
     <div className="flex-1 flex flex-col">
       {/* Header */}
       {selectedUser && (
-        <div className="p-4 border-b border-white/10 bg-white/5 flex items-center">
+        <div className="p-4 border-b border-[color:var(--border)] bg-white/5 flex items-center">
           <div className="relative">
             <div className="w-10 h-10 rounded-full bg-primary-500/30 flex items-center justify-center">
               <span className="text-primary-200 font-semibold">
-                {selectedUser.name?.charAt(0) || 'U'}
+                {selectedUser.name?.charAt(0) || "U"}
               </span>
             </div>
           </div>
           <div className="ml-3">
-            <span className="font-medium text-gray-900 dark:text-white">{selectedUser.name}</span>
-            <p className="text-xs text-gray-900/40 dark:text-white/40">
-              {partnerTyping ? 'Typing...' : 'Online'}
+            <span className="font-medium text-[color:var(--text-main)] text-[color:var(--text-primary)]">
+              {selectedUser.name}
+            </span>
+            <p className="text-xs text-[color:var(--text-main)]/40 text-[color:var(--text-primary)]/40">
+              {partnerTyping ? "Typing..." : "Online"}
             </p>
           </div>
         </div>
@@ -119,11 +121,20 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
             ))}
             {partnerTyping && (
               <div className="flex justify-start mb-4">
-                <div className="bg-white/10 px-4 py-2 rounded-2xl border border-white/10">
+                <div className="bg-[color:var(--surface-raised)] px-4 py-2 rounded-2xl border border-[color:var(--border)]">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    <div
+                      className="w-2 h-2 bg-white/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "0ms" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-white/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-white/50 rounded-full animate-bounce"
+                      style={{ animationDelay: "300ms" }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -134,7 +145,10 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSend} className="p-4 border-t border-white/10">
+      <form
+        onSubmit={handleSend}
+        className="p-4 border-t border-[color:var(--border)]"
+      >
         <div className="flex gap-3">
           <input
             type="text"
@@ -144,15 +158,15 @@ const ChatWindow = ({ selectedUser, messages, loading, onSendMessage }) => {
               handleTyping();
             }}
             onKeyDown={handleKeyDown}
-            placeholder={t('common.type_a_message', 'Type a message...')}
-            className="flex-1 px-4 py-3 rounded-xl glass-input text-gray-900 dark:text-white placeholder-white/40"
+            placeholder={t("common.type_a_message", "Type a message...")}
+            className="flex-1 px-4 py-3 rounded-xl glass-input text-[color:var(--text-main)] text-[color:var(--text-primary)] placeholder-white/40"
           />
           <button
             type="submit"
             disabled={sending || !newMessage.trim()}
-            className="glass-btn text-gray-900 dark:text-white px-6 py-3 rounded-xl disabled:opacity-50"
+            className="glass-btn text-[color:var(--text-main)] text-[color:var(--text-primary)] px-6 py-3 rounded-xl disabled:opacity-50"
           >
-            {sending ? <LoadingSpinner size="sm" /> : 'Send'}
+            {sending ? <LoadingSpinner size="sm" /> : "Send"}
           </button>
         </div>
       </form>

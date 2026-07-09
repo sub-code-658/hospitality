@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import api from '../api/axios';
+import { useState, useEffect, useCallback } from "react";
+import api from "../services/axios";
 
 export const useFetch = (url, options = {}) => {
   const [data, setData] = useState(null);
@@ -20,7 +20,7 @@ export const useFetch = (url, options = {}) => {
       const response = await api.get(url);
       setData(response.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'An error occurred');
+      setError(err.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }

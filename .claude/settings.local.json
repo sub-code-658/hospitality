@@ -30,7 +30,18 @@
       "Bash(node server/index.js)",
       "Bash(git -C /Users/ioxy/Desktop/Hospitality log --oneline --all)",
       "Bash(rsync *)",
-      "Read(//Users/ioxy/Desktop/EventStaff-Nepal-Submit/**)"
+      "Read(//Users/ioxy/Desktop/EventStaff-Nepal-Submit/**)",
+      "Read(//Users/ioxy/Desktop/EventStaff-Nepal/**)",
+      "Read(//Users/ioxy/Desktop/EventStaff-Nepal/client/**)",
+      "Read(//Users/ioxy/Desktop/EventStaff-Nepal/server/**)",
+      "Bash(echo \"PID: $!\")",
+      "Read(//tmp/**)",
+      "Bash(node *)",
+      "Bash(npx --yes vite --version)",
+      "Bash(echo \"Started PID: $!\")",
+      "Bash(npx nodemon *)",
+      "Bash(mongod --version)",
+      "Bash(mongod --dbpath /Users/ioxy/Desktop/Hospitality/eventstaff-nepal/server/data --directoryperdb --fork --logpath /tmp/mongodb.log)"
     ]
   }
 }

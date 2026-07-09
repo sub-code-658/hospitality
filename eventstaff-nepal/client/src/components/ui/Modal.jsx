@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const Modal = ({
   isOpen,
@@ -6,27 +6,27 @@ const Modal = ({
   title,
   children,
   footer,
-  size = 'md', // sm, md, lg, xl
+  size = "md", // sm, md, lg, xl
   closeOnBackdrop = true,
-  closeOnEscape = true
+  closeOnEscape = true,
 }) => {
   const modalRef = useRef(null);
 
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape' && closeOnEscape && isOpen) {
+      if (e.key === "Escape" && closeOnEscape && isOpen) {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, closeOnEscape, onClose]);
 
@@ -39,10 +39,10 @@ const Modal = ({
   if (!isOpen) return null;
 
   const sizes = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
+    sm: "max-w-md",
+    md: "max-w-lg",
+    lg: "max-w-2xl",
+    xl: "max-w-4xl",
   };
 
   return (
@@ -56,27 +56,37 @@ const Modal = ({
       >
         {/* Header */}
         {title && (
-          <div className="p-6 border-b border-white/10 flex justify-between items-center">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
+          <div className="p-6 border-b border-[color:var(--border)] flex justify-between items-center">
+            <h3 className="text-xl font-semibold text-[color:var(--text-main)] text-[color:var(--text-primary)]">
+              {title}
+            </h3>
             <button
               onClick={onClose}
-              className="text-gray-900/50 dark:text-white/50 hover:text-gray-900 dark:text-white transition-colors"
+              className="text-[color:var(--text-main)]/50 text-[color:var(--text-primary)]/50 hover:text-[color:var(--text-main)] text-[color:var(--text-primary)] transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
         )}
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[60vh]">
-          {children}
-        </div>
+        <div className="p-6 overflow-y-auto max-h-[60vh]">{children}</div>
 
         {/* Footer */}
         {footer && (
-          <div className="p-6 border-t border-white/10">
+          <div className="p-6 border-t border-[color:var(--border)]">
             {footer}
           </div>
         )}

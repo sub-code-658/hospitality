@@ -132,3 +132,38 @@ exports.getUnreadCount = async (req, res, next) => {
     next(error);
   }
 };
+
+// Initiate a conversation
+exports.initiateConversation = async (req, res, next) => {
+  try {
+    const senderId = req.user.id;
+    const { receiverId } = req.body;
+
+    const receiver = await User.findById(receiverId);
+    if (!receiver) {
+      return res.status(404).json({ message: 'Receiver not found' });
+    }
+
+    const existingMessage = await Message.findOne({
+      $or: [
+        { sender: senderId, receiver: receiverId },
+        { sender: receiverId, receiver: senderId }
+      ]
+    });
+
+    if (existingMessage) {
+      return res.json({ _id: receiverId });
+    }
+
+    const message = new Message({
+      sender: senderId,
+      receiver: receiverId,
+      content: '👋 Hello! I would like to connect.'
+    });
+
+    await message.save();
+    res.json({ _id: receiverId });
+  } catch (error) {
+    next(error);
+  }
+};

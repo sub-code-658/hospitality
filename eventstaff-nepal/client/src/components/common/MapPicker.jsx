@@ -1,72 +1,37 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { KATHMANDU_CENTER, MAP_CONFIG } from '../../utils/constants';
+// Replaced react-leaflet with native inputs (Ponytail philosophy)
+import React from "react";
+import { Input } from "./ui/Input";
 
-const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-function LocationMarker({ position, setPosition }) {
-  useMapEvents({
-    click(e) {
-      setPosition(e.latlng);
-    }
-  });
-
-  return position ? <Marker position={position} icon={defaultIcon} /> : null;
-}
-
-const MapPicker = ({
-  position,
-  setPosition,
-  height = '300px',
-  showInstructions = true
-}) => {
-  const [localPosition, setLocalPosition] = useState(position || KATHMANDU_CENTER);
-
-  useEffect(() => {
-    if (position) {
-      setLocalPosition(position);
-    }
-  }, [position]);
-
-  const handlePositionChange = (newPos) => {
-    setLocalPosition(newPos);
-    if (setPosition) {
-      setPosition(newPos);
-    }
+export default function MapPicker({ location, setLocation }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    // Update location with simple text inputs instead of map coordinates
+    setLocation((prev) => ({
+      ...prev,
+      [name]: value,
+      address: `${prev.city || ""} ${prev.street || ""}`.trim(),
+    }));
   };
 
   return (
-    <div className="relative">
-      <div className="h-64 rounded-xl overflow-hidden">
-        <MapContainer
-          center={localPosition}
-          zoom={MAP_CONFIG.defaultZoom}
-          style={{ height: '100%', width: '100%' }}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <LocationMarker position={localPosition} setPosition={handlePositionChange} />
-        </MapContainer>
-      </div>
-      {showInstructions && (
-        <p className="text-gray-900/50 dark:text-white/50 text-sm mt-2">{t('common.click_on_the_map_to_set_the_ev', 'Click on the map to set the event location')}</p>
-      )}
+    <div className="space-y-4">
+      <Input
+        label="City"
+        name="city"
+        value={location.city || ""}
+        onChange={handleChange}
+        placeholder="Enter city"
+      />
+      <Input
+        label="Street / Landmark"
+        name="street"
+        value={location.street || ""}
+        onChange={handleChange}
+        placeholder="Enter street or landmark"
+      />
+      <p className="text-sm text-gray-400">
+        Map functionality has been simplified to text inputs for minimalism.
+      </p>
     </div>
   );
-};
-
-export default MapPicker;
+}

@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import api from '../api/axios';
-import { useToast } from '../components/Toast';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import api from "../services/axios";
+import { useToast } from "../components/Toast";
 
 export default function LeaveReviewPage() {
   const { t } = useTranslation();
@@ -10,21 +10,28 @@ export default function LeaveReviewPage() {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
-  const revieweeId = searchParams.get('revieweeId');
-  const eventId = searchParams.get('eventId');
-  const revieweeName = searchParams.get('revieweeName') || 'Unknown';
+  const revieweeId = searchParams.get("revieweeId");
+  const eventId = searchParams.get("eventId");
+  const revieweeName = searchParams.get("revieweeName") || "Unknown";
 
   const [rating, setRating] = useState(0);
   const [hovered, setHovered] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   if (!revieweeId || !eventId) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="card p-8 max-w-md w-full text-center">
-          <p className="font-serif text-xl" style={{ color: 'var(--crimson)' }}>{t('common.invalid_review_link', 'Invalid review link')}</p>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{t('common.missing_required_parameters_pl', 'Missing required parameters. Please use the link from your dashboard.')}</p>
+          <p className="font-serif text-xl" style={{ color: "var(--crimson)" }}>
+            {t("common.invalid_review_link", "Invalid review link")}
+          </p>
+          <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
+            {t(
+              "common.missing_required_parameters_pl",
+              "Missing required parameters. Please use the link from your dashboard.",
+            )}
+          </p>
         </div>
       </div>
     );
@@ -33,16 +40,19 @@ export default function LeaveReviewPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (rating === 0) {
-      addToast('Please select a star rating', 'error');
+      addToast("Please select a star rating", "error");
       return;
     }
     setSubmitting(true);
     try {
-      await api.post('/reviews', { revieweeId, eventId, rating, comment });
-      addToast('Review submitted!', 'success');
+      await api.post("/reviews", { revieweeId, eventId, rating, comment });
+      addToast("Review submitted!", "success");
       navigate(-1);
     } catch (err) {
-      addToast(err.response?.data?.message || 'Failed to submit review', 'error');
+      addToast(
+        err.response?.data?.message || "Failed to submit review",
+        "error",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -55,9 +65,15 @@ export default function LeaveReviewPage() {
       <div className="card p-8 max-w-lg w-full animate-slide-up">
         {/* Header */}
         <div className="mb-8 text-center">
-          <span style={{ color: 'var(--flame)', fontSize: '1.2rem' }}>◆</span>
-          <h1 className="font-serif text-3xl text-gray-900 dark:text-white mt-3">{t('common.leave_a_review', 'Leave a Review')}</h1>
-          <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>{t('common.for', 'for')}<span style={{ color: 'var(--gold)' }}>{decodeURIComponent(revieweeName)}</span>
+          <span style={{ color: "var(--accent)", fontSize: "1.2rem" }}>◆</span>
+          <h1 className="font-serif text-3xl text-[color:var(--text-main)] text-[color:var(--text-primary)] mt-3">
+            {t("common.leave_a_review", "Leave a Review")}
+          </h1>
+          <p className="text-sm mt-2" style={{ color: "var(--text-muted)" }}>
+            {t("common.for", "for")}
+            <span style={{ color: "var(--accent)" }}>
+              {decodeURIComponent(revieweeName)}
+            </span>
           </p>
         </div>
 
@@ -66,8 +82,10 @@ export default function LeaveReviewPage() {
           <div>
             <label
               className="block text-xs font-semibold uppercase tracking-widest mb-4"
-              style={{ color: 'var(--text-muted)' }}
-            >{t('common.rating', 'Rating')}</label>
+              style={{ color: "var(--text-muted)" }}
+            >
+              {t("common.rating", "Rating")}
+            </label>
             <div className="flex gap-2 justify-center">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -77,24 +95,31 @@ export default function LeaveReviewPage() {
                   onMouseEnter={() => setHovered(star)}
                   onMouseLeave={() => setHovered(0)}
                   style={{
-                    fontSize: '2rem',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: star <= displayRating ? 'var(--gold)' : 'var(--text-dim, rgba(237,232,224,0.2))',
-                    transition: 'color 0.15s, transform 0.1s',
-                    transform: star <= displayRating ? 'scale(1.15)' : 'scale(1)',
-                    padding: '0 0.1rem',
+                    fontSize: "2rem",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color:
+                      star <= displayRating
+                        ? "var(--accent)"
+                        : "var(--text-dim, rgba(237,232,224,0.2))",
+                    transition: "color 0.15s, transform 0.1s",
+                    transform:
+                      star <= displayRating ? "scale(1.15)" : "scale(1)",
+                    padding: "0 0.1rem",
                   }}
-                  aria-label={`${star} star${star !== 1 ? 's' : ''}`}
+                  aria-label={`${star} star${star !== 1 ? "s" : ""}`}
                 >
                   ★
                 </button>
               ))}
             </div>
             {rating > 0 && (
-              <p className="text-center text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
-                {['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent'][rating]}
+              <p
+                className="text-center text-xs mt-2"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {["", "Poor", "Fair", "Good", "Great", "Excellent"][rating]}
               </p>
             )}
           </div>
@@ -103,18 +128,28 @@ export default function LeaveReviewPage() {
           <div>
             <label
               className="block text-xs font-semibold uppercase tracking-widest mb-2"
-              style={{ color: 'var(--text-muted)' }}
-            >{t('common.comment', 'Comment')}<span style={{ color: 'var(--text-dim, rgba(237,232,224,0.2))' }}>(optional)</span>
+              style={{ color: "var(--text-muted)" }}
+            >
+              {t("common.comment", "Comment")}
+              <span style={{ color: "var(--text-dim, rgba(237,232,224,0.2))" }}>
+                (optional)
+              </span>
             </label>
             <textarea
               rows={4}
               value={comment}
               onChange={(e) => setComment(e.target.value.slice(0, 500))}
-              placeholder={t('common.share_your_experience', 'Share your experience...')}
+              placeholder={t(
+                "common.share_your_experience",
+                "Share your experience...",
+              )}
               className="input-field w-full resize-none"
-              style={{ fontFamily: 'inherit' }}
+              style={{ fontFamily: "inherit" }}
             />
-            <p className="text-xs mt-1 text-right" style={{ color: 'var(--text-muted)' }}>
+            <p
+              className="text-xs mt-1 text-right"
+              style={{ color: "var(--text-muted)" }}
+            >
               {comment.length}/500
             </p>
           </div>
@@ -125,13 +160,15 @@ export default function LeaveReviewPage() {
               type="button"
               onClick={() => navigate(-1)}
               className="btn-secondary flex-1 py-3"
-            >{t('common.cancel', 'Cancel')}</button>
+            >
+              {t("common.cancel", "Cancel")}
+            </button>
             <button
               type="submit"
               disabled={submitting || rating === 0}
               className="btn-primary flex-1 py-3 disabled:opacity-50"
             >
-              {submitting ? 'Submitting…' : 'Submit Review'}
+              {submitting ? "Submitting…" : "Submit Review"}
             </button>
           </div>
         </form>
